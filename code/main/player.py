@@ -35,10 +35,15 @@ class Player(Entity):
 
         # stats
         self.stats = {'health': 100, 'energy': 60, 'attack': 10, 'speed': 6}
-        self.health = self.stats['health']*0.2
-        self.energy = self.stats['energy']*0.7
+        self.health = self.stats['health']
+        self.energy = self.stats['energy']
         self.speed = self.stats['speed']
         self.exp = 1941
+
+        # damage timer
+        self.vulnerable = True
+        self.hurt_time = None
+        self.invulnerable_duration = 500
 
     def get_status(self):
         # idle
@@ -117,13 +122,17 @@ class Player(Entity):
         current_time = pygame.time.get_ticks()
 
         if self.attacking:
-            if current_time - self.attack_time >= self.attack_cooldown:
+            if current_time - self.attack_time >= self.attack_cooldown + weapon_data[self.weapon]['cooldown']:
                 self.attacking = False
                 self.destroy_attack()
 
         if not self.can_switch_weapon:
             if current_time - self.weapon_switch_time >= self.switch_duration_cooldown:
                 self.can_switch_weapon = True
+
+        if not self.vulnerable:
+            if current_time - self.hurt_time >= self.invulnerable_duration:
+                self.vulnerable = True
 
     def animate(self):
         animation = self.animations[self.status]
@@ -136,6 +145,16 @@ class Player(Entity):
             # set the image
         self.image = animation[int(self.frame_index)]
         self.rect = self.image.get_rect(center=self.hitbox.center)
+
+        # flicker
+        if not self.vulnerable:
+            alpha_value = self.wave_value()
+            self.image.set_alpha(alpha_value)
+        else:
+            self.image.set_alpha(255)
+
+    def get_full_weapon_damage(self):
+        return self.stats['attack'] + weapon_data[self.weapon]['damage']
 
     def update(self):
         self.input()
