@@ -42,8 +42,6 @@ class UI:
         pygame.draw.rect(self.display_surface, UI_BG_COLOR, bg_rect)
         pygame.draw.rect(self.display_surface, UI_BORDER_COLOR, bg_rect, 3)
 
-        print(weapon_index)
-
         weapon_image = pygame.transform.scale(
             self.weapon_graphics[weapon_index], (ITEM_BOX_SIZE, ITEM_BOX_SIZE))
         self.display_surface.blit(weapon_image, (left, top))
