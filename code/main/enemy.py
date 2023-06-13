@@ -5,7 +5,7 @@ from support import *
 
 
 class Enemy(Entity):
-    def __init__(self, monster_name, pos, groups, obstacle_sprites, damage_player):
+    def __init__(self, monster_name, pos, groups, obstacle_sprites, damage_player, trigger_death_particles, update_experience):
         # general setup
         super().__init__(groups)
         self.sprite_type = 'enemy'
@@ -37,6 +37,8 @@ class Enemy(Entity):
         self.attack_time = None
         self.attack_cooldown = 400
         self.damage_player = damage_player
+        self.trigger_death_particles = trigger_death_particles
+        self.update_experience = update_experience
 
         # invincibility timer
         self.vulnerable = True
@@ -92,6 +94,8 @@ class Enemy(Entity):
     def check_death(self):
         if self.health <= 0:
             self.kill()
+            self.trigger_death_particles(self.rect.center, self.monster_name)
+            self.update_experience(self.exp)
 
     def hit_reaction(self):
         if not self.vulnerable:
@@ -129,8 +133,8 @@ class Enemy(Entity):
         self.hit_reaction()
         self.move(self.speed)
         self.animate()
-        self.cooldown()
         self.check_death()
+        self.cooldown()
 
     def enemy_update(self, player):
         self.get_status(player)
