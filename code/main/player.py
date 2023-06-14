@@ -11,7 +11,7 @@ class Player(Entity):
         self.image = pygame.image.load(
             'graphics/Characters/player/down_idle/down_idle.png')
         self.rect = self.image.get_rect(topleft=pos)
-        self.hitbox = self.rect.inflate(0, -30)
+        self.hitbox = self.rect.inflate(-6, HITBOX_OFFSET['player'])
 
         # graphics setup
         self.import_player_assets()
@@ -48,6 +48,10 @@ class Player(Entity):
         self.vulnerable = True
         self.hurt_time = None
         self.invulnerable_duration = 500
+
+        # import sound
+        self.weapon_attack_sound = pygame.mixer.Sound('audio/sword.wav')
+        self.weapon_attack_sound.set_volume(0.1)
 
     def get_status(self):
         # idle
@@ -106,6 +110,7 @@ class Player(Entity):
                 self.attacking = True
                 self.attack_time = pygame.time.get_ticks()
                 self.create_attack()
+                self.weapon_attack_sound.play()
 
             if keys[pygame.K_q] and self.can_switch_weapon:
                 self.can_switch_weapon = False
