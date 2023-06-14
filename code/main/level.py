@@ -11,6 +11,7 @@ from enemy import Enemy
 from particles import AnimationPlayer
 from random import randint
 from talents import Talents
+from npc import NPC
 
 
 class Level:
@@ -53,6 +54,7 @@ class Level:
             'object': import_folder_sorted('graphics/objects'),
             'buildings': import_folder_sorted('graphics/buildings'),
         }
+        villagerNames = ['Villager1', 'Villager2', 'Villager3', 'Villager4']
 
         for style, layout in layouts.items():
             for row_index, row in enumerate(layout):
@@ -84,6 +86,11 @@ class Level:
                             if col == '394':
                                 self.player = Player(
                                     (x, y), [self.visible_sprites], self.obstacle_sprites, self.create_attack, self.destroy_attack)
+
+                            elif col == '-2147483254':
+                                self.npc = NPC(choice(villagerNames), (x, y), [
+                                               self.visible_sprites], self.obstacle_sprites)
+
                             else:
                                 if col == '391':
                                     monster_name = 'spirit'
@@ -152,6 +159,7 @@ class Level:
         else:
             self.visible_sprites.update()
             self.visible_sprites.enemy_update(self.player)
+            self.visible_sprites.npc_update(self.player)
             self.player_attack_logic()
 
 
@@ -189,3 +197,9 @@ class YSortCameraGroup(pygame.sprite.Group):
             sprite, 'sprite_type') and sprite.sprite_type == 'enemy']
         for enemy in enemy_sprites:
             enemy.enemy_update(player)
+
+    def npc_update(self, player):
+        npc_sprites = [sprite for sprite in self.sprites()if hasattr(
+            sprite, 'sprite_type') and sprite.sprite_type == 'npc']
+        for npc in npc_sprites:
+            npc.npc_update(player)

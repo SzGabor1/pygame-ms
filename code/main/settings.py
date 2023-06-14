@@ -51,3 +51,31 @@ monster_data = {
     'raccoon': {'health': 300, 'exp': 250, 'damage': 40, 'attack_type': 'claw',  'attack_sound': 'audio/attack/claw.wav', 'speed': 2, 'resistance': 3, 'attack_radius': 120, 'notice_radius': 400},
     'spirit': {'health': 100, 'exp': 110, 'damage': 8, 'attack_type': 'thunder', 'attack_sound': 'audio/attack/fireball.wav', 'speed': 4, 'resistance': 3, 'attack_radius': 60, 'notice_radius': 350}
 }
+
+quests = [
+    {
+        "title": "The Lost Artifact",
+        "description": "Retrieve the ancient artifact hidden deep within the jungle.",
+        "reward": "Rare gemstone and 500 gold coins."
+    },
+    {
+        "title": "Monster Hunter",
+        "description": "Slay five ferocious beasts terrorizing the nearby village.",
+        "reward": "Legendary sword and a suit of enchanted armor."
+    },
+    {
+        "title": "The Mysterious Puzzle",
+        "description": "Solve a series of cryptic riddles to unlock the hidden treasure.",
+        "reward": "Chest filled with valuable relics and a map to a secret location."
+    },
+    {
+        "title": "The Forbidden Temple",
+        "description": "Brave the dangers of the forbidden temple to retrieve the sacred idol.",
+        "reward": "Eternal blessings and eternal knowledge."
+    },
+    {
+        "title": "The Cursed Manor",
+        "description": "Investigate the haunted manor and lift the curse that plagues its inhabitants.",
+        "reward": "Gratitude of the spirits and a powerful talisman."
+    }
+]
