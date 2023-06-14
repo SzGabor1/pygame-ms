@@ -21,6 +21,9 @@ class Game:
                 if event.type == pygame.QUIT:
                     pygame.quit()
                     sys.exit()
+                if event.type == pygame.KEYDOWN:
+                    if event.key == pygame.K_n:
+                        self.level.toggle_menu('talents')
             self.screen.fill('#71DDEE')
             self.level.run()
             pygame.display.update()

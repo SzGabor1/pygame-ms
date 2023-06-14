@@ -35,10 +35,14 @@ class Player(Entity):
 
         # stats
         self.stats = {'health': 100, 'energy': 60, 'attack': 10, 'speed': 6}
+        self.max_stats = {'health': 300,
+                          'energy': 160, 'attack': 110, 'speed': 20}
+        self.upgrade_cost = {'health': 100,
+                             'energy': 600, 'attack': 140, 'speed': 60}
         self.health = self.stats['health']
         self.energy = self.stats['energy']
         self.speed = self.stats['speed']
-        self.exp = 0
+        self.exp = 10000
 
         # damage timer
         self.vulnerable = True
@@ -155,6 +159,12 @@ class Player(Entity):
 
     def get_full_weapon_damage(self):
         return self.stats['attack'] + weapon_data[self.weapon]['damage']
+
+    def get_value_by_index(self, index):
+        return list(self.stats.values())[index]
+
+    def get_cost_by_index(self, index):
+        return list(self.upgrade_cost.values())[index]
 
     def update(self):
         self.input()

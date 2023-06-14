@@ -31,6 +31,13 @@ TEXT_COLOR = '#EEEEEE'
 HEALTH_COLOR = 'red'
 ENERGY_COLOR = 'blue'
 
+# talent menu
+BLACK_TEXT_COLOR = '#111111'
+WHITE_TEXT_COLOR = '#EEEEEE'
+BAR_COLOR = '#EEEEEE'
+BAR_COLOR_SELECTED = '#111111'
+TALENT_BG_COLOR_SELECTED = '#EEEEEE'
+
 # enemy
 monster_data = {
     'spirit': {'health': 100, 'exp': 100, 'damage': 20, 'attack_type': 'slash', 'attack_sound': 'sounds/skeleton_hurt.wav', 'speed': 3, 'resistance': 3, 'attack_radius': 80, 'notice_radius': 360},

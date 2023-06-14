@@ -29,7 +29,7 @@ class UI:
         pygame.draw.rect(self.display_surface, UI_BORDER_COLOR, bg_rect, 3)
 
     def show_exp(self, exp):
-        text_surf = self.font.render(str(int(exp)), False, TEXT_COLOR)
+        text_surf = self.font.render(str(int(exp)), False, BLACK_TEXT_COLOR)
         text_rect = text_surf.get_rect(bottomright=(WIDTH-10, HEIGHT-10))
         pygame.draw.rect(self.display_surface, UI_BG_COLOR,
                          text_rect.inflate(20, 20))
