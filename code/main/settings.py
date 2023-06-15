@@ -52,30 +52,85 @@ monster_data = {
     'spirit': {'health': 100, 'exp': 110, 'damage': 8, 'attack_type': 'thunder', 'attack_sound': 'audio/attack/fireball.wav', 'speed': 4, 'resistance': 3, 'attack_radius': 60, 'notice_radius': 350}
 }
 
-quests = [
-    {
-        "title": "The Lost Artifact",
-        "description": "Retrieve the ancient artifact hidden deep within the jungle.",
-        "reward": "Rare gemstone and 500 gold coins."
+
+npc_data = {
+    '256': {'name': 'Villager256', 'quest_ids': [0, 1]},
+    '-2147483254': {'name': 'Villager-2147483254', 'quest_ids': [2, 3]},
+    '257': {'name': 'Villager257', 'quest_ids': [4, 7]},
+    '258': {'name': 'Villager258', 'quest_ids': [5]},
+    '259': {'name': 'Villager259', 'quest_ids': [6]}
+}
+
+quest_data = {
+    0: {
+        "text": "Öld meg a szellemeket",
+        "objective": ["Ölj meg 3 szellemet"],
+        "max_amount": 3,
+        "rewardMoney": "200",
+        "rewardXP": "3010",
+        "npcNewPosition": ""
     },
-    {
-        "title": "Monster Hunter",
-        "description": "Slay five ferocious beasts terrorizing the nearby village.",
-        "reward": "Legendary sword and a suit of enchanted armor."
+
+    1: {
+        "text": "Védj meg egy falut az inváziótól",
+        "objective": ["Védd meg a falut az ellenséges támadóktól"],
+        "max_amount": 1,
+        "rewardMoney": "500",
+        "rewardXP": "4000",
+        "npcNewPosition": ""
     },
-    {
-        "title": "The Mysterious Puzzle",
-        "description": "Solve a series of cryptic riddles to unlock the hidden treasure.",
-        "reward": "Chest filled with valuable relics and a map to a secret location."
+
+    2: {
+        "text": "Kutass az elveszett város romjaiban",
+        "objective": ["Fedezd fel az elveszett város romjait", "Találd meg a rejtett kincsesládát"],
+        "max_amount": 1,
+        "rewardMoney": "300",
+        "rewardXP": "2500",
+        "npcNewPosition": ""
     },
-    {
-        "title": "The Forbidden Temple",
-        "description": "Brave the dangers of the forbidden temple to retrieve the sacred idol.",
-        "reward": "Eternal blessings and eternal knowledge."
+
+    3: {
+        "text": "Harcold le a sárkányt",
+        "objective": ["Öld meg a hatalmas sárkányt"],
+        "max_amount": 1,
+        "rewardMoney": "1000",
+        "rewardXP": "8000",
+        "npcNewPosition": ""
     },
-    {
-        "title": "The Cursed Manor",
-        "description": "Investigate the haunted manor and lift the curse that plagues its inhabitants.",
-        "reward": "Gratitude of the spirits and a powerful talisman."
+
+    4: {
+        "text": "Szerezd vissza az elveszett varázskönyvet",
+        "objective": ["Keresd meg az elveszett varázskönyvet", "Védd meg magad a varázslényektől"],
+        "max_amount": 1,
+        "rewardMoney": "400",
+        "rewardXP": "3500",
+        "npcNewPosition": ""
+    },
+
+    5: {
+        "text": "Teljesíts egy veszélyes küldetést",
+        "objective": ["Teljesíts egy veszélyes küldetést a kiképződ segítségével"],
+        "max_amount": 1,
+        "rewardMoney": "800",
+        "rewardXP": "6000",
+        "npcNewPosition": ""
+    },
+
+    6: {
+        "text": "Keress meg egy rejtélyes tárgyat",
+        "objective": ["Kutass a mély barlangban", "Találd meg a rejtélyes tárgyat"],
+        "max_amount": 1,
+        "rewardMoney": "600",
+        "rewardXP": "4500",
+        "npcNewPosition": ""
+    },
+
+    7: {
+        "text": "Tisztítsd meg a mocsarat a szörnyektől",
+        "objective": ["Ölj meg 5 mocsári szörnyet"],
+        "max_amount": 5,
+        "rewardMoney": "300",
+        "rewardXP": "2800",
+        "npcNewPosition": ""
     }
-]
+}

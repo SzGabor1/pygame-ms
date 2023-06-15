@@ -54,7 +54,6 @@ class Level:
             'object': import_folder_sorted('graphics/objects'),
             'buildings': import_folder_sorted('graphics/buildings'),
         }
-        villagerNames = ['Villager1', 'Villager2', 'Villager3', 'Villager4']
 
         for style, layout in layouts.items():
             for row_index, row in enumerate(layout):
@@ -87,9 +86,21 @@ class Level:
                                 self.player = Player(
                                     (x, y), [self.visible_sprites], self.obstacle_sprites, self.create_attack, self.destroy_attack)
 
+                            elif col == '256':
+                                self.npc = NPC(npc_data['256']['name'], (x, y), [
+                                               self.visible_sprites], self.obstacle_sprites, npc_data['256']['quest_ids'])
                             elif col == '-2147483254':
-                                self.npc = NPC(choice(villagerNames), (x, y), [
-                                               self.visible_sprites], self.obstacle_sprites)
+                                self.npc = NPC(npc_data['-2147483254']['name'], (x, y), [
+                                               self.visible_sprites], self.obstacle_sprites, npc_data['-2147483254']['quest_ids'])
+                            elif col == '257':
+                                self.npc = NPC(npc_data['257']['name'], (x, y), [
+                                               self.visible_sprites], self.obstacle_sprites, npc_data['257']['quest_ids'])
+                            elif col == '258':
+                                self.npc = NPC(npc_data['258']['name'], (x, y), [
+                                               self.visible_sprites], self.obstacle_sprites, npc_data['258']['quest_ids'])
+                            elif col == '259':
+                                self.npc = NPC(npc_data['259']['name'], (x, y), [
+                                               self.visible_sprites], self.obstacle_sprites, npc_data['259']['quest_ids'])
 
                             else:
                                 if col == '391':

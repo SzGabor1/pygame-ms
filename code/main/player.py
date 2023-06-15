@@ -44,6 +44,10 @@ class Player(Entity):
         self.speed = self.stats['speed']
         self.exp = 10000
 
+        # quest
+        self.completed_quests = [2, 4, 6, 7]
+        self.current_quest = 0
+
         # damage timer
         self.vulnerable = True
         self.hurt_time = None
@@ -85,19 +89,19 @@ class Player(Entity):
             keys = pygame.key.get_pressed()
 
             # movement input
-            if keys[pygame.K_LEFT] or keys[pygame.K_a]:
+            if keys[pygame.K_a]:
                 self.direction.x = -1
                 self.status = 'left'
-            elif keys[pygame.K_RIGHT] or keys[pygame.K_d]:
+            elif keys[pygame.K_d]:
                 self.direction.x = 1
                 self.status = 'right'
             else:
                 self.direction.x = 0
 
-            if keys[pygame.K_UP] or keys[pygame.K_w]:
+            if keys[pygame.K_w]:
                 self.direction.y = -1
                 self.status = 'up'
-            elif keys[pygame.K_DOWN] or keys[pygame.K_s]:
+            elif keys[pygame.K_s]:
                 self.direction.y = 1
                 self.status = 'down'
             else:

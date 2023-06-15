@@ -37,6 +37,15 @@ class UI:
         pygame.draw.rect(self.display_surface, UI_BORDER_COLOR,
                          text_rect.inflate(20, 20), 3)
 
+    def show_objective(self, objective):
+        text_surf = self.font.render((objective), False, BLACK_TEXT_COLOR)
+        text_rect = text_surf.get_rect(bottomright=(WIDTH-10, HEIGHT-200))
+        pygame.draw.rect(self.display_surface, UI_BG_COLOR,
+                         text_rect.inflate(20, 20))
+        self.display_surface.blit(text_surf, text_rect)
+        pygame.draw.rect(self.display_surface, UI_BORDER_COLOR,
+                         text_rect.inflate(20, 20), 3)
+
     def show_weapon(self, left, top, weapon_index):
         bg_rect = pygame.Rect(left, top, ITEM_BOX_SIZE, ITEM_BOX_SIZE)
         pygame.draw.rect(self.display_surface, UI_BG_COLOR, bg_rect)
@@ -46,10 +55,12 @@ class UI:
             self.weapon_graphics[weapon_index], (ITEM_BOX_SIZE, ITEM_BOX_SIZE))
         self.display_surface.blit(weapon_image, (left, top))
 
-    def display(self, palyer):
+    def display(self, player):
         self.show_bar(
-            palyer.health, palyer.stats['health'], self.health_bar_rect, HEALTH_COLOR)
+            player.health, player.stats['health'], self.health_bar_rect, HEALTH_COLOR)
         self.show_bar(
-            palyer.energy, palyer.stats['energy'], self.energy_bar_rect, ENERGY_COLOR)
-        self.show_exp(palyer.exp)
-        self.show_weapon(10, HEIGHT - 10 - ITEM_BOX_SIZE, palyer.weapon_index)
+            player.energy, player.stats['energy'], self.energy_bar_rect, ENERGY_COLOR)
+        self.show_exp(player.exp)
+        self.show_weapon(10, HEIGHT - 10 - ITEM_BOX_SIZE, player.weapon_index)
+
+        self.show_objective("quest_data[player.current_quest]['objective']")

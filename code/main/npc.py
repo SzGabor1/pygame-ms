@@ -2,11 +2,12 @@ from typing import Any
 import pygame
 from entity import Entity
 from support import *
+from settings import *
 from dialogue import Dialogue
 
 
 class NPC(Entity):
-    def __init__(self, npc_name, pos, groups, obstacle_sprites):
+    def __init__(self, npc_name, pos, groups, obstacle_sprites, quests):
         # general setup
         super().__init__(groups)
         self.sprite_type = 'npc'
@@ -24,9 +25,9 @@ class NPC(Entity):
         # stats
         self.npc_name = npc_name
         self.npc_pos = pos
+        self.quests = quests
 
         # player interaction
-        self.quest_id = 1
         self.range_of_player = False
         self.toggle_dialogue = False
         self.dialogue = Dialogue()
@@ -54,11 +55,28 @@ class NPC(Entity):
             self.toggle_dialogue = False
 
     def update(self):
-        self.dialogue.display_dialogue_button(
-            self.range_of_player, self.toggle_dialogue)
+
         self.input()
-        if self.toggle_dialogue and self.range_of_player:
-            self.dialogue.display(self.npc_name, "XFGSDHGDFGHSRTERTGSGHSF")
+
+        self.show_dialogue_button()
+
+        self.show_dialogue()
 
     def npc_update(self, player):
         self.in_range_of_player(player)
+        self.get_rid_of_completed_quests(player)
+
+    def get_rid_of_completed_quests(self, player):
+        for quest in player.completed_quests:
+            if quest in self.quests:
+                self.quests.remove(quest)
+
+    def show_dialogue(self):
+        if self.toggle_dialogue and self.range_of_player and self.quests != []:
+            self.dialogue.display(
+                self.npc_name, str(self.quests[0]) + "        " + quest_data[self.quests[0]]['text'])
+
+    def show_dialogue_button(self):
+        if(self.quests != []):
+            self.dialogue.display_dialogue_button(
+                self.range_of_player, self.toggle_dialogue)
