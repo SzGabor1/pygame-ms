@@ -64,7 +64,7 @@ npc_data = {
 quest_data = {
     0: {
         "text": "Öld meg a szellemeket",
-        "objective": ["Ölj meg 3 szellemet"],
+        "objective": "Ölj meg 3 szellemet",
         "max_amount": 3,
         "rewardMoney": "200",
         "rewardXP": "3010",
@@ -73,7 +73,7 @@ quest_data = {
 
     1: {
         "text": "Védj meg egy falut az inváziótól",
-        "objective": ["Védd meg a falut az ellenséges támadóktól"],
+        "objective": "Védd meg a falut az ellenséges támadóktól",
         "max_amount": 1,
         "rewardMoney": "500",
         "rewardXP": "4000",
@@ -82,7 +82,7 @@ quest_data = {
 
     2: {
         "text": "Kutass az elveszett város romjaiban",
-        "objective": ["Fedezd fel az elveszett város romjait", "Találd meg a rejtett kincsesládát"],
+        "objective": "Fedezd fel az elveszett város romjait",
         "max_amount": 1,
         "rewardMoney": "300",
         "rewardXP": "2500",
@@ -91,7 +91,7 @@ quest_data = {
 
     3: {
         "text": "Harcold le a sárkányt",
-        "objective": ["Öld meg a hatalmas sárkányt"],
+        "objective": "Öld meg a hatalmas sárkányt",
         "max_amount": 1,
         "rewardMoney": "1000",
         "rewardXP": "8000",
@@ -100,7 +100,7 @@ quest_data = {
 
     4: {
         "text": "Szerezd vissza az elveszett varázskönyvet",
-        "objective": ["Keresd meg az elveszett varázskönyvet", "Védd meg magad a varázslényektől"],
+        "objective": "Keresd meg az elveszett varázskönyvet",
         "max_amount": 1,
         "rewardMoney": "400",
         "rewardXP": "3500",
@@ -109,7 +109,7 @@ quest_data = {
 
     5: {
         "text": "Teljesíts egy veszélyes küldetést",
-        "objective": ["Teljesíts egy veszélyes küldetést a kiképződ segítségével"],
+        "objective": "Teljesíts egy veszélyes küldetést a kiképződ segítségével",
         "max_amount": 1,
         "rewardMoney": "800",
         "rewardXP": "6000",
@@ -118,7 +118,7 @@ quest_data = {
 
     6: {
         "text": "Keress meg egy rejtélyes tárgyat",
-        "objective": ["Kutass a mély barlangban", "Találd meg a rejtélyes tárgyat"],
+        "objective": "Találd meg a rejtélyes tárgyat",
         "max_amount": 1,
         "rewardMoney": "600",
         "rewardXP": "4500",
@@ -127,7 +127,7 @@ quest_data = {
 
     7: {
         "text": "Tisztítsd meg a mocsarat a szörnyektől",
-        "objective": ["Ölj meg 5 mocsári szörnyet"],
+        "objective": "Ölj meg 5 mocsári szörnyet",
         "max_amount": 5,
         "rewardMoney": "300",
         "rewardXP": "2800",

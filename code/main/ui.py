@@ -63,4 +63,4 @@ class UI:
         self.show_exp(player.exp)
         self.show_weapon(10, HEIGHT - 10 - ITEM_BOX_SIZE, player.weapon_index)
 
-        self.show_objective("quest_data[player.current_quest]['objective']")
+        self.show_objective(quest_data[player.current_quest]['objective'])
