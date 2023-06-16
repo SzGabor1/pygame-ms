@@ -88,19 +88,19 @@ class Level:
 
                             elif col == '256':
                                 self.npc = NPC(npc_data['256']['name'], (x, y), [
-                                               self.visible_sprites], self.obstacle_sprites, npc_data['256']['quest_ids'])
+                                               self.visible_sprites], self.obstacle_sprites, npc_data['256']['quest_ids'], self.player)
                             elif col == '-2147483254':
                                 self.npc = NPC(npc_data['-2147483254']['name'], (x, y), [
-                                               self.visible_sprites], self.obstacle_sprites, npc_data['-2147483254']['quest_ids'])
+                                               self.visible_sprites], self.obstacle_sprites, npc_data['-2147483254']['quest_ids'], self.player)
                             elif col == '257':
                                 self.npc = NPC(npc_data['257']['name'], (x, y), [
-                                               self.visible_sprites], self.obstacle_sprites, npc_data['257']['quest_ids'])
+                                               self.visible_sprites], self.obstacle_sprites, npc_data['257']['quest_ids'], self.player)
                             elif col == '258':
                                 self.npc = NPC(npc_data['258']['name'], (x, y), [
-                                               self.visible_sprites], self.obstacle_sprites, npc_data['258']['quest_ids'])
+                                               self.visible_sprites], self.obstacle_sprites, npc_data['258']['quest_ids'], self.player)
                             elif col == '259':
                                 self.npc = NPC(npc_data['259']['name'], (x, y), [
-                                               self.visible_sprites], self.obstacle_sprites, npc_data['259']['quest_ids'])
+                                               self.visible_sprites], self.obstacle_sprites, npc_data['259']['quest_ids'], self.player)
 
                             else:
                                 if col == '391':
@@ -111,7 +111,8 @@ class Level:
                                     monster_name = 'squid'
 
                                 Enemy(monster_name, (x, y), [
-                                      self.visible_sprites, self.attackable_sprites], self.obstacle_sprites, self.damage_player, self.trigger_death_particles, self.update_experience)
+                                      self.visible_sprites, self.attackable_sprites], self.obstacle_sprites,
+                                      self.damage_player, self.trigger_death_particles, self.update_experience, self.update_quest_progress)
 
     def create_attack(self):
         self.current_attack = Weapon(
@@ -156,6 +157,11 @@ class Level:
     def update_experience(self, amount):
         self.player.exp += amount
 
+    def update_quest_progress(self, player):
+        if player.current_quest != -1:
+            if player.current_amount < player.max_amount:
+                player.current_amount += 1
+
     def toggle_menu(self, menu_type):
         self.menu_type = menu_type
         self.game_paused = not self.game_paused
@@ -170,7 +176,6 @@ class Level:
         else:
             self.visible_sprites.update()
             self.visible_sprites.enemy_update(self.player)
-            self.visible_sprites.npc_update(self.player)
             self.player_attack_logic()
 
 
@@ -208,9 +213,3 @@ class YSortCameraGroup(pygame.sprite.Group):
             sprite, 'sprite_type') and sprite.sprite_type == 'enemy']
         for enemy in enemy_sprites:
             enemy.enemy_update(player)
-
-    def npc_update(self, player):
-        npc_sprites = [sprite for sprite in self.sprites()if hasattr(
-            sprite, 'sprite_type') and sprite.sprite_type == 'npc']
-        for npc in npc_sprites:
-            npc.npc_update(player)

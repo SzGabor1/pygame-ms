@@ -15,7 +15,7 @@ HITBOX_OFFSET = {
 # weapons
 weapon_data = {
     'sword': {'cooldown': 100, 'damage': 15, 'graphic': 'graphics/weapons/sword/full.png'},
-    'lance': {'cooldown': 400, 'damage': 30, 'graphic': 'graphics/weapons/lance/full.png'},
+    'lance': {'cooldown': 400, 'damage': 300, 'graphic': 'graphics/weapons/lance/full.png'},
     'axe': {'cooldown': 300, 'damage': 20, 'graphic': 'graphics/weapons/axe/full.png'},
     'rapier': {'cooldown': 50, 'damage': 8, 'graphic': 'graphics/weapons/rapier/full.png'},
     'sai': {'cooldown': 80, 'damage': 10, 'graphic': 'graphics/weapons/sai/full.png'}}
@@ -66,71 +66,71 @@ quest_data = {
         "text": "Öld meg a szellemeket",
         "objective": "Ölj meg 3 szellemet",
         "max_amount": 3,
-        "rewardMoney": "200",
-        "rewardXP": "3010",
-        "npcNewPosition": ""
+        "enemy_type": "spirit",
+        "rewardMoney": 200,
+        "rewardXP": 3010
     },
 
     1: {
         "text": "Védj meg egy falut az inváziótól",
         "objective": "Védd meg a falut az ellenséges támadóktól",
         "max_amount": 1,
-        "rewardMoney": "500",
-        "rewardXP": "4000",
-        "npcNewPosition": ""
+        "enemy_type": "",
+        "rewardMoney": 500,
+        "rewardXP": 4000
     },
 
     2: {
         "text": "Kutass az elveszett város romjaiban",
         "objective": "Fedezd fel az elveszett város romjait",
         "max_amount": 1,
-        "rewardMoney": "300",
-        "rewardXP": "2500",
-        "npcNewPosition": ""
+        "enemy_type": "",
+        "rewardMoney": 300,
+        "rewardXP": 2500
     },
 
     3: {
         "text": "Harcold le a sárkányt",
         "objective": "Öld meg a hatalmas sárkányt",
         "max_amount": 1,
-        "rewardMoney": "1000",
-        "rewardXP": "8000",
-        "npcNewPosition": ""
+        "enemy_type": "",
+        "rewardMoney": 1000,
+        "rewardXP": 8000
     },
 
     4: {
         "text": "Szerezd vissza az elveszett varázskönyvet",
         "objective": "Keresd meg az elveszett varázskönyvet",
         "max_amount": 1,
-        "rewardMoney": "400",
-        "rewardXP": "3500",
-        "npcNewPosition": ""
+        "enemy_type": "",
+        "rewardMoney": 400,
+        "rewardXP": 3500
     },
 
     5: {
         "text": "Teljesíts egy veszélyes küldetést",
         "objective": "Teljesíts egy veszélyes küldetést a kiképződ segítségével",
         "max_amount": 1,
-        "rewardMoney": "800",
-        "rewardXP": "6000",
-        "npcNewPosition": ""
+        "enemy_type": "",
+        "rewardMoney": 800,
+        "rewardXP": 6000
     },
 
     6: {
         "text": "Keress meg egy rejtélyes tárgyat",
         "objective": "Találd meg a rejtélyes tárgyat",
         "max_amount": 1,
-        "rewardMoney": "600",
-        "rewardXP": "4500",
-        "npcNewPosition": ""
+        "enemy_type": "",
+        "rewardMoney": 600,
+        "rewardXP": 4500
     },
 
     7: {
         "text": "Tisztítsd meg a mocsarat a szörnyektől",
         "objective": "Ölj meg 5 mocsári szörnyet",
         "max_amount": 5,
-        "rewardMoney": "300",
-        "rewardXP": "2800",
-        "npcNewPosition": ""
+        "enemy_type": "",
+        "rewardMoney": 300,
+        "rewardXP": 2800
     }
 }

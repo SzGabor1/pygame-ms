@@ -16,7 +16,6 @@ class Game:
         self.level = Level()
 
         # sound
-
         # main_sound = pygame.mixer.Sound('audio/main.ogg')
         # main_sound.set_volume(0.1)
         # main_sound.play(loops=-1)
@@ -30,7 +29,7 @@ class Game:
                 if event.type == pygame.KEYDOWN:
                     if event.key == pygame.K_n:
                         self.level.toggle_menu('talents')
-            self.screen.fill('#71DDEE')
+            self.screen.fill(WATER_COLOR)
             self.level.run()
             pygame.display.update()
             self.clock.tick(FPS)

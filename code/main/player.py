@@ -26,7 +26,7 @@ class Player(Entity):
 
         # weapon
         self.create_attack = create_attack
-        self.weapon_index = 0
+        self.weapon_index = 1
         self.weapon = list(weapon_data.keys())[self.weapon_index]
         self.destroy_attack = destroy_attack
         self.can_switch_weapon = True
@@ -43,11 +43,13 @@ class Player(Entity):
         self.energy = self.stats['energy']
         self.speed = self.stats['speed']
         self.exp = 10000
+        self.balance = 0
 
         # quest
         self.completed_quests = [2, 4, 6, 7]
-        self.current_quest = 0
-
+        self.current_quest = -1
+        self.current_amount = 0
+        self.max_amount = 1
         # damage timer
         self.vulnerable = True
         self.hurt_time = None

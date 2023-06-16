@@ -38,8 +38,9 @@ class UI:
                          text_rect.inflate(20, 20), 3)
 
     def show_objective(self, objective):
-        text_surf = self.font.render((objective), False, BLACK_TEXT_COLOR)
-        text_rect = text_surf.get_rect(bottomright=(WIDTH-10, HEIGHT-200))
+        text_surf = self.font.render((objective), False, WHITE_TEXT_COLOR)
+        text_rect = text_surf.get_rect(
+            topright=(WIDTH-10, 200))  # Módosított sor
         pygame.draw.rect(self.display_surface, UI_BG_COLOR,
                          text_rect.inflate(20, 20))
         self.display_surface.blit(text_surf, text_rect)
@@ -63,4 +64,8 @@ class UI:
         self.show_exp(player.exp)
         self.show_weapon(10, HEIGHT - 10 - ITEM_BOX_SIZE, player.weapon_index)
 
-        self.show_objective(quest_data[player.current_quest]['objective'])
+        if player.current_quest != -1:
+            self.show_objective(quest_data[player.current_quest]['objective'] +
+                                " " +
+                                str(quest_data[player.current_quest]['max_amount']
+                                    ) + "/" + str(player.current_amount))
