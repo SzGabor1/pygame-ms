@@ -1,7 +1,12 @@
-# game setup
-
 WIDTH = 1680
 HEIGHT = 950
+RESOLUTIONS = [
+    (800, 600),
+    (1024, 768),
+    (1280, 720),
+    (1680, 950)
+]
+
 FPS = 60
 TILESIZE = 64
 HITBOX_OFFSET = {
@@ -19,6 +24,11 @@ weapon_data = {
     'axe': {'cooldown': 300, 'damage': 20, 'graphic': 'graphics/weapons/axe/full.png'},
     'rapier': {'cooldown': 50, 'damage': 8, 'graphic': 'graphics/weapons/rapier/full.png'},
     'sai': {'cooldown': 80, 'damage': 10, 'graphic': 'graphics/weapons/sai/full.png'}}
+
+# MENU UI
+MENU_BORDER_COLOR = '#551C03'
+MENU_BG_COLOR = '#F9AA5E'
+MENU_BUTTON_BG_COLOR = '#EE7F26'
 
 # UI
 BAR_HEIGHT = 20

@@ -91,7 +91,6 @@ class NPC(Entity):
 
     def accept_quest(self, player):
         if not self.quest_accepted and player.current_quest == -1:
-            print('lefut')
             player.current_quest = self.quests[0]
             player.max_amount = quest_data[self.quests[0]]['max_amount']
             player.quest_accepted = True
