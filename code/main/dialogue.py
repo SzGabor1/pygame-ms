@@ -3,13 +3,13 @@ from settings import *
 
 
 class Dialogue:
-    def __init__(self, accept_quest, toggle_dialogue):
+    def __init__(self, accepting_quest, toggle_dialogue):
         self.display_surface = pygame.display.get_surface()
         self.font = pygame.font.Font(UI_FONT, UI_FONT_SIZE)
         self.font2 = pygame.font.Font(UI_FONT, UI_FONT_SIZE + 10)
         self.toggle_dialogue = toggle_dialogue
         self.selection_index = 0
-        self.accept_quest = accept_quest
+        self.accepting_quest = accepting_quest
         self.selection_time = None
         self.can_move = True
 
@@ -28,10 +28,10 @@ class Dialogue:
 
             if keys[pygame.K_RETURN]:
                 self.can_move = False
-                self.selection_time = pygame.time.get_ticks()
                 if self.selection_index == 1:
-                    self.accept_quest()
+                    self.accepting_quest(True)
                 self.toggle_dialogue = False
+                self.selection_time = pygame.time.get_ticks()
 
     def should_close_dialogue(self):
         keys = pygame.key.get_pressed()

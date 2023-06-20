@@ -5,7 +5,7 @@ from support import *
 
 
 class Enemy(Entity):
-    def __init__(self, monster_name, pos, groups, obstacle_sprites, damage_player, trigger_death_particles, update_experience, update_quest_progress):
+    def __init__(self, monster_name, pos, groups, obstacle_sprites, trigger_death_particles, update_quest_progress):
         # general setup
         super().__init__(groups)
         self.sprite_type = 'enemy'
@@ -36,9 +36,7 @@ class Enemy(Entity):
         self.can_attack = True
         self.attack_time = None
         self.attack_cooldown = 400
-        self.damage_player = damage_player
         self.trigger_death_particles = trigger_death_particles
-        self.update_experience = update_experience
         self.update_quest_progress = update_quest_progress
 
         # invincibility timer
@@ -87,7 +85,8 @@ class Enemy(Entity):
     def actions(self, player):
         if self.status == 'attack':
             self.attack_time = pygame.time.get_ticks()
-            self.damage_player(self.attack_damage, self.attack_type)
+            #self.damage_player(self.attack_damage, self.attack_type)
+            player.get_damage(self.attack_damage)
             self.attack_sound.play()
         elif self.status == 'move':
             self.direction = self.get_player_distance_direction(player)[1]
@@ -97,7 +96,7 @@ class Enemy(Entity):
     def get_damage(self, player, attack_type):
         if self.vulnerable:
             if attack_type == 'weapon':
-                self.health -= player.get_full_weapon_damage()
+                self.health -= player.get_full_damage()
             self.hit_time = pygame.time.get_ticks()
             self.vulnerable = False
             self.hit_sound.play()
@@ -106,7 +105,7 @@ class Enemy(Entity):
         if self.health <= 0:
             self.kill()
             self.trigger_death_particles(self.rect.center, self.monster_name)
-            self.update_experience(self.exp)
+            player.update_experience(self.exp)
             self.death_sound.play()
             if not player.current_quest == -1:
                 if(self.monster_name == quest_data[player.current_quest]['enemy_type']):

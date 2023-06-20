@@ -54,11 +54,11 @@ monster_data = {
 
 
 npc_data = {
-    '256': {'name': 'Villager256', 'quest_ids': [0, 1]},
-    '-2147483254': {'name': 'Villager-2147483254', 'quest_ids': [2, 3]},
-    '257': {'name': 'Villager257', 'quest_ids': [4, 7]},
-    '258': {'name': 'Villager258', 'quest_ids': [5]},
-    '259': {'name': 'Villager259', 'quest_ids': [6]}
+    '256': {'name': 'Villager256', 'quest_ids': [0]},
+    '-2147483254': {'name': 'Villager-2147483254', 'quest_ids': [1]},
+    '257': {'name': 'Villager257', 'quest_ids': [2]},
+    '258': {'name': 'Villager258', 'quest_ids': []},
+    '259': {'name': 'Villager259', 'quest_ids': []}
 }
 
 quest_data = {
@@ -72,10 +72,10 @@ quest_data = {
     },
 
     1: {
-        "text": "Védj meg egy falut az inváziótól",
-        "objective": "Védd meg a falut az ellenséges támadóktól",
+        "text": "Öld meg a racoont",
+        "objective": "Öld meg a racoont",
         "max_amount": 1,
-        "enemy_type": "",
+        "enemy_type": "raccoon",
         "rewardMoney": 500,
         "rewardXP": 4000
     },
@@ -84,7 +84,7 @@ quest_data = {
         "text": "Kutass az elveszett város romjaiban",
         "objective": "Fedezd fel az elveszett város romjait",
         "max_amount": 1,
-        "enemy_type": "",
+        "enemy_type": "spirit",
         "rewardMoney": 300,
         "rewardXP": 2500
     },

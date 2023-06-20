@@ -5,9 +5,11 @@ from support import *
 from settings import *
 from dialogue import Dialogue
 
+# ha quest felvételnél tapasztalható lesz lag, akkor kell egy quest osztály és memóriába kell tárolni az adatokat.
+
 
 class NPC(Entity):
-    def __init__(self, npc_name, pos, groups, obstacle_sprites, quests, player):
+    def __init__(self, npc_name, pos, groups, obstacle_sprites, quests):
         # general setup
         super().__init__(groups)
         self.sprite_type = 'npc'
@@ -22,8 +24,6 @@ class NPC(Entity):
         self.rect = self.image.get_rect(topleft=pos)
         self.obstacle_sprites = obstacle_sprites
 
-        self.player = player
-
         # stats
         self.npc_name = npc_name
         self.npc_pos = pos
@@ -32,8 +32,9 @@ class NPC(Entity):
         # self.player interaction
         self.range_of_player = False
         self.toggle_dialogue = False
-        self.dialogue = Dialogue(self.accept_quest, self.toggle_dialogue)
+        self.dialogue = Dialogue(self.accepting_quest, self.toggle_dialogue)
         self.quest_accepted = False
+        self.accept_quest_bool = False
 
         self.display_surface = pygame.display.get_surface()
 
@@ -48,8 +49,8 @@ class NPC(Entity):
         if keys[pygame.K_e]:
             self.toggle_dialogue = True
 
-    def in_range_of_player(self):
-        player_pos = self.player.rect.center
+    def in_range_of_player(self, player):
+        player_pos = player.rect.center
         distance = pygame.math.Vector2(self.npc_pos) - player_pos
         if distance.length() <= 100:
             self.range_of_player = True
@@ -58,42 +59,52 @@ class NPC(Entity):
             self.toggle_dialogue = False
 
     def update(self):
-
         self.input()
-        self.show_dialogue_button()
-        self.in_range_of_player()
-        self.show_dialogue()
-        self.complete_quest()
-        self.get_rid_of_completed_quests()
 
-    def complete_quest(self):
-        if self.player.current_amount >= self.player.max_amount:
-            self.player.completed_quests.append(self.player.current_quest)
-            self.player.exp += quest_data[self.player.current_quest]['rewardXP']
-            self.player.balance += quest_data[self.player.current_quest]['rewardMoney']
-            self.player.current_quest = -1
-            self.player.quest_accepted = False
-            self.player.current_amount = 0
+    def npc_update(self, player):
+        self.complete_quest(player)
+        self.get_rid_of_completed_quests(player)
+        self.show_dialogue(player)
+        self.in_range_of_player(player)
+        self.show_dialogue_button(player)
 
-    def accept_quest(self):
-        if not self.quest_accepted and self.player.current_quest == -1:
-            self.player.current_quest = self.quests[0]
-            self.player.max_amount = quest_data[self.quests[0]]['max_amount']
-            self.player.quest_accepted = True
+        if self.accept_quest_bool:
+            self.accept_quest(player)
 
-    def get_rid_of_completed_quests(self):
-        for quest in self.player.completed_quests:
+    def complete_quest(self, player):
+        if player.current_amount >= player.max_amount:
+            player.completed_quests.append(player.current_quest)
+            player.exp += quest_data[player.current_quest]['rewardXP']
+            player.balance += quest_data[player.current_quest]['rewardMoney']
+            player.current_quest = -1
+            player.quest_accepted = False
+            self.accept_quest_bool = False
+            player.current_amount = 0
+
+    def get_rid_of_completed_quests(self, player):
+        for quest in player.completed_quests:
             if quest in self.quests:
                 self.quests.remove(quest)
 
-    def show_dialogue(self):
-        if self.toggle_dialogue and self.range_of_player and self.quests != [] and self.player.current_quest == -1:
+    def accepting_quest(self, status):
+        self.accept_quest_bool = status
+
+    def accept_quest(self, player):
+        if not self.quest_accepted and player.current_quest == -1:
+            print('lefut')
+            player.current_quest = self.quests[0]
+            player.max_amount = quest_data[self.quests[0]]['max_amount']
+            player.quest_accepted = True
+            self.accept_quest_bool = False
+
+    def show_dialogue(self, player):
+        if self.toggle_dialogue and self.range_of_player and self.quests != [] and player.current_quest == -1:
             self.dialogue.display(
                 self.npc_name, str(quest_data[self.quests[0]]['text']))
 
             if self.dialogue.should_close_dialogue():
                 self.toggle_dialogue = False
 
-    def show_dialogue_button(self):
-        if self.quests != [] and self.player.current_quest == -1 and self.range_of_player and not self.toggle_dialogue:
+    def show_dialogue_button(self, player):
+        if self.quests != [] and player.current_quest == -1 and self.range_of_player and not self.toggle_dialogue:
             self.dialogue.display_dialogue_button()

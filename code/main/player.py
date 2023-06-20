@@ -46,10 +46,12 @@ class Player(Entity):
         self.balance = 0
 
         # quest
-        self.completed_quests = [2, 4, 6, 7]
+        #self.completed_quests = [2, 4, 6, 7]
+        self.completed_quests = []
         self.current_quest = -1
         self.current_amount = 0
         self.max_amount = 1
+
         # damage timer
         self.vulnerable = True
         self.hurt_time = None
@@ -168,7 +170,7 @@ class Player(Entity):
         else:
             self.image.set_alpha(255)
 
-    def get_full_weapon_damage(self):
+    def get_full_damage(self):
         return self.stats['attack'] + weapon_data[self.weapon]['damage']
 
     def get_value_by_index(self, index):
@@ -176,6 +178,15 @@ class Player(Entity):
 
     def get_cost_by_index(self, index):
         return list(self.upgrade_cost.values())[index]
+
+    def get_damage(self, amount):
+        if self.vulnerable:
+            self.health -= amount
+            self.hurt_time = pygame.time.get_ticks()
+            self.vulnerable = False
+
+    def update_experience(self, amount):
+        self.exp += amount
 
     def update(self):
         self.input()
