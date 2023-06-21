@@ -5,20 +5,21 @@ from entity import Entity
 
 
 class Player(Entity):
-    def __init__(self, pos, groups, obstacle_sprites, create_attack, destroy_attack):
+    def __init__(self, pos, groups, obstacle_sprites, create_attack, destroy_attack, settings):
         super().__init__(groups)
-
+        self.settings = settings
         self.image = pygame.image.load(
             'graphics/Characters/player/down_idle/down_idle.png')
         self.rect = self.image.get_rect(topleft=pos)
-        self.hitbox = self.rect.inflate(-6, HITBOX_OFFSET['player'])
+        self.hitbox = self.rect.inflate(-6,
+                                        self.settings.HITBOX_OFFSET['player'])
 
         # graphics setup
         self.import_player_assets()
         self.status = 'down'
 
         # movement
-        self.speed = 5
+        self.speed = 2
         self.attacking = False
         self.attack_cooldown = 400
         self.attack_time = None
@@ -27,7 +28,7 @@ class Player(Entity):
         # weapon
         self.create_attack = create_attack
         self.weapon_index = 1
-        self.weapon = list(weapon_data.keys())[self.weapon_index]
+        self.weapon = list(self.settings.weapon_data.keys())[self.weapon_index]
         self.destroy_attack = destroy_attack
         self.can_switch_weapon = True
         self.weapon_switch_time = None
@@ -124,11 +125,12 @@ class Player(Entity):
                 self.can_switch_weapon = False
                 self.weapon_switch_time = pygame.time.get_ticks()
 
-                if self.weapon_index < len(list(weapon_data.keys()))-1:
+                if self.weapon_index < len(list(self.settings.weapon_data.keys()))-1:
                     self.weapon_index += 1
                 else:
                     self.weapon_index = 0
-                self.weapon = list(weapon_data.keys())[self.weapon_index]
+                self.weapon = list(self.settings.weapon_data.keys())[
+                    self.weapon_index]
             # sprint
             if keys[pygame.K_LSHIFT]:
                 self.speed = self.stats['speed']*5.5
@@ -139,7 +141,7 @@ class Player(Entity):
         current_time = pygame.time.get_ticks()
 
         if self.attacking:
-            if current_time - self.attack_time >= self.attack_cooldown + weapon_data[self.weapon]['cooldown']:
+            if current_time - self.attack_time >= self.attack_cooldown + self.settings.weapon_data[self.weapon]['cooldown']:
                 self.attacking = False
                 self.destroy_attack()
 
@@ -171,7 +173,7 @@ class Player(Entity):
             self.image.set_alpha(255)
 
     def get_full_damage(self):
-        return self.stats['attack'] + weapon_data[self.weapon]['damage']
+        return self.stats['attack'] + self.settings.weapon_data[self.weapon]['damage']
 
     def get_value_by_index(self, index):
         return list(self.stats.values())[index]

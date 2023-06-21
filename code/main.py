@@ -1,20 +1,23 @@
 import pygame
+from pygame.locals import *
 import sys
-from settings import *
+from settings import Settings
+from support import import_settings
 from level import Level
 from mainmenu import MainMenu, SettingsMenu
-from temp import tempsettings
 
 
 class Game:
+
     def __init__(self):
-        self.check_new_settings()
+        self.settings = Settings(
+            import_settings('data/settings/settings.json'))
         pygame.init()
         self.screen = pygame.display.set_mode(
-            (WIDTH, HEIGHT), flags=pygame.SCALED, vsync=1)
+            (self.settings.WIDTH, self.settings.HEIGHT), flags=pygame.RESIZABLE)
         pygame.display.set_caption("Marooned Sailor")
         self.clock = pygame.time.Clock()
-        self.level = Level()
+        self.level = Level(self.settings)
         self.menu = MainMenu(self)
         self.settings_menu = None
         self.state = 'MENU'
@@ -36,10 +39,10 @@ class Game:
                     if event.type == pygame.KEYDOWN:
                         if event.key == pygame.K_n:
                             self.level.toggle_menu('talents')
-                self.screen.fill(WATER_COLOR)
+                self.screen.fill(self.settings.WATER_COLOR)
                 self.level.run()
                 pygame.display.update()
-                self.clock.tick(FPS)
+                self.clock.tick(self.settings.FPS)
 
     def start_new_game(self):
         # Logic for starting a new game
@@ -54,19 +57,6 @@ class Game:
     def open_settings_menu(self):
         self.settings_menu = SettingsMenu(self)
         self.state = 'SETTINGS'
-
-    def check_new_settings(self):
-        if WIDTH != tempsettings.WIDTH or HEIGHT != tempsettings.HEIGHT:
-            with open("code/settings.py", "r") as config_file:
-                lines = config_file.readlines()
-
-            if lines[0].startswith("WIDTH =") and lines[1].startswith("HEIGHT ="):
-                if WIDTH != tempsettings.WIDTH or HEIGHT != tempsettings.HEIGHT:
-                    lines[0] = f"WIDTH = {tempsettings.WIDTH}\n"
-                    lines[1] = f"HEIGHT = {tempsettings.HEIGHT}\n"
-
-            with open("code/settings.py", "w") as config_file:
-                config_file.writelines(lines)
 
 
 if __name__ == '__main__':

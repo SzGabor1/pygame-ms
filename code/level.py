@@ -15,10 +15,12 @@ from npc import NPC
 
 
 class Level:
-    def __init__(self):
+    def __init__(self, settings):
 
         # get the display surface
         self.display_surface = pygame.display.get_surface()
+
+        self.settings = settings
 
         # sprite group setup
         self.visible_sprites = YSortCameraGroup()
@@ -33,8 +35,8 @@ class Level:
         self.current_attack = None
 
         # UI
-        self.ui = UI()
-        self.talents = Talents(self.player)
+        self.ui = UI(self.settings)
+        self.talents = Talents(self.player, self.settings)
         self.game_paused = False
         self.menu_type = None
 
@@ -59,43 +61,50 @@ class Level:
             for row_index, row in enumerate(layout):
                 for col_index, col in enumerate(row):
                     if col != '-1':
-                        x = col_index * TILESIZE
-                        y = row_index * TILESIZE
+                        x = col_index * self.settings.TILESIZE
+                        y = row_index * self.settings.TILESIZE
                         if style == 'boundary':
-                            Tile((x, y), [self.obstacle_sprites], 'invisible')
+                            Tile((x, y), [self.obstacle_sprites],
+                                 'invisible', self.settings, pygame.Surface(
+                                     (self.settings.TILESIZE, self.settings.TILESIZE)))
                         if style == 'grass':
                             random_grass_image = choice(
                                 graphics['grass'])
                             Tile((x, y), [self.visible_sprites,
-                                 self.obstacle_sprites, self.attackable_sprites], 'grass', random_grass_image)
+                                 self.obstacle_sprites, self.attackable_sprites], 'grass', self.settings, random_grass_image)
                         if style == 'object':
                             # create object tile
                             surf = graphics['object'][int(col)]
 
                             Tile((x, y+64), [self.visible_sprites,
-                                 self.obstacle_sprites], 'object', surf)
+                                 self.obstacle_sprites], 'object', self.settings, surf)
 
                         if style == 'buildings':
                             # create building tile
                             surf = graphics['buildings'][int(col)]
 
                             Tile((x, y), [self.visible_sprites,
-                                 self.obstacle_sprites], 'building', surf)
+                                 self.obstacle_sprites], 'building', self.settings, surf)
                         if style == 'entities':
                             if col == '394':
                                 self.player = Player(
-                                    (x, y), [self.visible_sprites], self.obstacle_sprites, self.create_attack, self.destroy_attack)
+                                    (x, y), [self.visible_sprites], self.obstacle_sprites, self.create_attack, self.destroy_attack, self.settings)
 
                             elif col == '256':
-                                self.create_npc(col, x, y, npc_data)
+                                self.create_npc(
+                                    col, x, y, self.settings.npc_data)
                             elif col == '-2147483254':
-                                self.create_npc(col, x, y, npc_data)
+                                self.create_npc(
+                                    col, x, y, self.settings.npc_data)
                             elif col == '257':
-                                self.create_npc(col, x, y, npc_data)
+                                self.create_npc(
+                                    col, x, y, self.settings.npc_data)
                             elif col == '258':
-                                self.create_npc(col, x, y, npc_data)
+                                self.create_npc(
+                                    col, x, y, self.settings.npc_data)
                             elif col == '259':
-                                self.create_npc(col, x, y, npc_data)
+                                self.create_npc(
+                                    col, x, y, self.settings.npc_data)
 
                             else:
                                 if col == '391':
@@ -107,11 +116,11 @@ class Level:
 
                                 Enemy(monster_name, (x, y), [
                                       self.visible_sprites, self.attackable_sprites], self.obstacle_sprites,
-                                      self.trigger_death_particles, self.update_quest_progress)
+                                      self.trigger_death_particles, self.update_quest_progress, self.settings)
 
     def create_npc(self, id, x, y, npc_data):
         self.npc = NPC(npc_data[id]['name'], (x, y), [
-            self.visible_sprites], self.obstacle_sprites, npc_data[id]['quest_ids'])
+            self.visible_sprites], self.obstacle_sprites, npc_data[id]['quest_ids'], self.settings)
 
     def create_attack(self):
         self.current_attack = Weapon(

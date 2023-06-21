@@ -3,15 +3,16 @@ from settings import *
 
 
 class Talents():
-    def __init__(self, player):
-
+    def __init__(self, player, settings):
+        self.settings = settings
         # general setup
         self.display_surface = pygame.display.get_surface()
         self.player = player
         self.menu_paused = False
         self.attribute_nr = len(player.stats)
         self.attribute_names = list(player.stats.keys())
-        self.font = pygame.font.Font(UI_FONT, UI_FONT_SIZE)
+        self.font = pygame.font.Font(
+            self.settings.UI_FONT, self.settings.UI_FONT_SIZE)
         self.max_values = list(player.max_stats.values())
 
         # selection system
@@ -82,7 +83,7 @@ class Item:
         self.font = font
 
     def display_names(self, surface, name, cost, selected):
-        color = BLACK_TEXT_COLOR if selected else TEXT_COLOR
+        color = self.settings.BLACK_TEXT_COLOR if selected else self.settings.TEXT_COLOR
 
         # title
         title_surf = self.font.render(name, False, color)
@@ -103,7 +104,7 @@ class Item:
         # drawing setup
         top = self.rect.midtop + pygame.math.Vector2(0, 60)
         bottom = self.rect.midbottom - pygame.math.Vector2(0, 60)
-        color = BAR_COLOR_SELECTED if selected else BAR_COLOR
+        color = self.settings.BAR_COLOR_SELECTED if selected else self.settings.BAR_COLOR
 
         # bar setup
         full_height = bottom[1] - top[1]
@@ -128,11 +129,14 @@ class Item:
 
     def display(self, surface, selection_num, name, value, max_value, cost):
         if self.index == selection_num:
-            pygame.draw.rect(surface, TALENT_BG_COLOR_SELECTED, self.rect)
-            pygame.draw.rect(surface, UI_BORDER_COLOR, self.rect, 4)
+            pygame.draw.rect(
+                surface, self.settings.TALENT_BG_COLOR_SELECTED, self.rect)
+            pygame.draw.rect(
+                surface, self.settings.UI_BORDER_COLOR, self.rect, 4)
         else:
-            pygame.draw.rect(surface, UI_BG_COLOR, self.rect)
-            pygame.draw.rect(surface, UI_BORDER_COLOR, self.rect, 4)
+            pygame.draw.rect(surface, self.settings.UI_BG_COLOR, self.rect)
+            pygame.draw.rect(
+                surface, self.settings.UI_BORDER_COLOR, self.rect, 4)
 
         self.display_names(surface, name, cost, self.index == selection_num)
         self.display_bar(surface, value, max_value,

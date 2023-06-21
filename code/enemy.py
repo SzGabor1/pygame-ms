@@ -5,11 +5,12 @@ from support import *
 
 
 class Enemy(Entity):
-    def __init__(self, monster_name, pos, groups, obstacle_sprites, trigger_death_particles, update_quest_progress):
+    def __init__(self, monster_name, pos, groups, obstacle_sprites, trigger_death_particles, update_quest_progress, settings):
         # general setup
         super().__init__(groups)
         self.sprite_type = 'enemy'
 
+        self.settings = settings
         # graphics setup
         self.import_graphics(monster_name)
         self.status = 'idle'
@@ -22,7 +23,7 @@ class Enemy(Entity):
 
         # stats
         self.monster_name = monster_name
-        monster_info = monster_data[self.monster_name]
+        monster_info = self.settings.monster_data[self.monster_name]
         self.health = monster_info['health']
         self.exp = monster_info['exp']
         self.speed = monster_info['speed']
@@ -108,7 +109,7 @@ class Enemy(Entity):
             player.update_experience(self.exp)
             self.death_sound.play()
             if not player.current_quest == -1:
-                if(self.monster_name == quest_data[player.current_quest]['enemy_type']):
+                if(self.monster_name == self.settings.quest_data[player.current_quest]['enemy_type']):
                     self.update_quest_progress(player)
 
     def hit_reaction(self):

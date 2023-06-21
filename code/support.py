@@ -3,6 +3,7 @@ import os
 from os import walk
 import pygame
 import re
+import json
 
 
 def import_csv_layout(path):
@@ -43,3 +44,15 @@ def import_folder_sorted(path):
         surface_list.append(image_surf)
 
     return surface_list
+
+
+def import_settings(path):
+    f = open(path)
+
+    # returns JSON object as a dictionary
+    data = json.load(f)
+
+    f.close()
+    return data
+
+    # Closing file

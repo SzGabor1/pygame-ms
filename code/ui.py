@@ -3,69 +3,80 @@ from settings import *
 
 
 class UI:
-    def __init__(self):
+    def __init__(self, settings):
 
         # general
+        self.settings = settings
         self.display_surface = pygame.display.get_surface()
-        self.font = pygame.font.Font(UI_FONT, UI_FONT_SIZE)
+        self.font = pygame.font.Font(
+            self.settings.UI_FONT, self.settings.UI_FONT_SIZE)
 
         # bar setup
         self.health_bar_rect = pygame.Rect(
-            10, 10, HEALTH_BAR_WIDTH, BAR_HEIGHT)
+            10, 10, self.settings.HEALTH_BAR_WIDTH, self.settings.BAR_HEIGHT)
         self.energy_bar_rect = pygame.Rect(
-            10, 37, ENERGY_BAR_WIDTH, BAR_HEIGHT)
+            10, 37, self.settings.ENERGY_BAR_WIDTH, self.settings.BAR_HEIGHT)
 
         # weapon dictionary
         self.weapon_graphics = []
-        for weapon in weapon_data.values():
+        for weapon in self.settings.weapon_data.values():
             path = weapon['graphic']
             weapon = pygame.image.load(path).convert_alpha()
             self.weapon_graphics.append(weapon)
 
     def show_bar(self, current, max, bg_rect, color):
-        pygame.draw.rect(self.display_surface, UI_BG_COLOR, bg_rect)
+        pygame.draw.rect(self.display_surface,
+                         self.settings.UI_BG_COLOR, bg_rect)
         pygame.draw.rect(self.display_surface, color, (bg_rect.x,
                          bg_rect.y, bg_rect.width * (current/max), bg_rect.height))
-        pygame.draw.rect(self.display_surface, UI_BORDER_COLOR, bg_rect, 3)
+        pygame.draw.rect(self.display_surface,
+                         self.settings.UI_BORDER_COLOR, bg_rect, 3)
 
     def show_exp(self, exp):
-        text_surf = self.font.render(str(int(exp)), False, BLACK_TEXT_COLOR)
-        text_rect = text_surf.get_rect(bottomright=(WIDTH-10, HEIGHT-10))
-        pygame.draw.rect(self.display_surface, UI_BG_COLOR,
+        text_surf = self.font.render(
+            str(int(exp)), False, self.settings.BLACK_TEXT_COLOR)
+        text_rect = text_surf.get_rect(bottomright=(
+            self.settings.WIDTH-10, self.settings.HEIGHT-10))
+        pygame.draw.rect(self.display_surface, self.settings.UI_BG_COLOR,
                          text_rect.inflate(20, 20))
         self.display_surface.blit(text_surf, text_rect)
-        pygame.draw.rect(self.display_surface, UI_BORDER_COLOR,
+        pygame.draw.rect(self.display_surface, self.settings.UI_BORDER_COLOR,
                          text_rect.inflate(20, 20), 3)
 
     def show_objective(self, objective):
-        text_surf = self.font.render((objective), False, WHITE_TEXT_COLOR)
+        text_surf = self.font.render(
+            (objective), False, self.settings.WHITE_TEXT_COLOR)
         text_rect = text_surf.get_rect(
-            topright=(WIDTH-10, 200))  # Módosított sor
-        pygame.draw.rect(self.display_surface, UI_BG_COLOR,
+            topright=(self.settings.WIDTH-10, 200))  # Módosított sor
+        pygame.draw.rect(self.display_surface, self.settings.UI_BG_COLOR,
                          text_rect.inflate(20, 20))
         self.display_surface.blit(text_surf, text_rect)
-        pygame.draw.rect(self.display_surface, UI_BORDER_COLOR,
+        pygame.draw.rect(self.display_surface, self.settings.UI_BORDER_COLOR,
                          text_rect.inflate(20, 20), 3)
 
     def show_weapon(self, left, top, weapon_index):
-        bg_rect = pygame.Rect(left, top, ITEM_BOX_SIZE, ITEM_BOX_SIZE)
-        pygame.draw.rect(self.display_surface, UI_BG_COLOR, bg_rect)
-        pygame.draw.rect(self.display_surface, UI_BORDER_COLOR, bg_rect, 3)
+        bg_rect = pygame.Rect(
+            left, top, self.settings.ITEM_BOX_SIZE, self.settings.ITEM_BOX_SIZE)
+        pygame.draw.rect(self.display_surface,
+                         self.settings.UI_BG_COLOR, bg_rect)
+        pygame.draw.rect(self.display_surface,
+                         self.settings.UI_BORDER_COLOR, bg_rect, 3)
 
         weapon_image = pygame.transform.scale(
-            self.weapon_graphics[weapon_index], (ITEM_BOX_SIZE, ITEM_BOX_SIZE))
+            self.weapon_graphics[weapon_index], (self.settings.ITEM_BOX_SIZE, self.settings.ITEM_BOX_SIZE))
         self.display_surface.blit(weapon_image, (left, top))
 
     def display(self, player):
         self.show_bar(
-            player.health, player.stats['health'], self.health_bar_rect, HEALTH_COLOR)
+            player.health, player.stats['health'], self.health_bar_rect, self.settings.HEALTH_COLOR)
         self.show_bar(
-            player.energy, player.stats['energy'], self.energy_bar_rect, ENERGY_COLOR)
+            player.energy, player.stats['energy'], self.energy_bar_rect, self.settings.ENERGY_COLOR)
         self.show_exp(player.exp)
-        self.show_weapon(10, HEIGHT - 10 - ITEM_BOX_SIZE, player.weapon_index)
+        self.show_weapon(10, self.settings.HEIGHT - 10 -
+                         self.settings.ITEM_BOX_SIZE, player.weapon_index)
 
         if player.current_quest != -1:
-            self.show_objective(quest_data[player.current_quest]['objective'] +
+            self.show_objective(self.settings.quest_data[player.current_quest]['objective'] +
                                 " " +
-                                str(quest_data[player.current_quest]['max_amount']
+                                str(self.settings.quest_data[player.current_quest]['max_amount']
                                     ) + "/" + str(player.current_amount))
