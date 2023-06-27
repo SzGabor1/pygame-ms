@@ -14,7 +14,7 @@ class Game:
             import_settings('data/settings/settings.json'))
         pygame.init()
         self.screen = pygame.display.set_mode(
-            (self.settings.WIDTH, self.settings.HEIGHT), flags=pygame.RESIZABLE)
+            (self.settings.WIDTH, self.settings.HEIGHT), flags=pygame.RESIZABLE | pygame.SCALED, vsync=1)
         pygame.display.set_caption("Marooned Sailor")
         self.clock = pygame.time.Clock()
         self.level = Level(self.settings)
@@ -39,6 +39,9 @@ class Game:
                     if event.type == pygame.KEYDOWN:
                         if event.key == pygame.K_n:
                             self.level.toggle_menu('talents')
+                    if event.type == pygame.KEYDOWN:
+                        if event.key == pygame.K_ESCAPE:
+                            self.level.toggle_menu('ingame_menu')
                 self.screen.fill(self.settings.WATER_COLOR)
                 self.level.run()
                 pygame.display.update()

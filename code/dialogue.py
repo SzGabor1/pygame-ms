@@ -36,6 +36,21 @@ class Dialogue:
                 self.toggle_dialogue = False
                 self.selection_time = pygame.time.get_ticks()
 
+    def handle_mouse_click(self, event):
+        if event.type == pygame.MOUSEBUTTONDOWN:
+            if event.button == 1:  # Left mouse button
+                pos = pygame.mouse.get_pos()
+                if self.selection_index == 0 and self.left_choice_rect.collidepoint(pos):
+                    self.can_move = False
+                    self.accepting_quest(False)
+                    self.toggle_dialogue = False
+                    self.selection_time = pygame.time.get_ticks()
+                elif self.selection_index == 1 and self.right_choice_rect.collidepoint(pos):
+                    self.can_move = False
+                    self.accepting_quest(True)
+                    self.toggle_dialogue = False
+                    self.selection_time = pygame.time.get_ticks()
+
     def should_close_dialogue(self):
         keys = pygame.key.get_pressed()
         return keys[pygame.K_RETURN] and self.selection_index == 0
@@ -68,15 +83,16 @@ class Dialogue:
         left_choice_x = self.settings.WIDTH / 4 + 25
         right_choice_x = left_choice_x + choice_width + 25
 
-        left_choice_rect = pygame.Rect(
+        self.left_choice_rect = pygame.Rect(
             left_choice_x, box_y + box_height - box_height / 3, choice_width, box_height / 3)
 
-        right_choice_rect = pygame.Rect(
+        self.right_choice_rect = pygame.Rect(
             right_choice_x, box_y + box_height - box_height / 3, choice_width, box_height / 3)
 
         self.draw_dialogue_box()
-        self.draw_choice_rectangles(left_choice_rect, right_choice_rect)
-        self.draw_choice_text(left_choice_rect, right_choice_rect)
+        self.draw_choice_rectangles(
+            self.left_choice_rect, self.right_choice_rect)
+        self.draw_choice_text(self.left_choice_rect, self.right_choice_rect)
         self.render_and_display_text(name, text)
 
     def draw_dialogue_box(self):

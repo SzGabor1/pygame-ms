@@ -4,8 +4,8 @@ from settings import *
 
 class Talents():
     def __init__(self, player, settings):
-        self.settings = settings
         # general setup
+        self.settings = settings
         self.display_surface = pygame.display.get_surface()
         self.player = player
         self.menu_paused = False

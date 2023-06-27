@@ -11,6 +11,7 @@ from enemy import Enemy
 from particles import AnimationPlayer
 from random import randint
 from talents import Talents
+from ingame_menu import IngameMenu
 from npc import NPC
 
 
@@ -37,6 +38,7 @@ class Level:
         # UI
         self.ui = UI(self.settings)
         self.talents = Talents(self.player, self.settings)
+        self.ingame_menu = IngameMenu(self.settings, self.toggle_menu)
         self.game_paused = False
         self.menu_type = None
 
@@ -170,6 +172,9 @@ class Level:
         if self.game_paused:
             if self.menu_type == 'talents':
                 self.talents.display()
+        if self.game_paused:
+            if self.menu_type == 'ingame_menu':
+                self.ingame_menu.display()
         else:
             debug(self.player.current_quest)
             self.visible_sprites.update()
@@ -189,7 +194,7 @@ class YSortCameraGroup(pygame.sprite.Group):
         self.offset = pygame.math.Vector2()
 
         self.floor_surf = pygame.image.load(
-            'map/background.png').convert()
+            'map/map_test.png').convert()
         self.floor_rect = self.floor_surf.get_rect(topleft=(0, 0))
 
     def custom_draw(self, player):
