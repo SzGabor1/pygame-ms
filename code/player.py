@@ -1,7 +1,9 @@
 import pygame
 from settings import *
 from support import import_folder
+from debug import debug
 from entity import Entity
+from inventory import Inventory
 
 
 class Player(Entity):
@@ -30,8 +32,8 @@ class Player(Entity):
         self.weapon_index = 1
         self.weapon = list(self.settings.weapon_data.keys())[self.weapon_index]
         self.destroy_attack = destroy_attack
-        self.can_switch_weapon = True
-        self.weapon_switch_time = None
+        self.can_switch_item = True
+        self.item_switch_time = None
         self.switch_duration_cooldown = 200
 
         # stats
@@ -40,14 +42,14 @@ class Player(Entity):
                           'energy': 160, 'attack': 110, 'speed': 20}
         self.upgrade_cost = {'health': 100,
                              'energy': 600, 'attack': 140, 'speed': 60}
-        self.health = self.stats['health']
+        self.health = 0
         self.energy = self.stats['energy']
         self.speed = self.stats['speed']
         self.exp = 10000
         self.balance = 0
 
         # quest
-        #self.completed_quests = [2, 4, 6, 7]
+        # self.completed_quests = [2, 4, 6, 7]
         self.completed_quests = []
         self.current_quest = -1
         self.current_amount = 0
@@ -61,6 +63,25 @@ class Player(Entity):
         # import sound
         self.weapon_attack_sound = pygame.mixer.Sound('audio/sword.wav')
         self.weapon_attack_sound.set_volume(0.1)
+
+        # inventory
+        self.inventory = Inventory(settings)
+        self.inventory_index = 0
+        self.init_inventory_items()
+        self.can_use_item = True
+        self.item_use_time = None
+        self.item_usage_cooldown = 1000
+
+        # strength potion timer
+        self.strength_potion_time = None
+        self.used_strength_potion = False
+        self.strength_potion_duration = self.settings.items[2]['duration']*1000
+
+    def init_inventory_items(self):
+        self.inventory.add_item(0)
+        self.inventory.add_item(1)
+        self.inventory.add_item(2)
+        self.inventory.add_item(0)
 
     def get_status(self):
         # idle
@@ -88,6 +109,13 @@ class Player(Entity):
         for animation in self.animations:
             full_path = character_path + animation
             self.animations[animation] = import_folder(full_path)
+
+    def use_strength_potion(self):
+        if not self.used_strength_potion:
+            self.strength_potion_time = pygame.time.get_ticks()
+            self.used_strength_potion = True
+            self.stats['attack'] += self.settings.items[2]['amount']
+            print("meghivodott ez a szar")
 
     def input(self):
         if not self.attacking:
@@ -121,9 +149,9 @@ class Player(Entity):
                 self.create_attack()
                 self.weapon_attack_sound.play()
 
-            if keys[pygame.K_q] and self.can_switch_weapon:
-                self.can_switch_weapon = False
-                self.weapon_switch_time = pygame.time.get_ticks()
+            if keys[pygame.K_e] and self.can_switch_item:
+                self.can_switch_item = False
+                self.item_switch_time = pygame.time.get_ticks()
 
                 if self.weapon_index < len(list(self.settings.weapon_data.keys()))-1:
                     self.weapon_index += 1
@@ -137,6 +165,33 @@ class Player(Entity):
             else:
                 self.speed = self.stats['speed']
 
+            # inventory
+            if keys[pygame.K_1] and self.can_switch_item:
+                self.can_switch_item = False
+                self.item_switch_time = pygame.time.get_ticks()
+                self.inventory_index = 0
+            elif keys[pygame.K_2] and self.can_switch_item:
+                self.can_switch_item = False
+                self.item_switch_time = pygame.time.get_ticks()
+                self.inventory_index = 1
+            elif keys[pygame.K_3] and self.can_switch_item:
+                self.can_switch_item = False
+                self.item_switch_time = pygame.time.get_ticks()
+                self.inventory_index = 2
+            elif keys[pygame.K_4] and self.can_switch_item:
+                self.can_switch_item = False
+                self.item_switch_time = pygame.time.get_ticks()
+                self.inventory_index = 3
+            elif keys[pygame.K_5] and self.can_switch_item:
+                self.can_switch_item = False
+                self.item_switch_time = pygame.time.get_ticks()
+                self.inventory_index = 4
+            elif keys[pygame.K_q] and self.can_use_item:
+                self.can_use_item = False
+                self.item_use_time = pygame.time.get_ticks()
+
+                self.inventory.use_item(self.inventory_index, self)
+
     def cooldowns(self):
         current_time = pygame.time.get_ticks()
 
@@ -145,9 +200,18 @@ class Player(Entity):
                 self.attacking = False
                 self.destroy_attack()
 
-        if not self.can_switch_weapon:
-            if current_time - self.weapon_switch_time >= self.switch_duration_cooldown:
-                self.can_switch_weapon = True
+        if not self.can_switch_item:
+            if current_time - self.item_switch_time >= self.switch_duration_cooldown:
+                self.can_switch_item = True
+
+        if not self.can_use_item:
+            if current_time - self.item_use_time >= self.item_usage_cooldown:
+                self.can_use_item = True
+
+        if self.used_strength_potion:
+            if current_time - self.strength_potion_time >= self.strength_potion_duration:
+                self.stats['attack'] -= 20
+                self.used_strength_potion = False
 
         if not self.vulnerable:
             if current_time - self.hurt_time >= self.invulnerable_duration:
@@ -196,3 +260,4 @@ class Player(Entity):
         self.get_status()
         self.animate()
         self.move(self.speed)
+        debug(self.stats['attack'])

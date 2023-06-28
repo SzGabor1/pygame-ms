@@ -17,8 +17,8 @@ class Game:
             (self.settings.WIDTH, self.settings.HEIGHT), flags=pygame.RESIZABLE | pygame.SCALED, vsync=1)
         pygame.display.set_caption("Marooned Sailor")
         self.clock = pygame.time.Clock()
-        self.level = Level(self.settings)
         self.menu = MainMenu(self)
+        self.level = Level(self.settings)
         self.settings_menu = None
         self.state = 'MENU'
 

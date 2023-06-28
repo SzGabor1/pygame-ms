@@ -176,7 +176,6 @@ class Level:
             if self.menu_type == 'ingame_menu':
                 self.ingame_menu.display()
         else:
-            debug(self.player.current_quest)
             self.visible_sprites.update()
             self.visible_sprites.enemy_update(self.player)
             self.visible_sprites.npc_update(self.player)
@@ -194,7 +193,7 @@ class YSortCameraGroup(pygame.sprite.Group):
         self.offset = pygame.math.Vector2()
 
         self.floor_surf = pygame.image.load(
-            'map/map_test.png').convert()
+            'map/background.png').convert()
         self.floor_rect = self.floor_surf.get_rect(topleft=(0, 0))
 
     def custom_draw(self, player):

@@ -1,4 +1,5 @@
 import json
+import pygame
 
 
 class Settings:
@@ -23,6 +24,11 @@ class Settings:
             'invisible': 0
         }
 
+        # sounds
+
+        self.potion_sound = pygame.mixer.Sound('audio/potion.wav')
+        self.potion_sound.set_volume(0.1)
+
         # weapons
         self.weapon_data = {
             'sword': {'cooldown': 100, 'damage': 15, 'graphic': 'graphics/weapons/sword/full.png'},
@@ -35,6 +41,10 @@ class Settings:
         self.MENU_BORDER_COLOR = '#551C03'
         self.MENU_BG_COLOR = '#F9AA5E'
         self.MENU_BUTTON_BG_COLOR = '#EE7F26'
+
+        self.INVENTORY_BG_COLOR = '#F9AA5E'
+        self.INVENTORY_BORDER_COLOR = '#551C03'
+        self.INVENTORY_SELECTED_BG_COLOR = '#c56307'
 
         # UI
         self.BAR_HEIGHT = 20
@@ -148,6 +158,40 @@ class Settings:
                 "rewardMoney": 300,
                 "rewardXP": 2800
             }
+        }
+
+        self.items = {
+
+            0: {
+                "id": 0,
+                "name": "Health Potion",
+                "description": "Regenerate a small amount of health.",
+                "type": "consumable",
+                "effect": "health",
+                "amount": 60,
+                "duration": 0,
+                "graphic": "graphics/items/health_potion.png"
+            },
+            1: {
+                "id": 1,
+                "name": "Energy Potion",
+                "description": "Restores a small amount of mana.",
+                "type": "consumable",
+                "effect": "energy",
+                "amount": 30,
+                "duration": 0,
+                "graphic": "graphics/items/energy_potion.png"
+            },
+            2: {
+                "id": 2,
+                "name": "Strength Potion",
+                "description": "Temporarily increases your strength.",
+                "type": "consumable",
+                "effect": "strength",
+                "amount": 10,
+                "duration": 60,
+                "graphic": "graphics/items/strength_potion.png"
+            },
         }
 
     def overwite_settings(self, WIDTH, HEIGHT):

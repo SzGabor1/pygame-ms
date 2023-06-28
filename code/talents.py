@@ -60,7 +60,7 @@ class Talents():
             top = self.display_surface.get_size()[1] * 0.1
 
             self.item_list.append(
-                Item(left, top, self.width, self.height, index, self.font))
+                Item(left, top, self.width, self.height, index, self.font, self.settings))
 
     def display(self):
         self.input()
@@ -77,10 +77,11 @@ class Talents():
 
 
 class Item:
-    def __init__(self, l, t, w, h, index, font):
+    def __init__(self, l, t, w, h, index, font, settings):
         self.rect = pygame.Rect(l, t, w, h)
         self.index = index
         self.font = font
+        self.settings = settings
 
     def display_names(self, surface, name, cost, selected):
         color = self.settings.BLACK_TEXT_COLOR if selected else self.settings.TEXT_COLOR
