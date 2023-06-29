@@ -47,16 +47,14 @@ class Level:
 
     def create_map(self):
         layouts = {
-            'boundary': import_csv_layout('map/MSmap._walls.csv'),
-            'grass': import_csv_layout('map/MSmap._grass.csv'),
-            'object': import_csv_layout('map/MSmap._objects.csv'),
-            'buildings': import_csv_layout('map/MSmap._buildings.csv'),
-            'entities': import_csv_layout('map/MSmap._entities.csv'),
+            'boundary': import_csv_layout('new_map/MSmap._walls.csv'),
+            'grass': import_csv_layout('new_map/MSmap._grass.csv'),
+            'object': import_csv_layout('new_map/MSmap._objects.csv'),
+            'entities': import_csv_layout('new_map/MSmap._entities.csv'),
         }
         graphics = {
             'grass': import_folder('graphics/grass'),
-            'object': import_folder_sorted('graphics/objects'),
-            'buildings': import_folder_sorted('graphics/buildings'),
+            'object': import_folder('graphics/objects'),
         }
 
         for style, layout in layouts.items():
@@ -76,17 +74,13 @@ class Level:
                                  self.obstacle_sprites, self.attackable_sprites], 'grass', self.settings, random_grass_image)
                         if style == 'object':
                             # create object tile
+                            print(col)
+                            print(str(x) + " " + str(y))
                             surf = graphics['object'][int(col)]
 
                             Tile((x, y+64), [self.visible_sprites,
                                  self.obstacle_sprites], 'object', self.settings, surf)
 
-                        if style == 'buildings':
-                            # create building tile
-                            surf = graphics['buildings'][int(col)]
-
-                            Tile((x, y), [self.visible_sprites,
-                                 self.obstacle_sprites], 'building', self.settings, surf)
                         if style == 'entities':
                             if col == '394':
                                 self.player = Player(
@@ -193,7 +187,7 @@ class YSortCameraGroup(pygame.sprite.Group):
         self.offset = pygame.math.Vector2()
 
         self.floor_surf = pygame.image.load(
-            'map/background.png').convert()
+            'new_map/MSmap_background.png').convert()
         self.floor_rect = self.floor_surf.get_rect(topleft=(0, 0))
 
     def custom_draw(self, player):
