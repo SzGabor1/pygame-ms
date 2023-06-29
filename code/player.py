@@ -79,6 +79,8 @@ class Player(Entity):
 
     def init_inventory_items(self):
         self.inventory.add_item(0)
+        self.inventory.add_item(0)
+        self.inventory.add_item(1)
         self.inventory.add_item(1)
         self.inventory.add_item(2)
         self.inventory.add_item(0)

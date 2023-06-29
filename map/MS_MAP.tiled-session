@@ -1,0 +1,33 @@
+{
+    "activeFile": "",
+    "expandedProjectPaths": [
+    ],
+    "fileStates": {
+        "E:/PROGRAMOZAS/Python/pygame/MS/graphics/Floor64x64.tsx": {
+            "scaleInDock": 1
+        },
+        "E:/PROGRAMOZAS/Python/pygame/MS/graphics/FloorDetails64x64.tsx": {
+            "scaleInDock": 1
+        },
+        "E:/PROGRAMOZAS/Python/pygame/MS/graphics/TilesetElement64x64.tsx": {
+            "scaleInDock": 1
+        },
+        "E:/PROGRAMOZAS/Python/pygame/MS/graphics/TilesetHouse64x64.tsx": {
+            "scaleInDock": 1
+        },
+        "E:/PROGRAMOZAS/Python/pygame/MS/graphics/TilesetNature64x64.tsx": {
+            "scaleInDock": 1
+        }
+    },
+    "last.imagePath": "C:/Users/Gabor/Desktop/Tilesets",
+    "openFiles": [
+    ],
+    "project": "MS_MAP.tiled-project",
+    "recentFiles": [
+    ],
+    "tileset.lastUsedFormat": "tsx",
+    "tileset.tileSize": {
+        "height": 64,
+        "width": 64
+    }
+}

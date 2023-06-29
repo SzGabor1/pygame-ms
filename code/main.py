@@ -18,9 +18,10 @@ class Game:
         pygame.display.set_caption("Marooned Sailor")
         self.clock = pygame.time.Clock()
         self.menu = MainMenu(self)
-        self.level = Level(self.settings)
+        self.level = None
         self.settings_menu = None
         self.state = 'MENU'
+        self.mapGenerated = False
 
     def run(self):
         while True:
@@ -32,6 +33,10 @@ class Game:
                     self.settings_menu.update()
                     self.settings_menu.render()
             elif self.state == 'GAME':
+                if self.level is None:
+                    self.level = Level(self.settings)
+                    self.mapGenerated = True
+                    
                 for event in pygame.event.get():
                     if event.type == pygame.QUIT:
                         pygame.quit()
