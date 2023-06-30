@@ -17,15 +17,27 @@ class Settings:
         self.FPS = 120
         self.TILESIZE = 64
         self.HITBOX_OFFSET = {
-            'player': -26,
+            'player': -20,
             'object': -40,
             'building': -40,
             'grass': -10,
             'invisible': 0
         }
 
-        # sounds
+        self.loots = {
+            'gold_coin': {'chance': 0.8, 'graphics': 'graphics/items/gold_coin.png', 'amount': 1000},
+            'gold_coins': {'chance': 0.2, 'graphics': 'graphics/items/gold_coins.png', 'amount': 5000},
+            'xp_orb': {'chance': 0, 'graphics': 'graphics/items/xp_orb.png', 'amount': 0}
+        }
 
+        # enemy
+        self.monster_data = {
+            'squid': {'loots': {'xp_orb', 'gold_coin', 'gold_coins'}, 'health': 100, 'exp': 100, 'damage': 20, 'attack_type': 'slash', 'attack_sound': 'audio/attack/slash.wav', 'speed': 3, 'resistance': 3, 'attack_radius': 80, 'notice_radius': 360},
+            'raccoon': {'loots': {'xp_orb', 'gold_coin', 'gold_coins'}, 'health': 300, 'exp': 250, 'damage': 40, 'attack_type': 'claw',  'attack_sound': 'audio/attack/claw.wav', 'speed': 2, 'resistance': 3, 'attack_radius': 120, 'notice_radius': 400},
+            'spirit': {'loots': {'xp_orb', 'gold_coin', 'gold_coins'}, 'health': 100, 'exp': 150, 'damage': 8, 'attack_type': 'thunder', 'attack_sound': 'audio/attack/fireball.wav', 'speed': 4, 'resistance': 3, 'attack_radius': 60, 'notice_radius': 350}
+        }
+
+        # sounds
         self.potion_sound = pygame.mixer.Sound('audio/potion.wav')
         self.potion_sound.set_volume(0.1)
 
@@ -71,19 +83,12 @@ class Settings:
         self.BAR_COLOR_SELECTED = '#111111'
         self.TALENT_BG_COLOR_SELECTED = '#EEEEEE'
 
-        # enemy
-        self.monster_data = {
-            'squid': {'health': 100, 'exp': 100, 'damage': 20, 'attack_type': 'slash', 'attack_sound': 'audio/attack/slash.wav', 'speed': 3, 'resistance': 3, 'attack_radius': 80, 'notice_radius': 360},
-            'raccoon': {'health': 300, 'exp': 250, 'damage': 40, 'attack_type': 'claw',  'attack_sound': 'audio/attack/claw.wav', 'speed': 2, 'resistance': 3, 'attack_radius': 120, 'notice_radius': 400},
-            'spirit': {'health': 100, 'exp': 110, 'damage': 8, 'attack_type': 'thunder', 'attack_sound': 'audio/attack/fireball.wav', 'speed': 4, 'resistance': 3, 'attack_radius': 60, 'notice_radius': 350}
-        }
-
         self.npc_data = {
-            '256': {'name': 'Villager256', 'quest_ids': [0]},
-            '-2147483254': {'name': 'Villager-2147483254', 'quest_ids': [1]},
-            '257': {'name': 'Villager257', 'quest_ids': [2]},
-            '258': {'name': 'Villager258', 'quest_ids': []},
-            '259': {'name': 'Villager259', 'quest_ids': []}
+            '59': {'name': 'Laci 59', 'quest_ids': [1]},
+            '79': {'name': 'Roli 79', 'quest_ids': [2]},
+            '99': {'name': 'Kevin 99', 'quest_ids': []},
+            '119': {'name': 'Kritof 119', 'quest_ids': []},
+            '139': {'name': 'Mate 139 ', 'quest_ids': [0]}
         }
 
         self.quest_data = {

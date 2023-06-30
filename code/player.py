@@ -42,10 +42,10 @@ class Player(Entity):
                           'energy': 160, 'attack': 110, 'speed': 20}
         self.upgrade_cost = {'health': 100,
                              'energy': 600, 'attack': 140, 'speed': 60}
-        self.health = 0
+        self.health = self.stats['health']
         self.energy = self.stats['energy']
         self.speed = self.stats['speed']
-        self.exp = 10000
+        self.exp = 0
         self.balance = 0
 
         # quest
@@ -117,7 +117,6 @@ class Player(Entity):
             self.strength_potion_time = pygame.time.get_ticks()
             self.used_strength_potion = True
             self.stats['attack'] += self.settings.items[2]['amount']
-            print("meghivodott ez a szar")
 
     def input(self):
         if not self.attacking:
@@ -255,6 +254,9 @@ class Player(Entity):
 
     def update_experience(self, amount):
         self.exp += amount
+
+    def update_balance(self, amount):
+        self.balance += amount
 
     def update(self):
         self.input()

@@ -13,6 +13,8 @@ from random import randint
 from talents import Talents
 from ingame_menu import IngameMenu
 from npc import NPC
+import random
+import math
 
 
 class Level:
@@ -45,6 +47,8 @@ class Level:
         # particles
         self.particle_player = AnimationPlayer()
 
+        self.loots = []
+
     def create_map(self):
         layouts = {
             'boundary': import_csv_layout('new_map/MSmap._walls.csv'),
@@ -54,7 +58,7 @@ class Level:
         }
         graphics = {
             'grass': import_folder('graphics/grass'),
-            'object': import_folder('graphics/objects'),
+            'object': import_folder_sorted('graphics/objects'),
         }
 
         for style, layout in layouts.items():
@@ -74,45 +78,107 @@ class Level:
                                  self.obstacle_sprites, self.attackable_sprites], 'grass', self.settings, random_grass_image)
                         if style == 'object':
                             # create object tile
-                            print(col)
-                            print(str(x) + " " + str(y))
                             surf = graphics['object'][int(col)]
 
                             Tile((x, y+64), [self.visible_sprites,
-                                 self.obstacle_sprites], 'object', self.settings, surf)
+                                             self.obstacle_sprites], 'object', self.settings, surf)
 
                         if style == 'entities':
-                            if col == '394':
+                            if col == '39':
                                 self.player = Player(
                                     (x, y), [self.visible_sprites], self.obstacle_sprites, self.create_attack, self.destroy_attack, self.settings)
 
-                            elif col == '256':
+                            elif col == '59':
                                 self.create_npc(
                                     col, x, y, self.settings.npc_data)
-                            elif col == '-2147483254':
+                            elif col == '79':
                                 self.create_npc(
                                     col, x, y, self.settings.npc_data)
-                            elif col == '257':
+                            elif col == '139':
                                 self.create_npc(
                                     col, x, y, self.settings.npc_data)
-                            elif col == '258':
+                            elif col == '99':
                                 self.create_npc(
                                     col, x, y, self.settings.npc_data)
-                            elif col == '259':
+                            elif col == '119':
                                 self.create_npc(
                                     col, x, y, self.settings.npc_data)
 
                             else:
-                                if col == '391':
+                                if col == '18':
                                     monster_name = 'spirit'
-                                elif col == '392':
+                                elif col == '38':
                                     monster_name = 'raccoon'
                                 else:
                                     monster_name = 'squid'
 
                                 Enemy(monster_name, (x, y), [
                                       self.visible_sprites, self.attackable_sprites], self.obstacle_sprites,
-                                      self.trigger_death_particles, self.update_quest_progress, self.settings)
+                                      self.trigger_death_particles, self.update_quest_progress, self.settings, self.drop_loot)
+
+    def drop_loot(self, x, y, monster_name):
+        x += random.randint(-100, 100)
+        y += random.randint(-100, 100)
+        loot_types = list(self.settings.monster_data[monster_name]['loots'])
+
+        # Exclude xp_orb from the loot_types list
+        loot_types.remove('xp_orb')
+
+        # Check if there should be a drop or not for other loot types
+        no_drop_chance = 0  # Adjust the chance as desired
+
+        # Determine whether to drop xp_orb or not
+        drop_xp_orb = random.random() >= no_drop_chance
+
+        if drop_xp_orb:
+            xp_orb_amount = self.settings.monster_data[monster_name]['exp']
+            self.loots.append(("xp_orb", xp_orb_amount, (x, y)))
+
+        # Drop other loot types
+        for loot_type in loot_types:
+            chance = self.settings.loots[loot_type]['chance']
+            if random.random() < chance:
+                loot_amount = self.settings.loots[loot_type]['amount']
+                loot_x = x
+                loot_y = y
+
+                # Generate separate position for items
+                if drop_xp_orb:
+                    loot_x += random.randint(-50, 50)
+                    loot_y += random.randint(-50, 50)
+
+                self.loots.append((loot_type, loot_amount, (loot_x, loot_y)))
+
+    def draw_and_collect_loot(self, player):
+        player_x, player_y = player.rect.center
+        collected_loot = []
+
+        for loot_type, loot_amount, loot_pos in self.loots:
+            loot_x, loot_y = loot_pos
+            loot_offset_x = loot_x - player_x + self.settings.WIDTH // 2
+            loot_offset_y = loot_y - player_y + self.settings.HEIGHT // 2
+
+            loot_graphics = self.settings.loots[loot_type]['graphics']
+            loot_image = pygame.image.load(loot_graphics)
+            loot_rect = loot_image.get_rect(
+                center=(loot_offset_x, loot_offset_y))
+
+            # Calculate vertical animation position
+            distance = math.sqrt((player_x - loot_x) **
+                                 2 + (player_y - loot_y) ** 2)
+
+            self.display_surface.blit(loot_image, loot_rect)
+
+            if distance < 50:
+                collected_loot.append((loot_type, loot_amount, loot_pos))
+
+        for loot in collected_loot:
+            loot_type, loot_amount, loot_pos = loot
+            if loot_type == 'gold_coin' or loot_type == 'gold_coins':
+                player.balance += loot_amount
+            elif loot_type == 'xp_orb':
+                player.update_experience(loot_amount)
+            self.loots.remove(loot)
 
     def create_npc(self, id, x, y, npc_data):
         self.npc = NPC(npc_data[id]['name'], (x, y), [
@@ -174,6 +240,8 @@ class Level:
             self.visible_sprites.enemy_update(self.player)
             self.visible_sprites.npc_update(self.player)
             self.player_attack_logic()
+            self.draw_and_collect_loot(self.player)
+            debug(self.player.balance)
 
 
 class YSortCameraGroup(pygame.sprite.Group):

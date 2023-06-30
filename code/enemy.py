@@ -2,10 +2,11 @@ import pygame
 from settings import *
 from entity import Entity
 from support import *
+import random
 
 
 class Enemy(Entity):
-    def __init__(self, monster_name, pos, groups, obstacle_sprites, trigger_death_particles, update_quest_progress, settings):
+    def __init__(self, monster_name, pos, groups, obstacle_sprites, trigger_death_particles, update_quest_progress, settings, drop_loot):
         # general setup
         super().__init__(groups)
         self.sprite_type = 'enemy'
@@ -39,7 +40,7 @@ class Enemy(Entity):
         self.attack_cooldown = 400
         self.trigger_death_particles = trigger_death_particles
         self.update_quest_progress = update_quest_progress
-
+        self.drop_loot = drop_loot
         # invincibility timer
         self.vulnerable = True
         self.hit_time = None
@@ -104,9 +105,11 @@ class Enemy(Entity):
 
     def check_death(self, player):
         if self.health <= 0:
+            # print position
+            self.drop_loot(self.rect.centerx,
+                           self.rect.centery, self.monster_name)
             self.kill()
             self.trigger_death_particles(self.rect.center, self.monster_name)
-            player.update_experience(self.exp)
             self.death_sound.play()
             if not player.current_quest == -1:
                 if(self.monster_name == self.settings.quest_data[player.current_quest]['enemy_type']):

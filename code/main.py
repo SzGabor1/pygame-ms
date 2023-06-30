@@ -36,7 +36,7 @@ class Game:
                 if self.level is None:
                     self.level = Level(self.settings)
                     self.mapGenerated = True
-                    
+
                 for event in pygame.event.get():
                     if event.type == pygame.QUIT:
                         pygame.quit()

@@ -1,6 +1,7 @@
 {
-    "activeFile": "",
+    "activeFile": "MS_TILESET.tsx",
     "expandedProjectPaths": [
+        "."
     ],
     "fileStates": {
         "E:/PROGRAMOZAS/Python/pygame/MS/graphics/Floor64x64.tsx": {
@@ -17,6 +18,18 @@
         },
         "E:/PROGRAMOZAS/Python/pygame/MS/graphics/TilesetNature64x64.tsx": {
             "scaleInDock": 1
+        },
+        "E:/PROGRAMOZAS/Python/pygame/MS/new_map/MSmap.tmx": {
+            "scale": 0.125,
+            "selectedLayer": 4,
+            "viewCenter": {
+                "x": 3240,
+                "y": 2592
+            }
+        },
+        "MS_TILESET.tsx": {
+            "scaleInDock": 0.33,
+            "scaleInEditor": 0.75
         }
     },
     "last.exportedFilePath": "E:/PROGRAMOZAS/Python/pygame/MS/new_map",
@@ -24,9 +37,13 @@
     "map.lastUsedExportFilter": "CSV files (*.csv)",
     "map.lastUsedFormat": "tmx",
     "openFiles": [
+        "E:/PROGRAMOZAS/Python/pygame/MS/new_map/MSmap.tmx",
+        "MS_TILESET.tsx"
     ],
     "project": "MS_MAP.tiled-project",
     "recentFiles": [
+        "E:/PROGRAMOZAS/Python/pygame/MS/new_map/MSmap.tmx",
+        "MS_TILESET.tsx"
     ],
     "tileset.lastUsedFormat": "tsx",
     "tileset.tileSize": {
