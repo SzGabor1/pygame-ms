@@ -53,5 +53,4 @@ class Inventory:
             else:
                 player.energy += item_data['amount']
         elif(effect == 'strength'):
-            print("HEEEEEE")
             player.use_strength_potion()
