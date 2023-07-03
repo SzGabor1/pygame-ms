@@ -3,8 +3,11 @@ from pygame.locals import *
 import sys
 from settings import Settings
 from support import import_settings
-from level import Level
-from mainmenu import MainMenu, SettingsMenu
+from mainmenu import MainMenu, SettingsMenu, NewGameMenu, LoadMenu
+from ingame_menu import IngameMenu
+from menuenums import menuenums
+from gamehandler import GameHandler
+from save import Save
 
 
 class Game:
@@ -18,53 +21,60 @@ class Game:
         pygame.display.set_caption("Marooned Sailor")
         self.clock = pygame.time.Clock()
         self.menu = MainMenu(self)
-        self.level = None
+        self.game_handler = None
         self.settings_menu = None
-        self.state = 'MENU'
+        self.load_menu = None
+        self.new_game_menu = None
+        self.state = menuenums.MENU
         self.mapGenerated = False
 
     def run(self):
         while True:
-            if self.state == 'MENU':
+            if self.state == menuenums.MENU:
                 self.menu.update()
                 self.menu.render()
-            elif self.state == 'SETTINGS':
+            elif self.state == menuenums.SETTINGS:
                 if self.settings_menu is not None:
                     self.settings_menu.update()
                     self.settings_menu.render()
-            elif self.state == 'GAME':
-                if self.level is None:
-                    self.level = Level(self.settings)
+            if self.state == menuenums.LOAD_GAME:
+                self.load_menu.update()
+                self.load_menu.render()
+            elif self.state == menuenums.NEW_GAME_MENU:
+                self.new_game_menu.update()
+                self.new_game_menu.render()
+            elif self.state == menuenums.GAME:
+                if self.game_handler is None:
+                    self.game_handler = GameHandler(self.settings)
                     self.mapGenerated = True
-
                 for event in pygame.event.get():
                     if event.type == pygame.QUIT:
                         pygame.quit()
                         sys.exit()
                     if event.type == pygame.KEYDOWN:
                         if event.key == pygame.K_n:
-                            self.level.toggle_menu('talents')
+                            self.game_handler.level.toggle_menu(
+                                menuenums.TALENTS)
                     if event.type == pygame.KEYDOWN:
                         if event.key == pygame.K_ESCAPE:
-                            self.level.toggle_menu('ingame_menu')
+                            self.game_handler.level.toggle_menu(
+                                menuenums.INGAME_MENU)
                 self.screen.fill(self.settings.WATER_COLOR)
-                self.level.run()
+                self.game_handler.run()
                 pygame.display.update()
                 self.clock.tick(self.settings.FPS)
 
-    def start_new_game(self):
-        # Logic for starting a new game
-        # Reset player data, initialize a new Level instance, etc.
-        pass
+    def open_new_game_menu(self):
+        self.new_game_menu = NewGameMenu(self)
+        self.state = menuenums.NEW_GAME_MENU
 
-    def load_game(self):
-        # Logic for loading a saved game
-        # Load player data, initialize a Level instance with the loaded data, etc.
-        pass
+    def open_load_menu(self):
+        self.load_menu = LoadMenu(self)
+        self.state = menuenums.LOAD_GAME
 
     def open_settings_menu(self):
         self.settings_menu = SettingsMenu(self)
-        self.state = 'SETTINGS'
+        self.state = menuenums.SETTINGS
 
 
 if __name__ == '__main__':

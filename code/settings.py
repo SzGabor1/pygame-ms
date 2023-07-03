@@ -24,6 +24,8 @@ class Settings:
             'invisible': 0
         }
 
+        self.player_list = ['player', 'player2']
+
         self.loots = {
             'gold_coin': {'chance': 0.8, 'graphics': 'graphics/items/gold_coin.png', 'amount': 1000},
             'gold_coins': {'chance': 0.2, 'graphics': 'graphics/items/gold_coins.png', 'amount': 5000},
@@ -87,7 +89,7 @@ class Settings:
             '59': {'name': 'Laci 59', 'quest_ids': [1]},
             '79': {'name': 'Roli 79', 'quest_ids': [2]},
             '99': {'name': 'Kevin 99', 'quest_ids': []},
-            '119': {'name': 'Kritof 119', 'quest_ids': []},
+            '119': {'name': 'Matyi 119', 'quest_ids': []},
             '139': {'name': 'Mate 139 ', 'quest_ids': [0]}
         }
 

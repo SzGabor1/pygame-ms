@@ -15,6 +15,7 @@ from ingame_menu import IngameMenu
 from npc import NPC
 import random
 import math
+from menuenums import menuenums
 
 
 class Level:
@@ -169,7 +170,7 @@ class Level:
 
             self.display_surface.blit(loot_image, loot_rect)
 
-            if distance < 50:
+            if distance < 90:
                 collected_loot.append((loot_type, loot_amount, loot_pos))
 
         for loot in collected_loot:
@@ -230,10 +231,10 @@ class Level:
         self.ui.display(self.player)
 
         if self.game_paused:
-            if self.menu_type == 'talents':
+            if self.menu_type == menuenums.TALENTS:
                 self.talents.display()
         if self.game_paused:
-            if self.menu_type == 'ingame_menu':
+            if self.menu_type == menuenums.INGAME_MENU:
                 self.ingame_menu.display()
         else:
             self.visible_sprites.update()
