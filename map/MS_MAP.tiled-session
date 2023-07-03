@@ -1,5 +1,5 @@
 {
-    "activeFile": "MS_TILESET.tsx",
+    "activeFile": "E:/PROGRAMOZAS/Python/pygame/MS/new_map/MSmap.tmx",
     "expandedProjectPaths": [
         "."
     ],
@@ -20,15 +20,15 @@
             "scaleInDock": 1
         },
         "E:/PROGRAMOZAS/Python/pygame/MS/new_map/MSmap.tmx": {
-            "scale": 0.125,
-            "selectedLayer": 4,
+            "scale": 1.5,
+            "selectedLayer": 0,
             "viewCenter": {
-                "x": 3240,
-                "y": 2592
+                "x": 730,
+                "y": 2548
             }
         },
         "MS_TILESET.tsx": {
-            "scaleInDock": 0.33,
+            "scaleInDock": 1,
             "scaleInEditor": 0.75
         }
     },
@@ -42,8 +42,8 @@
     ],
     "project": "MS_MAP.tiled-project",
     "recentFiles": [
-        "E:/PROGRAMOZAS/Python/pygame/MS/new_map/MSmap.tmx",
-        "MS_TILESET.tsx"
+        "MS_TILESET.tsx",
+        "E:/PROGRAMOZAS/Python/pygame/MS/new_map/MSmap.tmx"
     ],
     "tileset.lastUsedFormat": "tsx",
     "tileset.tileSize": {
