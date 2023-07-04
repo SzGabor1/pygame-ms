@@ -16,7 +16,7 @@ class NPC(Entity):
         self.settings = settings
         # graphics setup
         self.import_graphics(npc_name)
-        self.status = 'idle'
+        self.status = 'profile'
         self.image = self.animations[self.status][self.frame_index]
 
         self.image = pygame.transform.scale(self.image, (64, 64))
@@ -40,8 +40,8 @@ class NPC(Entity):
         self.display_surface = pygame.display.get_surface()
 
     def import_graphics(self, name):
-        self.animations = {'idle': []}
-        main_path = f'graphics/Characters/Villager1/'
+        self.animations = {'profile': []}
+        main_path = f'graphics/Characters/players/1/'
         for animation in self.animations.keys():
             self.animations[animation] = import_folder(main_path + animation)
 

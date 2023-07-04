@@ -4,9 +4,9 @@ from mainmenu import SettingsMenu
 
 
 class IngameMenu:
-    def __init__(self, settings, toggle_menu):
+    def __init__(self, settings, pause_game, save_game):
         self.display_surface = pygame.display.get_surface()
-        self.toggle_menu = toggle_menu
+        self.pause_game = pause_game
         self.clock = pygame.time.Clock()
         self.font = pygame.font.Font(
             settings.UI_FONT, settings.UI_FONT_SIZE)
@@ -28,6 +28,8 @@ class IngameMenu:
         self.settings = settings
         self.cooldown_time = 500  # milliseconds
         self.last_click_time = 0
+
+        self.save_game = save_game
 
     def display(self):
         self.update()
@@ -55,10 +57,11 @@ class IngameMenu:
                     selected_item = self.menu_items[index]
                     if selected_item == "Resume":
                         print("Resume button clicked!")
-                        self.toggle_menu("")
+                        self.pause_game()
                         # Resume the game
                     elif selected_item == "Save":
                         print("Save button clicked!")
+                        self.save_game()
                         # Save the game
                     elif selected_item == "Settings":
                         print("Settings button clicked!")

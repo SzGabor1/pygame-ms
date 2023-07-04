@@ -19,11 +19,12 @@ from menuenums import menuenums
 
 
 class Level:
-    def __init__(self, settings):
+    def __init__(self, settings, save):
 
         # get the display surface
         self.display_surface = pygame.display.get_surface()
 
+        self.save = save
         self.settings = settings
 
         # sprite group setup
@@ -41,7 +42,6 @@ class Level:
         # UI
         self.ui = UI(self.settings)
         self.talents = Talents(self.player, self.settings)
-        self.ingame_menu = IngameMenu(self.settings, self.toggle_menu)
         self.game_paused = False
         self.menu_type = None
 
@@ -86,8 +86,12 @@ class Level:
 
                         if style == 'entities':
                             if col == '39':
-                                self.player = Player(
-                                    (x, y), [self.visible_sprites], self.obstacle_sprites, self.create_attack, self.destroy_attack, self.settings)
+                                if self.save[0] == "existing":
+                                    self.player = Player(
+                                        self.save[1]['player_pos'], [self.visible_sprites], self.obstacle_sprites, self.create_attack, self.destroy_attack, self.settings, self.save[1], None)
+                                else:
+                                    self.player = Player(
+                                        (x, y), [self.visible_sprites], self.obstacle_sprites, self.create_attack, self.destroy_attack, self.settings, self.save[1], "newCharacter")
 
                             elif col == '59':
                                 self.create_npc(
@@ -233,9 +237,6 @@ class Level:
         if self.game_paused:
             if self.menu_type == menuenums.TALENTS:
                 self.talents.display()
-        if self.game_paused:
-            if self.menu_type == menuenums.INGAME_MENU:
-                self.ingame_menu.display()
         else:
             self.visible_sprites.update()
             self.visible_sprites.enemy_update(self.player)

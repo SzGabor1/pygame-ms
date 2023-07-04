@@ -4,7 +4,6 @@ import sys
 from settings import Settings
 from support import import_settings
 from mainmenu import MainMenu, SettingsMenu, NewGameMenu, LoadMenu
-from ingame_menu import IngameMenu
 from menuenums import menuenums
 from gamehandler import GameHandler
 from save import Save
@@ -27,6 +26,7 @@ class Game:
         self.new_game_menu = None
         self.state = menuenums.MENU
         self.mapGenerated = False
+        self.save_parameters = None
 
     def run(self):
         while True:
@@ -45,7 +45,8 @@ class Game:
                 self.new_game_menu.render()
             elif self.state == menuenums.GAME:
                 if self.game_handler is None:
-                    self.game_handler = GameHandler(self.settings)
+                    self.game_handler = GameHandler(
+                        self.settings, self.save_parameters)
                     self.mapGenerated = True
                 for event in pygame.event.get():
                     if event.type == pygame.QUIT:
@@ -57,8 +58,7 @@ class Game:
                                 menuenums.TALENTS)
                     if event.type == pygame.KEYDOWN:
                         if event.key == pygame.K_ESCAPE:
-                            self.game_handler.level.toggle_menu(
-                                menuenums.INGAME_MENU)
+                            self.game_handler.pause_game()
                 self.screen.fill(self.settings.WATER_COLOR)
                 self.game_handler.run()
                 pygame.display.update()

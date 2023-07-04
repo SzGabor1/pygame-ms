@@ -60,9 +60,9 @@ def import_settings(path):
 
 def import_character_profile_images(settings):
     character_images = []
-    for player in settings.player_list:
+    for character_id in settings.character_ids:
         image_path = os.path.join(
-            "graphics", "characters", player, "profile", "profile.png")
+            "graphics", "characters", "players", character_id, "profile", "profile.png")
         image = pygame.image.load(image_path).convert_alpha()
         character_images.append(image)
     return character_images

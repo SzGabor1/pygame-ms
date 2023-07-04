@@ -7,11 +7,15 @@ from inventory import Inventory
 
 
 class Player(Entity):
-    def __init__(self, pos, groups, obstacle_sprites, create_attack, destroy_attack, settings):
+    def __init__(self, pos, groups, obstacle_sprites, create_attack, destroy_attack, settings, save_datas, newGame):
         super().__init__(groups)
+        self.newGame = newGame
+        self.name = save_datas['player_name']
+        self.character_id = save_datas['character_id']
         self.settings = settings
+        self.save_datas = save_datas
         self.image = pygame.image.load(
-            'graphics/Characters/player/down_idle/down_idle.png')
+            'graphics/Characters/players/'+str(self.character_id)+'/down_idle/down_idle.png')
         self.rect = self.image.get_rect(topleft=pos)
         self.hitbox = self.rect.inflate(-6,
                                         self.settings.HITBOX_OFFSET['player'])
@@ -37,26 +41,24 @@ class Player(Entity):
         self.switch_duration_cooldown = 200
 
         # stats
-        self.name = 'Gabi'
-        self.character_id = 0
 
-        self.stats = {'health': 100, 'energy': 60, 'attack': 10, 'speed': 6}
+        self.stats = None
         self.max_stats = {'health': 300,
                           'energy': 160, 'attack': 110, 'speed': 20}
         self.upgrade_cost = {'health': 100,
                              'energy': 600, 'attack': 140, 'speed': 60}
-        self.health = self.stats['health']
-        self.energy = self.stats['energy']
-        self.speed = self.stats['speed']
-        self.exp = 0
-        self.balance = 0
+        self.health = None
+        self.energy = None
+        self.speed = None
+        self.exp = None
+        self.balance = None
 
         # quest
         # self.completed_quests = [2, 4, 6, 7]
-        self.completed_quests = []
-        self.current_quest = -1
-        self.current_amount = 0
-        self.max_amount = 1
+        self.completed_quests = None
+        self.current_quest = None
+        self.current_amount = None
+        self.max_amount = None
 
         # damage timer
         self.vulnerable = True
@@ -70,7 +72,9 @@ class Player(Entity):
         # inventory
         self.inventory = Inventory(settings)
         self.inventory_index = 0
-        self.init_inventory_items()
+
+        self.init_stats()
+
         self.can_use_item = True
         self.item_use_time = None
         self.item_usage_cooldown = 1000
@@ -80,13 +84,38 @@ class Player(Entity):
         self.used_strength_potion = False
         self.strength_potion_duration = self.settings.items[2]['duration']*1000
 
-    def init_inventory_items(self):
-        self.inventory.add_item(0)
-        self.inventory.add_item(0)
-        self.inventory.add_item(1)
-        self.inventory.add_item(1)
-        self.inventory.add_item(2)
-        self.inventory.add_item(0)
+    def init_stats(self):
+        if not self.newGame:
+            self.stats = {'health': self.save_datas['player_stats']['health'], 'energy': self.save_datas['player_stats']
+                          ['energy'], 'attack': self.save_datas['player_stats']['attack'], 'speed': self.save_datas['player_stats']['speed']}
+            self.health = self.save_datas['player_health']
+            self.energy = self.save_datas['player_energy']
+            self.speed = self.save_datas['player_speed']
+            self.exp = self.save_datas['player_exp']
+            self.balance = self.save_datas['player_balance']
+            self.completed_quests = self.save_datas['player_completed_quests']
+            self.current_quest = self.save_datas['player_current_quest']
+            self.current_amount = self.save_datas['player_current_amount']
+            self.max_amount = self.save_datas['player_max_amount']
+            self.init_inventory_items(None)
+        else:
+            self.stats = {'health': 100, 'energy': 60,
+                          'attack': 10, 'speed': 6}
+            self.health = self.stats['health']
+            self.energy = self.stats['energy']
+            self.speed = self.stats['speed']
+            self.exp = 0
+            self.balance = 0
+            self.completed_quests = []
+            self.current_quest = -1
+            self.current_amount = 0
+            self.max_amount = 1
+            self.init_inventory_items("yes")
+
+    def init_inventory_items(self, newCharacter):
+        if not newCharacter:
+            for item_id in self.save_datas['player_inventory_item_ids']:
+                self.inventory.add_item(item_id)
 
     def get_status(self):
         # idle
@@ -107,7 +136,9 @@ class Player(Entity):
                     self.status = self.status.replace('_attack', '')
 
     def import_player_assets(self):
-        character_path = 'graphics/characters/player/'
+        character_path = 'graphics/characters/players/' + \
+            str(self.character_id)+'/'
+
         self.animations = {'up': [], 'down': [], 'left': [], 'right': [], 'right_idle': [], 'left_idle': [],
                            'up_idle': [], 'down_idle': [], 'right_attack': [], 'left_attack': [], 'up_attack': [], 'down_attack': []}
 

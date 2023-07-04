@@ -3,7 +3,7 @@ import sys
 from settings import *
 from menuenums import menuenums
 from support import import_character_profile_images
-from save import create_save, get_save_files
+from save import get_save_files
 
 
 class MainMenu:
@@ -202,7 +202,6 @@ class SettingsMenu:
 
 class NewGameMenu:
     def __init__(self, game):
-        self.create_save = create_save
         self.game = game
         self.menu_bg = pygame.transform.scale(pygame.image.load(
             "graphics/Backgrounds/menubg.jpg"), (self.game.settings.WIDTH, self.game.settings.HEIGHT))
@@ -350,8 +349,9 @@ class NewGameMenu:
                     # Check if the save button is clicked
                     if self.save_button.collidepoint(mouse_pos):
                         print("Save button clicked!")
-                        self.create_save(self.character_name,
-                                         self.current_character_index)
+                        self.game.save_parameters = ("new",
+                                                     self.character_name, self.current_character_index)
+                        self.game.state = menuenums.GAME
 
                     # Check if the back button is clicked
                     elif self.back_button.collidepoint(mouse_pos):
@@ -422,7 +422,7 @@ class LoadMenu:
             center=self.back_button.center)
 
         self.saves_folder = "saves/"
-        self.save_files = get_save_files(self.saves_folder, "names")
+        self.save_files = get_save_files(self.saves_folder)
 
         self.save_buttons = []  # Új sor: inicializálja a save_buttons listát
 
@@ -432,7 +432,7 @@ class LoadMenu:
         self.slider_button_rect = pygame.Rect(
             menu_x + 360, menu_y + 100, 40, 20)
         self.slider_dragging = False
-        self.slider_value = 0.75
+        self.slider_value = 0
         self.visible_save_files = []
         self.update_visible_save_files()
 
@@ -449,6 +449,13 @@ class LoadMenu:
                         self.game.state = menuenums.MENU
                     elif self.slider_button_rect.collidepoint(event.pos):
                         self.slider_dragging = True
+                    else:
+                        # Ellenőrizd, hogy a kattintás a save gombok valamelyikénél történt-e
+                        for i, button_rect in enumerate(self.save_buttons):
+                            if button_rect.collidepoint(event.pos):
+                                self.game.save_parameters = ("existing",
+                                                             self.visible_save_files[i])
+                                self.game.state = menuenums.GAME
             elif event.type == pygame.MOUSEBUTTONUP:
                 if event.button == 1:
                     self.slider_dragging = False
@@ -466,11 +473,9 @@ class LoadMenu:
 
     def update_visible_save_files(self):
         num_files = len(self.save_files)
-        # Korlátozd az elemek számát legfeljebb 5-re
         num_visible_files = min(4, num_files)
-        # Korrigáld a kezdőindexet
         start_index = int(self.slider_value *
-                          (num_files - num_visible_files + 1))
+                          (num_files - num_visible_files))
         self.visible_save_files = self.save_files[start_index: start_index + num_visible_files]
 
     def render(self):

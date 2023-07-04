@@ -24,7 +24,7 @@ class Settings:
             'invisible': 0
         }
 
-        self.player_list = ['player', 'player2']
+        self.character_ids = ['0', '1']
 
         self.loots = {
             'gold_coin': {'chance': 0.8, 'graphics': 'graphics/items/gold_coin.png', 'amount': 1000},
