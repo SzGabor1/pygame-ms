@@ -119,6 +119,53 @@ class UI:
             pygame.draw.rect(self.display_surface,
                              self.settings.MENU_BORDER_COLOR, item_rect, 3)
 
+    def show_completed_quest(self, player):
+        if player.is_quest_completed:
+            objective = self.settings.quest_data[player.current_quest]['objective']
+            rewardXP = self.settings.quest_data[player.current_quest]['rewardXP']
+            rewardMoney = self.settings.quest_data[player.current_quest]['rewardMoney']
+            quest_completed_msg = "Quest Completed!"
+
+            # Render the text surfaces
+            objective_surf = self.font.render(
+                objective, False, self.settings.WHITE_TEXT_COLOR)
+            rewardXP_surf = self.font.render(
+                str(rewardXP) + " xp", False, self.settings.WHITE_TEXT_COLOR)
+            rewardMoney_surf = self.font.render(
+                str(rewardMoney) + " gold", False, self.settings.WHITE_TEXT_COLOR)
+            quest_completed_surf = self.font.render(
+                quest_completed_msg, False, self.settings.WHITE_TEXT_COLOR)
+
+            # Calculate the rectangle dimensions and positions
+            text_width = max(objective_surf.get_width(), rewardXP_surf.get_width(
+            ), rewardMoney_surf.get_width(), quest_completed_surf.get_width())
+            text_height = objective_surf.get_height() + rewardXP_surf.get_height() + \
+                rewardMoney_surf.get_height() + quest_completed_surf.get_height() + 40
+            text_rect = pygame.Rect(
+                (self.settings.WIDTH - text_width) // 2, 10, text_width, text_height)
+
+            # Draw the background rectangle
+            pygame.draw.rect(self.display_surface,
+                             self.settings.UI_BG_COLOR, text_rect)
+            pygame.draw.rect(self.display_surface,
+                             self.settings.UI_BORDER_COLOR, text_rect, 3)
+
+            # Position and blit the text surfaces
+            quest_completed_rect = quest_completed_surf.get_rect(
+                center=(self.settings.WIDTH // 2, text_rect.y + 20))
+            objective_rect = objective_surf.get_rect(
+                center=(self.settings.WIDTH // 2, quest_completed_rect.bottom + 30))
+            rewardXP_rect = rewardXP_surf.get_rect(
+                center=(self.settings.WIDTH // 2, objective_rect.bottom + 10))
+            rewardMoney_rect = rewardMoney_surf.get_rect(
+                center=(self.settings.WIDTH // 2, rewardXP_rect.bottom + 10))
+
+            self.display_surface.blit(
+                quest_completed_surf, quest_completed_rect)
+            self.display_surface.blit(objective_surf, objective_rect)
+            self.display_surface.blit(rewardXP_surf, rewardXP_rect)
+            self.display_surface.blit(rewardMoney_surf, rewardMoney_rect)
+
     def display(self, player):
         self.show_bar(
             player.health, player.stats['health'], self.health_bar_rect, self.settings.HEALTH_COLOR)
@@ -128,9 +175,10 @@ class UI:
         self.show_weapon(10, self.settings.HEIGHT - 10 -
                          self.settings.ITEM_BOX_SIZE, player.weapon_index)
 
-        if player.current_quest != -1:
+        if player.current_quest != -1 and not player.is_quest_completed:
             self.show_objective(self.settings.quest_data[player.current_quest]['objective'] +
                                 " " +
                                 str(self.settings.quest_data[player.current_quest]['max_amount']
                                     ) + "/" + str(player.current_amount))
         self.show_inventory(player)
+        self.show_completed_quest(player)

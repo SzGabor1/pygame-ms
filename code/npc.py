@@ -74,10 +74,12 @@ class NPC(Entity):
 
     def complete_quest(self, player):
         if player.current_amount >= player.max_amount:
+            player.is_quest_completed = True
+            player.quest_completed_time = pygame.time.get_ticks()
             player.completed_quests.append(player.current_quest)
             player.exp += self.settings.quest_data[player.current_quest]['rewardXP']
             player.balance += self.settings.quest_data[player.current_quest]['rewardMoney']
-            player.current_quest = -1
+
             player.quest_accepted = False
             self.accept_quest_bool = False
             player.current_amount = 0

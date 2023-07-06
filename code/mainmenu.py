@@ -4,6 +4,7 @@ from settings import *
 from menuenums import menuenums
 from support import import_character_profile_images
 from save import get_save_files
+from screeninfo import get_monitors
 
 
 class MainMenu:
@@ -106,7 +107,6 @@ class MainMenu:
 
 class SettingsMenu:
     def __init__(self, game):
-
         self.game = game
         self.init_settings_menu()
 
@@ -127,7 +127,7 @@ class SettingsMenu:
 
         # Define the rectangle for the menu background
         menu_width = 400
-        menu_height = 400
+        menu_height = 500
         menu_x = (self.game.settings.WIDTH - menu_width) // 2
         # Adjust the value here
         menu_y = (self.game.settings.HEIGHT - menu_height) // 2
@@ -136,7 +136,7 @@ class SettingsMenu:
             menu_x, menu_y - 25, menu_width, menu_height)
 
         self.save_button = pygame.Rect(
-            menu_x + 100, menu_y + 300, 200, 50)
+            menu_x + 100, menu_y + 400, 200, 50)
         self.save_label = self.font.render(
             "Save Settings", True, self.game.settings.BLACK_TEXT_COLOR)
         self.save_rect = self.save_label.get_rect(
@@ -150,6 +150,32 @@ class SettingsMenu:
             self.resolution_labels.append(label)
             self.resolution_rects.append(rect)
 
+        self.fullscreen = self.game.settings.FULLSCREEN
+        # Create the fullscreen label
+        self.fullscreen_label = self.font.render(
+            "Fullscreen:", True, self.game.settings.BLACK_TEXT_COLOR)
+        self.fullscreen_rect = self.fullscreen_label.get_rect(
+            center=(self.game.settings.WIDTH // 2, menu_y + 300))
+
+        # Create the "yes" and "no" text labels
+        self.fullscreen_option_labels = [
+            self.font.render("Yes", True, self.game.settings.BLACK_TEXT_COLOR),
+            self.font.render("No", True, self.game.settings.BLACK_TEXT_COLOR)
+        ]
+
+        # Position the "yes" and "no" text labels in line with the fullscreen label
+        fullscreen_label_width = self.fullscreen_label.get_width()
+        fullscreen_option_spacing = 50
+        fullscreen_option_x = self.fullscreen_rect.right + fullscreen_option_spacing
+        fullscreen_option_y = self.fullscreen_rect.centery - \
+            self.fullscreen_option_labels[0].get_height() // 2
+        self.fullscreen_option_rects = [
+            self.fullscreen_option_labels[0].get_rect(
+                center=(self.game.settings.WIDTH // 2-70, menu_y + 340)),
+            self.fullscreen_option_labels[1].get_rect(
+                center=(self.game.settings.WIDTH // 2+70, menu_y + 340))
+        ]
+
     def update(self):
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
@@ -157,24 +183,52 @@ class SettingsMenu:
                 sys.exit()
             elif event.type == pygame.MOUSEBUTTONDOWN:
                 if event.button == 1:
+                    # Check for resolution selection
                     for i, rect in enumerate(self.resolution_rects):
                         if rect.collidepoint(event.pos):
                             self.selected_resolution = self.game.settings.RESOLUTIONS[i]
                             break
 
+                    # Check for fullscreen label selection
+                    for i, rect in enumerate(self.fullscreen_option_rects):
+                        if rect.collidepoint(event.pos):
+                            self.fullscreen = i == 0  # 0 represents "Yes", 1 represents "No"
+                            break
+
                     if self.save_button.collidepoint(event.pos):
                         print("Save Settings button clicked!")
+                        print(self.fullscreen)
                         if hasattr(self, 'selected_resolution'):
                             if self.selected_resolution is not None:
                                 print("Selected resolution:",
                                       self.selected_resolution)
+                                print(self.fullscreen)
                                 width, height = self.selected_resolution
-                                self.game.settings.overwite_settings(
-                                    width, height)
-                        self.game.menu.init_main_menu()
-                        self.init_settings_menu()
-                        self.game.screen = pygame.display.set_mode(
-                            (width, height), flags=pygame.RESIZABLE, vsync=1)
+                                self.game.settings.overwrite_settings(
+                                    width, height, False)
+                                self.game.menu.init_main_menu()
+                                self.init_settings_menu()
+                                self.game.screen = pygame.display.set_mode(
+                                    (width, height), flags=pygame.RESIZABLE, vsync=1)
+
+                        if self.fullscreen is True:
+                            print(self.fullscreen)
+                            print("fut")
+                            # Get the primary monitor
+                            monitor = get_monitors()[1]
+
+                            # Retrieve the width and height of the monitor
+                            width = monitor.width
+                            height = monitor.height
+
+                            print("Monitor size: {}x{}".format(width, height))
+                            self.game.settings.overwrite_settings(width, height,
+                                                                  fullscreen=self.fullscreen)
+                            self.game.menu.init_main_menu()
+                            self.init_settings_menu()
+                            self.game.screen = pygame.display.set_mode(
+                                (self.game.settings.WIDTH, self.game.settings.HEIGHT), flags=pygame.FULLSCREEN, vsync=1)
+
                         self.game.state = menuenums.MENU
                         # Call the game's save_settings method or perform any other necessary actions
 
@@ -191,8 +245,35 @@ class SettingsMenu:
             self.game.settings.MENU_BORDER_COLOR), self.menu_rect, 5)
 
         self.screen.blit(self.title_label, self.title_rect)
+
         for i, label in enumerate(self.resolution_labels):
-            self.screen.blit(label, self.resolution_rects[i])
+            rect = self.resolution_rects[i]
+            if self.game.settings.RESOLUTIONS[i] == getattr(self, 'selected_resolution', None):
+                text_color = self.game.settings.MENU_BUTTON_BG_COLOR
+            else:
+                text_color = self.game.settings.MENU_BG_COLOR
+
+            # Highlight the selected resolution
+            pygame.draw.rect(self.screen, text_color, rect)
+            self.screen.blit(label, rect)
+
+        # Draw the fullscreen label
+        self.screen.blit(self.fullscreen_label, self.fullscreen_rect)
+
+        # Draw the "yes" and "no" text labels
+        for i, label in enumerate(self.fullscreen_option_labels):
+            rect = self.fullscreen_option_rects[i]
+            if self.fullscreen and i == 0:
+                text_color = self.game.settings.MENU_BUTTON_BG_COLOR
+            elif not self.fullscreen and i == 1:
+                text_color = self.game.settings.MENU_BUTTON_BG_COLOR
+            else:
+                text_color = self.game.settings.MENU_BG_COLOR
+
+            # Highlight the selected fullscreen option
+            pygame.draw.rect(self.screen, text_color, rect)
+            self.screen.blit(label, rect)
+
         pygame.draw.rect(
             self.screen, self.game.settings.MENU_BUTTON_BG_COLOR, self.save_button)
         self.screen.blit(self.save_label, self.save_rect)

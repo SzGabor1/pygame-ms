@@ -59,6 +59,9 @@ class Player(Entity):
         self.current_quest = None
         self.current_amount = None
         self.max_amount = None
+        self.is_quest_completed = False
+        self.quest_completed_time = None
+        self.quest_popup_duration = 5000
 
         # damage timer
         self.vulnerable = True
@@ -251,6 +254,11 @@ class Player(Entity):
         if not self.vulnerable:
             if current_time - self.hurt_time >= self.invulnerable_duration:
                 self.vulnerable = True
+
+        if self.is_quest_completed:
+            if current_time - self.quest_completed_time >= self.quest_popup_duration:
+                self.is_quest_completed = False
+                self.current_quest = -1
 
     def animate(self):
         animation = self.animations[self.status]

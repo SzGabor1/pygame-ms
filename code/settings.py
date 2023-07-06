@@ -6,6 +6,7 @@ class Settings:
     def __init__(self, data):
         self.WIDTH = data['settings']['WIDTH']
         self.HEIGHT = data['settings']['HEIGHT']
+        self.FULLSCREEN = data['settings']['FULLSCREEN']
 
         self.RESOLUTIONS = [
             (800, 600),
@@ -201,13 +202,15 @@ class Settings:
             },
         }
 
-    def overwite_settings(self, WIDTH, HEIGHT):
+    def overwrite_settings(self, WIDTH, HEIGHT, fullscreen):
         self.WIDTH = WIDTH
         self.HEIGHT = HEIGHT
+        self.fullscreen = fullscreen
         dictionary = {
             "settings": {
                 "WIDTH": self.WIDTH,
-                "HEIGHT": self.HEIGHT
+                "HEIGHT": self.HEIGHT,
+                "FULLSCREEN": self.fullscreen
             }
         }
         json_object = json.dumps(dictionary, indent=4)
