@@ -15,8 +15,7 @@ class Game:
         self.settings = Settings(
             import_settings('data/settings/settings.json'))
         pygame.init()
-        self.screen = pygame.display.set_mode(
-            (self.settings.WIDTH, self.settings.HEIGHT), flags=pygame.RESIZABLE | pygame.SCALED, vsync=1)
+        self.init_screen()
         pygame.display.set_caption("Marooned Sailor")
         self.clock = pygame.time.Clock()
         self.menu = MainMenu(self)
@@ -27,6 +26,14 @@ class Game:
         self.state = menuenums.MENU
         self.mapGenerated = False
         self.save_parameters = None
+
+    def init_screen(self):
+        if self.settings.FULLSCREEN:
+            self.screen = pygame.display.set_mode(
+                (self.settings.WIDTH, self.settings.HEIGHT), flags=pygame.FULLSCREEN | pygame.SCALED, vsync=1)
+        else:
+            self.screen = pygame.display.set_mode(
+                (self.settings.WIDTH, self.settings.HEIGHT), flags=pygame.RESIZABLE | pygame.SCALED, vsync=1)
 
     def run(self):
         while True:

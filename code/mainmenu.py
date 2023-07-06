@@ -206,6 +206,7 @@ class SettingsMenu:
                                 width, height = self.selected_resolution
                                 self.game.settings.overwrite_settings(
                                     width, height, False)
+                                self.game.init_screen()
                                 self.game.menu.init_main_menu()
                                 self.init_settings_menu()
                                 self.game.screen = pygame.display.set_mode(
@@ -224,6 +225,7 @@ class SettingsMenu:
                             print("Monitor size: {}x{}".format(width, height))
                             self.game.settings.overwrite_settings(width, height,
                                                                   fullscreen=self.fullscreen)
+                            self.game.init_screen()
                             self.game.menu.init_main_menu()
                             self.init_settings_menu()
                             self.game.screen = pygame.display.set_mode(

@@ -50,6 +50,21 @@ class Level:
 
         self.loots = []
 
+        self.animation_index = 0
+        self.animation_time = None
+        self.can_get_new_animation_frame = True
+        self.animation_cooldown_time = 500
+        self.animation_layout = import_csv_layout(
+            'new_map/MSmap._animated.csv')
+        self.tree1_animation = import_folder_sorted('graphics/animated/tree1')
+        self.tree2_animation = import_folder_sorted('graphics/animated/tree2')
+        self.tree3_animation = import_folder_sorted('graphics/animated/tree3')
+        self.tree4_animation = import_folder_sorted('graphics/animated/tree4')
+        self.tree5_animation = import_folder_sorted('graphics/animated/tree5')
+        self.tree6_animation = import_folder_sorted('graphics/animated/tree6')
+        self.tree7_animation = import_folder_sorted('graphics/animated/tree7')
+        self.animation_tiles = []
+
     def create_map(self):
         layouts = {
             'boundary': import_csv_layout('new_map/MSmap._walls.csv'),
@@ -120,6 +135,72 @@ class Level:
                                 Enemy(monster_name, (x, y), [
                                       self.visible_sprites, self.attackable_sprites], self.obstacle_sprites,
                                       self.trigger_death_particles, self.update_quest_progress, self.settings, self.drop_loot)
+
+    def animate_map(self):
+        if self.can_get_new_animation_frame:
+            if self.animation_index >= len(self.tree1_animation):
+                self.animation_index = 0
+
+            for tile in self.animation_tiles:
+                tile.kill()  # Távolítsa el az összes régi animált csempét
+
+            for row_index, row in enumerate(self.animation_layout):
+                for col_index, col in enumerate(row):
+                    if col != '-1':
+                        x = col_index * self.settings.TILESIZE
+                        y = row_index * self.settings.TILESIZE
+
+                        if col == '125':
+                            animation_frame = self.tree1_animation[int(
+                                self.animation_index)]
+
+                            self.animation_tiles.append(Tile((x, y + 64), [self.visible_sprites,
+                                                                           self.obstacle_sprites], 'object', self.settings, animation_frame))
+                        if col == '127':
+                            animation_frame = self.tree2_animation[int(
+                                self.animation_index)]
+
+                            self.animation_tiles.append(Tile((x, y + 64), [self.visible_sprites,
+                                                                           self.obstacle_sprites], 'object', self.settings, animation_frame))
+                        if col == '165':
+                            animation_frame = self.tree3_animation[int(
+                                self.animation_index)]
+
+                            self.animation_tiles.append(Tile((x, y + 64), [self.visible_sprites,
+                                                                           self.obstacle_sprites], 'object', self.settings, animation_frame))
+                        if col == '167':
+                            animation_frame = self.tree4_animation[int(
+                                self.animation_index)]
+
+                            self.animation_tiles.append(Tile((x, y + 64), [self.visible_sprites,
+                                                                           self.obstacle_sprites], 'object', self.settings, animation_frame))
+                        if col == '205':
+                            animation_frame = self.tree5_animation[int(
+                                self.animation_index)]
+
+                            self.animation_tiles.append(Tile((x, y + 64), [self.visible_sprites,
+                                                                           self.obstacle_sprites], 'object', self.settings, animation_frame))
+                        if col == '207':
+                            animation_frame = self.tree6_animation[int(
+                                self.animation_index)]
+
+                            self.animation_tiles.append(Tile((x, y + 64), [self.visible_sprites,
+                                                                           self.obstacle_sprites], 'object', self.settings, animation_frame))
+                        if col == '169':
+                            animation_frame = self.tree7_animation[int(
+                                self.animation_index)]
+
+                            self.animation_tiles.append(Tile((x, y + 64), [self.visible_sprites,
+                                                                           self.obstacle_sprites], 'object', self.settings, animation_frame))
+            self.animation_time = pygame.time.get_ticks()
+            self.can_get_new_animation_frame = False
+
+    def animation_cooldown(self):
+        current_time = pygame.time.get_ticks()
+        if not self.can_get_new_animation_frame:
+            if current_time - self.animation_time >= self.animation_cooldown_time:
+                self.animation_index += 1
+                self.can_get_new_animation_frame = True
 
     def drop_loot(self, x, y, monster_name):
         x += random.randint(-100, 100)
@@ -239,6 +320,8 @@ class Level:
                 self.talents.display()
         else:
             self.visible_sprites.update()
+            self.animate_map()
+            self.animation_cooldown()
             self.visible_sprites.enemy_update(self.player)
             self.visible_sprites.npc_update(self.player)
             self.player_attack_logic()
