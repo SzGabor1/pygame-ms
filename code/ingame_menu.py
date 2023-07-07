@@ -30,12 +30,29 @@ class IngameMenu:
         self.last_click_time = 0
 
         self.save_game = save_game
+        self.is_game_saved = True
+        self.save_time = None
 
     def display(self):
         self.update()
         self.render()
 
+    def show_game_saved(self):
+        if not self.is_game_saved:
+            text_surf = self.font.render(
+                "Game saved!", True, self.settings.BLACK_TEXT_COLOR)
+            text_rect = text_surf.get_rect(center=(
+                self.settings.WIDTH // 2, self.settings.HEIGHT // 2-250))
+            self.display_surface.blit(text_surf, text_rect)
+
+    def cooldown(self):
+        current_time = pygame.time.get_ticks()
+        if not self.is_game_saved:
+            if current_time - self.save_time >= self.cooldown_time:
+                self.is_game_saved = True
+
     def update(self):
+        self.cooldown()
         current_time = pygame.time.get_ticks()
 
         for event in pygame.event.get():
@@ -62,6 +79,8 @@ class IngameMenu:
                     elif selected_item == "Save":
                         print("Save button clicked!")
                         self.save_game()
+                        self.save_time = pygame.time.get_ticks()
+                        self.is_game_saved = False
                         # Save the game
                     elif selected_item == "Settings":
                         print("Settings button clicked!")
@@ -90,6 +109,8 @@ class IngameMenu:
                 self.menu_rect.centerx, self.menu_rect.top + self.menu_item_height * index + self.menu_item_height // 2))
             self.menu_items_rects.append(item_rect)
             self.display_surface.blit(item_surf, item_rect)
+
+        self.show_game_saved()
 
         pygame.display.flip()
         self.clock.tick(self.settings.FPS)

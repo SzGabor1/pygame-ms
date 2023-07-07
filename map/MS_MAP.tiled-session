@@ -20,16 +20,16 @@
             "scaleInDock": 1
         },
         "E:/PROGRAMOZAS/Python/pygame/MS/new_map/MSmap.tmx": {
-            "scale": 1.5,
-            "selectedLayer": 0,
+            "scale": 1,
+            "selectedLayer": 6,
             "viewCenter": {
-                "x": 730,
-                "y": 2548
+                "x": 4738,
+                "y": 5867
             }
         },
         "MS_TILESET.tsx": {
-            "scaleInDock": 1,
-            "scaleInEditor": 0.75
+            "scaleInDock": 0.5,
+            "scaleInEditor": 0.33
         }
     },
     "last.exportedFilePath": "E:/PROGRAMOZAS/Python/pygame/MS/new_map",

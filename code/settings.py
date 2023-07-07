@@ -22,7 +22,8 @@ class Settings:
             'object': -40,
             'building': -40,
             'grass': -10,
-            'invisible': 0
+            'invisible': 0,
+            'water': +20
         }
 
         self.character_ids = ['0', '1']
@@ -87,11 +88,11 @@ class Settings:
         self.TALENT_BG_COLOR_SELECTED = '#EEEEEE'
 
         self.npc_data = {
-            '59': {'name': 'Laci 59', 'quest_ids': [1]},
-            '79': {'name': 'Roli 79', 'quest_ids': [2]},
-            '99': {'name': 'Kevin 99', 'quest_ids': []},
-            '119': {'name': 'Matyi 119', 'quest_ids': []},
-            '139': {'name': 'Mate 139 ', 'quest_ids': [0]}
+            '59': {'name': 'Laci 59', 'skin': 'Villager1', 'quest_ids': [1]},
+            '79': {'name': 'Roli 79', 'skin': 'Villager1', 'quest_ids': [2]},
+            '99': {'name': 'Kevin 99', 'skin': 'Villager1', 'quest_ids': []},
+            '119': {'name': 'Matyi 119', 'skin': 'Villager1', 'quest_ids': []},
+            '139': {'name': 'Mate 139 ', 'skin': 'Villager1', 'quest_ids': [0]}
         }
 
         self.quest_data = {
@@ -206,6 +207,7 @@ class Settings:
         self.WIDTH = WIDTH
         self.HEIGHT = HEIGHT
         self.fullscreen = fullscreen
+        print(self.fullscreen)
         dictionary = {
             "settings": {
                 "WIDTH": self.WIDTH,

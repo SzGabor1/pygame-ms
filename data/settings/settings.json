@@ -1,7 +1,7 @@
 {
     "settings": {
         "WIDTH": 1680,
-        "HEIGHT": 950,
-        "FULLSCREEN": false
+        "HEIGHT": 1050,
+        "FULLSCREEN": true
     }
 }

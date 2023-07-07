@@ -9,14 +9,15 @@ from dialogue import Dialogue
 
 
 class NPC(Entity):
-    def __init__(self, npc_name, pos, groups, obstacle_sprites, quests, settings):
+    def __init__(self, npc_name, pos, groups, obstacle_sprites, quests, settings, id):
         # general setup
         super().__init__(groups)
         self.sprite_type = 'npc'
         self.settings = settings
+        self.id = id
         # graphics setup
-        self.import_graphics(npc_name)
-        self.status = 'profile'
+        self.import_graphics(self.settings.npc_data[id]['skin'])
+        self.status = 'idle'
         self.image = self.animations[self.status][self.frame_index]
 
         self.image = pygame.transform.scale(self.image, (64, 64))
@@ -39,9 +40,9 @@ class NPC(Entity):
 
         self.display_surface = pygame.display.get_surface()
 
-    def import_graphics(self, name):
-        self.animations = {'profile': []}
-        main_path = f'graphics/Characters/players/1/'
+    def import_graphics(self, skin):
+        self.animations = {'idle': []}
+        main_path = f'graphics/Characters/'+skin+'/'
         for animation in self.animations.keys():
             self.animations[animation] = import_folder(main_path + animation)
 
