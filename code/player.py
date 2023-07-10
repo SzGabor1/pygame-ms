@@ -39,6 +39,7 @@ class Player(Entity):
         self.can_switch_item = True
         self.item_switch_time = None
         self.switch_duration_cooldown = 200
+        self.attack_direction = None
 
         # stats
 
@@ -190,6 +191,7 @@ class Player(Entity):
                 self.attacking = True
                 self.attack_time = pygame.time.get_ticks()
                 self.create_attack()
+                self.attack_direction = self.direction
                 self.weapon_attack_sound.play()
 
         if keys[pygame.K_e] and self.can_switch_item:
@@ -235,10 +237,16 @@ class Player(Entity):
 
             self.inventory.use_item(self.inventory_index, self)
 
+    def check_direction(self):
+        # if the player changes direction, the attack will be destroyed
+        if self.direction != self.attack_direction and self.direction != pygame.math.Vector2(0, 0):
+            self.destroy_attack()
+
     def cooldowns(self):
         current_time = pygame.time.get_ticks()
 
         if self.attacking:
+            self.check_direction()
             if current_time - self.attack_time >= self.attack_cooldown + self.settings.weapon_data[self.weapon]['cooldown']:
                 self.attacking = False
                 self.destroy_attack()
