@@ -163,79 +163,77 @@ class Player(Entity):
             self.stats['attack'] += self.settings.items[2]['amount']
 
     def input(self):
+        keys = pygame.key.get_pressed()
+
+        # movement input
+        if keys[pygame.K_a]:
+            self.direction.x = -1
+            self.status = 'left'
+        elif keys[pygame.K_d]:
+            self.direction.x = 1
+            self.status = 'right'
+        else:
+            self.direction.x = 0
+
+        if keys[pygame.K_w]:
+            self.direction.y = -1
+            self.status = 'up'
+        elif keys[pygame.K_s]:
+            self.direction.y = 1
+            self.status = 'down'
+        else:
+            self.direction.y = 0
+
         if not self.attacking:
-            keys = pygame.key.get_pressed()
-
-            # movement input
-            if keys[pygame.K_a]:
-                self.direction.x = -1
-                self.status = 'left'
-            elif keys[pygame.K_d]:
-                self.direction.x = 1
-                self.status = 'right'
-            else:
-                self.direction.x = 0
-
-            if keys[pygame.K_w]:
-                self.direction.y = -1
-                self.status = 'up'
-            elif keys[pygame.K_s]:
-                self.direction.y = 1
-                self.status = 'down'
-            else:
-                self.direction.y = 0
-
             # attack input
             if keys[pygame.K_SPACE]:
-                self.direction.x = 0
-                self.direction.y = 0
                 self.attacking = True
                 self.attack_time = pygame.time.get_ticks()
                 self.create_attack()
                 self.weapon_attack_sound.play()
 
-            if keys[pygame.K_e] and self.can_switch_item:
-                self.can_switch_item = False
-                self.item_switch_time = pygame.time.get_ticks()
+        if keys[pygame.K_e] and self.can_switch_item:
+            self.can_switch_item = False
+            self.item_switch_time = pygame.time.get_ticks()
 
-                if self.weapon_index < len(list(self.settings.weapon_data.keys()))-1:
-                    self.weapon_index += 1
-                else:
-                    self.weapon_index = 0
-                self.weapon = list(self.settings.weapon_data.keys())[
-                    self.weapon_index]
-            # sprint
-            if keys[pygame.K_LSHIFT]:
-                self.speed = self.stats['speed']*5.5
+            if self.weapon_index < len(list(self.settings.weapon_data.keys()))-1:
+                self.weapon_index += 1
             else:
-                self.speed = self.stats['speed']
+                self.weapon_index = 0
+            self.weapon = list(self.settings.weapon_data.keys())[
+                self.weapon_index]
+        # sprint
+        if keys[pygame.K_LSHIFT]:
+            self.speed = self.stats['speed']*5.5
+        else:
+            self.speed = self.stats['speed']
 
-            # inventory
-            if keys[pygame.K_1] and self.can_switch_item:
-                self.can_switch_item = False
-                self.item_switch_time = pygame.time.get_ticks()
-                self.inventory_index = 0
-            elif keys[pygame.K_2] and self.can_switch_item:
-                self.can_switch_item = False
-                self.item_switch_time = pygame.time.get_ticks()
-                self.inventory_index = 1
-            elif keys[pygame.K_3] and self.can_switch_item:
-                self.can_switch_item = False
-                self.item_switch_time = pygame.time.get_ticks()
-                self.inventory_index = 2
-            elif keys[pygame.K_4] and self.can_switch_item:
-                self.can_switch_item = False
-                self.item_switch_time = pygame.time.get_ticks()
-                self.inventory_index = 3
-            elif keys[pygame.K_5] and self.can_switch_item:
-                self.can_switch_item = False
-                self.item_switch_time = pygame.time.get_ticks()
-                self.inventory_index = 4
-            elif keys[pygame.K_q] and self.can_use_item:
-                self.can_use_item = False
-                self.item_use_time = pygame.time.get_ticks()
+        # inventory
+        if keys[pygame.K_1] and self.can_switch_item:
+            self.can_switch_item = False
+            self.item_switch_time = pygame.time.get_ticks()
+            self.inventory_index = 0
+        elif keys[pygame.K_2] and self.can_switch_item:
+            self.can_switch_item = False
+            self.item_switch_time = pygame.time.get_ticks()
+            self.inventory_index = 1
+        elif keys[pygame.K_3] and self.can_switch_item:
+            self.can_switch_item = False
+            self.item_switch_time = pygame.time.get_ticks()
+            self.inventory_index = 2
+        elif keys[pygame.K_4] and self.can_switch_item:
+            self.can_switch_item = False
+            self.item_switch_time = pygame.time.get_ticks()
+            self.inventory_index = 3
+        elif keys[pygame.K_5] and self.can_switch_item:
+            self.can_switch_item = False
+            self.item_switch_time = pygame.time.get_ticks()
+            self.inventory_index = 4
+        elif keys[pygame.K_q] and self.can_use_item:
+            self.can_use_item = False
+            self.item_use_time = pygame.time.get_ticks()
 
-                self.inventory.use_item(self.inventory_index, self)
+            self.inventory.use_item(self.inventory_index, self)
 
     def cooldowns(self):
         current_time = pygame.time.get_ticks()

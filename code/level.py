@@ -458,9 +458,10 @@ class Level:
             self.animation_cooldown()
             self.visible_sprites.enemy_update(self.player)
             self.visible_sprites.npc_update(self.player)
+            if self.current_attack:
+                self.current_attack.update()
             self.player_attack_logic()
             self.draw_and_collect_loot(self.player)
-            debug(self.animation_index)
 
 
 class YSortCameraGroup(pygame.sprite.Group):
