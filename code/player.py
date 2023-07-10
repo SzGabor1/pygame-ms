@@ -27,7 +27,7 @@ class Player(Entity):
         # movement
         self.speed = 2
         self.attacking = False
-        self.attack_cooldown = 400
+        self.attack_cooldown = 300
         self.attack_time = None
         self.obstacle_sprites = obstacle_sprites
 
@@ -247,7 +247,7 @@ class Player(Entity):
 
         if self.attacking:
             self.check_direction()
-            if current_time - self.attack_time >= self.attack_cooldown + self.settings.weapon_data[self.weapon]['cooldown']:
+            if current_time - self.attack_time >= self.attack_cooldown:
                 self.attacking = False
                 self.destroy_attack()
 
