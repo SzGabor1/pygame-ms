@@ -16,6 +16,7 @@ from npc import NPC
 import random
 import math
 from menuenums import menuenums
+from animation import Animation
 
 
 class Level:
@@ -50,55 +51,7 @@ class Level:
 
         self.loots = []
 
-        self.animation_index = 0
-        self.animation_time = None
-        self.can_get_new_animation_frame = True
-        self.animation_cooldown_time = 500
-        self.animation_layout = import_csv_layout(
-            'new_map/MSmap._animated.csv')
-        self.tree1_animation = import_folder_sorted('graphics/animated/tree1')
-        self.tree2_animation = import_folder_sorted('graphics/animated/tree2')
-        self.tree3_animation = import_folder_sorted('graphics/animated/tree3')
-        self.tree4_animation = import_folder_sorted('graphics/animated/tree4')
-        self.tree5_animation = import_folder_sorted('graphics/animated/tree5')
-        self.tree6_animation = import_folder_sorted('graphics/animated/tree6')
-        self.tree7_animation = import_folder_sorted('graphics/animated/tree7')
-        self.sand_water_animation = import_folder_sorted(
-            'graphics/animated/sandwater')
-        self.sand_water_left_corner_animation = import_folder_sorted(
-            'graphics/animated/sandwater_left_corner')
-        self.sand_water_rigth_corner_animation = import_folder_sorted(
-            'graphics/animated/sandwater_rigth_corner')
-        self.sand_water_left_small_corner = import_folder_sorted(
-            'graphics/animated/sandwater_left_small_corner')
-        self.sand_water_left_small_static_corner = import_folder_sorted(
-            'graphics/animated/sandwater_left_small_static_corner')
-        self.sand_water_right_small_corner = import_folder_sorted(
-            'graphics/animated/sandwater_right_small_corner')
-        self.sand_water_right_small_static_corner = import_folder_sorted(
-            'graphics/animated/sandwater_right_small_static_corner')
-
-        self.grass_water_animation = import_folder_sorted(
-            'graphics/animated/grasswater')
-        self.grass_water_left_corner_animation = import_folder_sorted(
-            'graphics/animated/grasswater_left_corner')
-        self.grass_water_rigth_corner_animation = import_folder_sorted(
-            'graphics/animated/grasswater_right_corner')
-        self.grass_water_left_small_corner = import_folder_sorted(
-            'graphics/animated/grasswater_left_small_corner')
-        self.grass_water_left_small_statictop_corner = import_folder_sorted(
-            'graphics/animated/grasswater_left_small_statictop_corner')
-        self.grass_water_left_staticbottom_corner = import_folder_sorted(
-            'graphics/animated/grasswater_left_staticbottom_corner')
-
-        self.grass_water_right_small_corner = import_folder_sorted(
-            'graphics/animated/grasswater_right_small_corner')
-        self.grass_water_right_small_statictop_corner = import_folder_sorted(
-            'graphics/animated/grasswater_right_small_statictop_corner')
-        self.grass_water_right_staticbottom_corner = import_folder_sorted(
-            'graphics/animated/grasswater_right_staticbottom_corner')
-
-        self.animation_tiles = []
+        self.animation = Animation(self.settings)
 
     def create_map(self):
         layouts = {
@@ -170,171 +123,6 @@ class Level:
                                 Enemy(monster_name, (x, y), [
                                       self.visible_sprites, self.attackable_sprites], self.obstacle_sprites,
                                       self.trigger_death_particles, self.update_quest_progress, self.settings, self.drop_loot)
-
-    def animate_map(self):
-        if self.can_get_new_animation_frame:
-            if self.animation_index >= len(self.tree1_animation):
-                self.animation_index = 0
-
-            for tile in self.animation_tiles:
-                tile.kill()  # Távolítsa el az összes régi animált csempét
-
-            for row_index, row in enumerate(self.animation_layout):
-                for col_index, col in enumerate(row):
-                    if col != '-1':
-                        x = col_index * self.settings.TILESIZE
-                        y = row_index * self.settings.TILESIZE
-
-                        if col == '125':
-                            animation_frame = self.tree1_animation[int(
-                                self.animation_index)]
-
-                            self.animation_tiles.append(Tile((x, y + 64), [self.visible_sprites,
-                                                                           self.obstacle_sprites], 'object', self.settings, animation_frame))
-                        if col == '127':
-                            animation_frame = self.tree2_animation[int(
-                                self.animation_index)]
-
-                            self.animation_tiles.append(Tile((x, y + 64), [self.visible_sprites,
-                                                                           self.obstacle_sprites], 'object', self.settings, animation_frame))
-                        if col == '165':
-                            animation_frame = self.tree3_animation[int(
-                                self.animation_index)]
-
-                            self.animation_tiles.append(Tile((x, y + 64), [self.visible_sprites,
-                                                                           self.obstacle_sprites], 'object', self.settings, animation_frame))
-                        if col == '167':
-                            animation_frame = self.tree4_animation[int(
-                                self.animation_index)]
-
-                            self.animation_tiles.append(Tile((x, y + 64), [self.visible_sprites,
-                                                                           self.obstacle_sprites], 'object', self.settings, animation_frame))
-                        if col == '205':
-                            animation_frame = self.tree5_animation[int(
-                                self.animation_index)]
-
-                            self.animation_tiles.append(Tile((x, y + 64), [self.visible_sprites,
-                                                                           self.obstacle_sprites], 'object', self.settings, animation_frame))
-                        if col == '207':
-                            animation_frame = self.tree6_animation[int(
-                                self.animation_index)]
-
-                            self.animation_tiles.append(Tile((x, y + 64), [self.visible_sprites,
-                                                                           self.obstacle_sprites], 'object', self.settings, animation_frame))
-                        if col == '169':
-                            animation_frame = self.tree7_animation[int(
-                                self.animation_index)]
-
-                            self.animation_tiles.append(Tile((x, y + 64), [self.visible_sprites,
-                                                                           self.obstacle_sprites], 'object', self.settings, animation_frame))
-
-                        if col == '5':
-                            animation_frame = self.sand_water_left_corner_animation[int(
-                                self.animation_index)]
-
-                            self.animation_tiles.append(Tile((x, y), [self.visible_sprites,
-                                                                      self.obstacle_sprites], 'water', self.settings, animation_frame))
-                        if col == '6':
-                            animation_frame = self.sand_water_animation[int(
-                                self.animation_index)]
-
-                            self.animation_tiles.append(Tile((x, y), [self.visible_sprites,
-                                                                      self.obstacle_sprites], 'water', self.settings, animation_frame))
-                        if col == '7':
-                            animation_frame = self.sand_water_rigth_corner_animation[int(
-                                self.animation_index)]
-
-                            self.animation_tiles.append(Tile((x, y), [self.visible_sprites,
-                                                                      self.obstacle_sprites], 'water', self.settings, animation_frame))
-
-                        if col == '28':
-                            animation_frame = self.sand_water_left_small_corner[int(
-                                self.animation_index)]
-
-                            self.animation_tiles.append(Tile((x, y), [self.visible_sprites,
-                                                                      self.obstacle_sprites], 'water', self.settings, animation_frame))
-                        if col == '88':
-                            animation_frame = self.sand_water_left_small_static_corner[int(
-                                self.animation_index)]
-
-                            self.animation_tiles.append(Tile((x, y), [self.visible_sprites,
-                                                                      self.obstacle_sprites], 'water', self.settings, animation_frame))
-                        if col == '29':
-                            animation_frame = self.sand_water_right_small_corner[int(
-                                self.animation_index)]
-
-                            self.animation_tiles.append(Tile((x, y), [self.visible_sprites,
-                                                                      self.obstacle_sprites], 'water', self.settings, animation_frame))
-                        if col == '89':
-                            animation_frame = self.sand_water_right_small_static_corner[int(
-                                self.animation_index)]
-
-                            self.animation_tiles.append(Tile((x, y), [self.visible_sprites,
-                                                                      self.obstacle_sprites], 'water', self.settings, animation_frame))
-                        if col == '0':
-                            animation_frame = self.grass_water_left_corner_animation[int(
-                                self.animation_index)]
-
-                            self.animation_tiles.append(Tile((x, y), [self.visible_sprites,
-                                                                      self.obstacle_sprites], 'water', self.settings, animation_frame))
-                        if col == '1':
-                            animation_frame = self.grass_water_animation[int(
-                                self.animation_index)]
-
-                            self.animation_tiles.append(Tile((x, y), [self.visible_sprites,
-                                                                      self.obstacle_sprites], 'water', self.settings, animation_frame))
-                        if col == '2':
-                            animation_frame = self.grass_water_rigth_corner_animation[int(
-                                self.animation_index)]
-
-                            self.animation_tiles.append(Tile((x, y), [self.visible_sprites,
-                                                                      self.obstacle_sprites], 'water', self.settings, animation_frame))
-                        if col == '23':
-                            animation_frame = self.grass_water_left_small_corner[int(
-                                self.animation_index)]
-
-                            self.animation_tiles.append(Tile((x, y), [self.visible_sprites,
-                                                                      self.obstacle_sprites], 'water', self.settings, animation_frame))
-                        if col == '107':
-                            animation_frame = self.grass_water_left_small_statictop_corner[int(
-                                self.animation_index)]
-
-                            self.animation_tiles.append(Tile((x, y), [self.visible_sprites,
-                                                                      self.obstacle_sprites], 'water', self.settings, animation_frame))
-                        if col == '108':
-                            animation_frame = self.grass_water_left_staticbottom_corner[int(
-                                self.animation_index)]
-
-                            self.animation_tiles.append(Tile((x, y), [self.visible_sprites,
-                                                                      self.obstacle_sprites], 'water', self.settings, animation_frame))
-                        if col == '24':
-                            animation_frame = self.grass_water_right_small_corner[int(
-                                self.animation_index)]
-
-                            self.animation_tiles.append(Tile((x, y), [self.visible_sprites,
-                                                                      self.obstacle_sprites], 'water', self.settings, animation_frame))
-                        if col == '109':
-                            animation_frame = self.grass_water_right_small_statictop_corner[int(
-                                self.animation_index)]
-
-                            self.animation_tiles.append(Tile((x, y), [self.visible_sprites,
-                                                                      self.obstacle_sprites], 'water', self.settings, animation_frame))
-                        if col == '131':
-                            animation_frame = self.grass_water_right_staticbottom_corner[int(
-                                self.animation_index)]
-
-                            self.animation_tiles.append(Tile((x, y), [self.visible_sprites,
-                                                                      self.obstacle_sprites], 'water', self.settings, animation_frame))
-
-            self.animation_time = pygame.time.get_ticks()
-            self.can_get_new_animation_frame = False
-
-    def animation_cooldown(self):
-        current_time = pygame.time.get_ticks()
-        if not self.can_get_new_animation_frame:
-            if current_time - self.animation_time >= self.animation_cooldown_time:
-                self.animation_index += 1
-                self.can_get_new_animation_frame = True
 
     def drop_loot(self, x, y, monster_name):
         x += random.randint(-100, 100)
@@ -453,9 +241,8 @@ class Level:
             if self.menu_type == menuenums.TALENTS:
                 self.talents.display()
         else:
-            self.animate_map()
+            self.animation.update(self.visible_sprites, self.obstacle_sprites)
             self.visible_sprites.update()
-            self.animation_cooldown()
             self.visible_sprites.enemy_update(self.player)
             self.visible_sprites.npc_update(self.player)
             if self.current_attack:

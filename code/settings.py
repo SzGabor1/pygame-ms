@@ -26,6 +26,32 @@ class Settings:
             'water': +20
         }
 
+        self.map_animation_data = {
+            '125': 'graphics/animated/tree1',
+            '127': 'graphics/animated/tree2',
+            '165': 'graphics/animated/tree3',
+            '167': 'graphics/animated/tree4',
+            '205': 'graphics/animated/tree5',
+            '207': 'graphics/animated/tree6',
+            '169': 'graphics/animated/tree7',
+            '5': 'graphics/animated/sandwater_left_corner',
+            '6': 'graphics/animated/sandwater',
+            '7': 'graphics/animated/sandwater_rigth_corner',
+            '28': 'graphics/animated/sandwater_left_small_corner',
+            '88': 'graphics/animated/sandwater_right_small_static_corner',
+            '29': 'graphics/animated/sandwater_right_small_corner',
+            '89': 'graphics/animated/sandwater_right_small_static_corner',
+            '0': 'graphics/animated/grasswater_left_corner',
+            '1': 'graphics/animated/grasswater',
+            '2': 'graphics/animated/grasswater_right_corner',
+            '23': 'graphics/animated/grasswater_left_small_corner',
+            '107': 'graphics/animated/grasswater_left_small_statictop_corner',
+            '108': 'graphics/animated/grasswater_left_staticbottom_corner',
+            '24': 'graphics/animated/grasswater_right_small_corner',
+            '109': 'graphics/animated/grasswater_right_small_statictop_corner',
+            '131': 'graphics/animated/grasswater_right_staticbottom_corner'
+        }
+
         self.character_ids = ['0', '1']
 
         self.loots = {
