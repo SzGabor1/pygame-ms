@@ -116,7 +116,7 @@ class Settings:
         self.npc_data = {
             '59': {'name': 'Laci 59', 'skin': 'Villager1', 'quest_ids': [1], 'type': 'quest_giver', 'item_list': None},
             '79': {'name': 'Roli 79', 'skin': 'Villager1', 'quest_ids': [2], 'type': 'quest_giver', 'item_list': None},
-            '119': {'name': 'Matyi 119', 'skin': 'Villager1', 'type': 'merchant', 'item_list': [0, 1, 2]},
+            '119': {'name': 'Matyi 119', 'skin': 'Villager1', 'type': 'merchant', 'item_list': [0, 1, 2, 3, 4, 5]},
             '99': {'name': 'Kevin 99', 'skin': 'Villager1', 'quest_ids': [3], 'type': 'merchant', 'item_list': [1, 2]},
             '139': {'name': 'Mate 139 ', 'skin': 'Villager1', 'quest_ids': [0], 'type': 'quest_giver', 'item_list': None}
         }
@@ -221,6 +221,36 @@ class Settings:
             },
             2: {
                 "id": 2,
+                "name": "Strength Potion",
+                "description": "Temporarily increases your strength.",
+                "type": "consumable",
+                "effect": "strength",
+                "amount": 10,
+                "duration": 60,
+                "graphic": "graphics/items/strength_potion.png",
+                "cost": 2000
+            },            3: {
+                "id": 3,
+                "name": "Strength Potion",
+                "description": "Temporarily increases your strength.",
+                "type": "consumable",
+                "effect": "strength",
+                "amount": 10,
+                "duration": 60,
+                "graphic": "graphics/items/strength_potion.png",
+                "cost": 2000
+            },            4: {
+                "id": 4,
+                "name": "Strength Potion",
+                "description": "Temporarily increases your strength.",
+                "type": "consumable",
+                "effect": "strength",
+                "amount": 10,
+                "duration": 60,
+                "graphic": "graphics/items/strength_potion.png",
+                "cost": 2000
+            },            5: {
+                "id": 5,
                 "name": "Strength Potion",
                 "description": "Temporarily increases your strength.",
                 "type": "consumable",

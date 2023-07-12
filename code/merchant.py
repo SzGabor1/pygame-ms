@@ -21,7 +21,7 @@ class Merchant(NPC):
 
     def show_shop(self, player):
         if self.range_of_player and self.toggle_shop:
-            self.shop.display(player)
+            self.shop.display(player, pygame.event.get())
             self.shop.update()
 
     def update(self):
