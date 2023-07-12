@@ -114,11 +114,11 @@ class Settings:
         self.TALENT_BG_COLOR_SELECTED = '#EEEEEE'
 
         self.npc_data = {
-            '59': {'name': 'Laci 59', 'skin': 'Villager1', 'quest_ids': [1]},
-            '79': {'name': 'Roli 79', 'skin': 'Villager1', 'quest_ids': [2]},
-            '99': {'name': 'Kevin 99', 'skin': 'Villager1', 'quest_ids': []},
-            '119': {'name': 'Matyi 119', 'skin': 'Villager1', 'quest_ids': []},
-            '139': {'name': 'Mate 139 ', 'skin': 'Villager1', 'quest_ids': [0]}
+            '59': {'name': 'Laci 59', 'skin': 'Villager1', 'quest_ids': [1], 'type': 'quest_giver', 'item_list': None},
+            '79': {'name': 'Roli 79', 'skin': 'Villager1', 'quest_ids': [2], 'type': 'quest_giver', 'item_list': None},
+            '119': {'name': 'Matyi 119', 'skin': 'Villager1', 'type': 'merchant', 'item_list': [0, 1, 2]},
+            '99': {'name': 'Kevin 99', 'skin': 'Villager1', 'quest_ids': [3], 'type': 'merchant', 'item_list': [1, 2]},
+            '139': {'name': 'Mate 139 ', 'skin': 'Villager1', 'quest_ids': [0], 'type': 'quest_giver', 'item_list': None}
         }
 
         self.quest_data = {
@@ -205,7 +205,8 @@ class Settings:
                 "effect": "health",
                 "amount": 60,
                 "duration": 0,
-                "graphic": "graphics/items/health_potion.png"
+                "graphic": "graphics/items/health_potion.png",
+                "cost": 1000
             },
             1: {
                 "id": 1,
@@ -215,7 +216,8 @@ class Settings:
                 "effect": "energy",
                 "amount": 30,
                 "duration": 0,
-                "graphic": "graphics/items/energy_potion.png"
+                "graphic": "graphics/items/energy_potion.png",
+                "cost": 1600
             },
             2: {
                 "id": 2,
@@ -225,7 +227,8 @@ class Settings:
                 "effect": "strength",
                 "amount": 10,
                 "duration": 60,
-                "graphic": "graphics/items/strength_potion.png"
+                "graphic": "graphics/items/strength_potion.png",
+                "cost": 2000
             },
         }
 

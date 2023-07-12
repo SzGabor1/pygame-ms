@@ -102,13 +102,6 @@ class Player(Entity):
             self.current_amount = self.save_datas['player_current_amount']
             self.max_amount = self.save_datas['player_max_amount']
             self.init_inventory_items(None)
-            self.inventory.add_item(0)
-            self.inventory.add_item(0)
-            self.inventory.add_item(0)
-            self.inventory.add_item(1)
-            self.inventory.add_item(2)
-            self.inventory.add_item(0)
-            self.inventory.add_item(1)
         else:
             self.stats = {'health': 100, 'energy': 60,
                           'attack': 10, 'speed': 6}
@@ -319,4 +312,3 @@ class Player(Entity):
         self.get_status()
         self.animate()
         self.move(self.speed)
-        debug(self.stats['attack'])

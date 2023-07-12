@@ -75,6 +75,7 @@ class Dialogue:
     def display(self, name, text):
         self.selection_cooldown()
         self.input()
+        # self.handle_mouse_click()
 
         box_height = self.display_surface.get_size()[1] // 5
         box_y = self.display_surface.get_size()[1] // 1.5

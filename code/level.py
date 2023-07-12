@@ -17,6 +17,8 @@ import random
 import math
 from menuenums import menuenums
 from animation import Animation
+from questgiver import QuestGiver
+from merchant import Merchant
 
 
 class Level:
@@ -189,8 +191,12 @@ class Level:
             self.loots.remove(loot)
 
     def create_npc(self, id, x, y, npc_data):
-        self.npc = NPC(npc_data[id]['name'], (x, y), [
-            self.visible_sprites], self.obstacle_sprites, npc_data[id]['quest_ids'], self.settings, id)
+        if self.settings.npc_data[id]['type'] == 'quest_giver':
+            self.npc = QuestGiver(npc_data[id]['name'], (x, y), [
+                self.visible_sprites], self.obstacle_sprites, npc_data[id]['quest_ids'], self.settings, id,)
+        elif self.settings.npc_data[id]['type'] == 'merchant':
+            self.npc = Merchant(npc_data[id]['name'], (x, y), [
+                self.visible_sprites], self.obstacle_sprites, self.settings, id, npc_data[id]['item_list'])
 
     def create_attack(self):
         self.current_attack = Weapon(
