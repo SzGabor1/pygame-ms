@@ -88,6 +88,9 @@ class Player(Entity):
         self.used_strength_potion = False
         self.strength_potion_duration = self.settings.items[2]['duration']*1000
 
+        self.in_range_of_dungeon_portal = False
+        self.is_inside_dungeon = False
+
     def init_stats(self):
         if not self.newGame:
             self.stats = {'health': self.save_datas['player_stats']['health'], 'energy': self.save_datas['player_stats']

@@ -23,7 +23,8 @@ class Settings:
             'building': -40,
             'grass': -10,
             'invisible': 0,
-            'water': +20
+            'water': 20,
+            'dungeonportals': -64
         }
 
         self.map_animation_data = {
@@ -38,7 +39,7 @@ class Settings:
             '6': 'graphics/animated/sandwater',
             '7': 'graphics/animated/sandwater_rigth_corner',
             '28': 'graphics/animated/sandwater_left_small_corner',
-            '88': 'graphics/animated/sandwater_right_small_static_corner',
+            '88': 'graphics/animated/sandwater_left_small_static_corner',
             '29': 'graphics/animated/sandwater_right_small_corner',
             '89': 'graphics/animated/sandwater_right_small_static_corner',
             '0': 'graphics/animated/grasswater_left_corner',

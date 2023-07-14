@@ -36,9 +36,13 @@ class Level:
         self.attack_sprites = pygame.sprite.Group()
         self.attackable_sprites = pygame.sprite.Group()
 
+        self.dungeon_entrances = []
+        self.dungeon_exits = []
+        self.dungeon_spawns = []
+        self.dungeon_id = None
+
         # sprite setup
         self.create_map()
-
         # attack sprites
         self.current_attack = None
 
@@ -47,6 +51,10 @@ class Level:
         self.talents = Talents(self.player, self.settings)
         self.game_paused = False
         self.menu_type = None
+
+        self.key_press_time = None
+        self.key_press_cooldown = 500
+        self.is_key_pressed = False
 
         # particles
         self.particle_player = AnimationPlayer()
@@ -61,6 +69,7 @@ class Level:
             'grass': import_csv_layout('new_map/MSmap._grass.csv'),
             'object': import_csv_layout('new_map/MSmap._objects.csv'),
             'entities': import_csv_layout('new_map/MSmap._entities.csv'),
+            'dungeonportals': import_csv_layout('new_map/MSmap._dungeonentrance.csv'),
         }
         graphics = {
             'grass': import_folder('graphics/grass'),
@@ -82,6 +91,13 @@ class Level:
                                 graphics['grass'])
                             Tile((x, y), [self.visible_sprites,
                                  self.obstacle_sprites, self.attackable_sprites], 'grass', self.settings, random_grass_image)
+
+                        if style == 'dungeonportals':
+
+                            if col == '178':
+                                surf = graphics['object'][int(col)]
+                                self.dungeon_entrances.append(Tile((x, y+64), [self.visible_sprites,
+                                                                               self.obstacle_sprites], 'dungeonportals', self.settings, surf))
                         if style == 'object':
                             # create object tile
                             surf = graphics['object'][int(col)]
@@ -125,6 +141,112 @@ class Level:
                                 Enemy(monster_name, (x, y), [
                                       self.visible_sprites, self.attackable_sprites], self.obstacle_sprites,
                                       self.trigger_death_particles, self.update_quest_progress, self.settings, self.drop_loot)
+
+    def create_dungeon(self):
+        layouts = {
+            'boundary': import_csv_layout('dungeontest/dungeontest_walls.csv'),
+            'object': import_csv_layout('dungeontest/dungeontest_objects.csv'),
+            'entities': import_csv_layout('dungeontest/dungeontest_entities.csv'),
+            'dungeonportals': import_csv_layout('dungeontest/dungeontest_dungeonportals.csv'),
+        }
+        graphics = {
+            'object': import_folder_sorted('graphics/objects'),
+        }
+
+        # Create a sprite group for the dungeon
+        dungeon_sprites = pygame.sprite.Group()
+
+        for style, layout in layouts.items():
+            for row_index, row in enumerate(layout):
+                for col_index, col in enumerate(row):
+                    if col != '-1':
+                        x = (col_index * self.settings.TILESIZE)-5000
+                        y = (row_index * self.settings.TILESIZE)-5000
+                        if style == 'boundary':
+                            Tile((x, y), [self.obstacle_sprites],
+                                 'invisible', self.settings, pygame.Surface(
+                                (self.settings.TILESIZE, self.settings.TILESIZE)))
+                        if style == 'object':
+                            # create object tile
+                            surf = graphics['object'][int(col)]
+
+                            Tile((x, y+64), [self.visible_sprites,
+                                             self.obstacle_sprites], 'object', self.settings, surf)
+
+                        if style == 'dungeonportals':
+
+                            if col == '178':
+                                surf = graphics['object'][int(col)]
+                                self.dungeon_exits.append(Tile((x, y), [self.visible_sprites,
+                                                                        self.obstacle_sprites], 'dungeonportals', self.settings, surf))
+                            if col == '179':
+                                surf = graphics['object'][int(col)]
+                                self.dungeon_spawns.append(Tile((x, y), [self.visible_sprites,
+                                                                         self.obstacle_sprites], 'dungeonportals', self.settings, surf))
+
+                        if style == 'entities':
+                            if col == '18':
+                                monster_name = 'spirit'
+                            elif col == '38':
+                                monster_name = 'raccoon'
+                            else:
+                                monster_name = 'squid'
+
+                            enemy = Enemy(monster_name, (x, y), [
+                                self.visible_sprites, self.attackable_sprites], self.obstacle_sprites,
+                                self.trigger_death_particles, self.update_quest_progress, self.settings, self.drop_loot)
+                            # Add the enemy to the dungeon sprite group
+                            dungeon_sprites.add(enemy)
+
+        return dungeon_sprites  # Return the dungeon sprite group
+
+    def is_player_in_range_of_dungeon_portal(self):
+        if not self.player.is_inside_dungeon:
+            for dungeon in self.dungeon_entrances:
+                player_pos = self.player.rect.center
+                distance = pygame.math.Vector2(
+                    (dungeon.x, dungeon.y)) - player_pos
+                if distance.length() <= 100:
+                    self.player.in_range_of_dungeon_portal = True
+                    self.dungeon_id = self.dungeon_entrances.index(dungeon)
+                else:
+                    self.player.in_range_of_dungeon_portal = False
+        else:
+            for dungeon in self.dungeon_exits:
+                player_pos = self.player.rect.center
+                distance = pygame.math.Vector2(
+                    (dungeon.x, dungeon.y)) - player_pos
+                if distance.length() <= 100:
+                    self.player.in_range_of_dungeon_portal = True
+                else:
+                    self.player.in_range_of_dungeon_portal = False
+
+    def cooldowns(self):
+        current_time = pygame.time.get_ticks()
+
+        if self.is_key_pressed:
+            if current_time - self.key_press_time >= self.key_press_cooldown:
+                self.is_key_pressed = False
+
+    def teleport_to_dungeon(self):
+        keys = pygame.key.get_pressed()
+        if keys[pygame.K_e] and not self.is_key_pressed:
+            if self.player.in_range_of_dungeon_portal and not self.player.is_inside_dungeon:
+                self.dungeon = self.create_dungeon()
+                self.player.hitbox.center = self.dungeon_spawns[self.dungeon_id].rect.center
+                self.player.is_inside_dungeon = True
+
+                self.is_key_pressed = True
+                self.key_press_time = pygame.time.get_ticks()
+
+            elif self.player.in_range_of_dungeon_portal and self.player.is_inside_dungeon:
+                self.player.hitbox.center = self.dungeon_entrances[self.dungeon_id].rect.center
+                self.dungeon.empty()  # Empty the dungeon sprite group
+                self.dungeon = None  # Set the dungeon object to None
+                self.player.is_inside_dungeon = False
+
+                self.is_key_pressed = True
+                self.key_press_time = pygame.time.get_ticks()
 
     def drop_loot(self, x, y, monster_name):
         x += random.randint(-100, 100)
@@ -247,6 +369,7 @@ class Level:
             if self.menu_type == menuenums.TALENTS:
                 self.talents.display()
         else:
+            self.cooldowns()
             self.animation.update(self.visible_sprites, self.obstacle_sprites)
             self.visible_sprites.update()
             self.visible_sprites.enemy_update(self.player)
@@ -255,6 +378,9 @@ class Level:
                 self.current_attack.update()
             self.player_attack_logic()
             self.draw_and_collect_loot(self.player)
+            self.is_player_in_range_of_dungeon_portal()
+            self.teleport_to_dungeon()
+            debug(self.player.in_range_of_dungeon_portal)
 
 
 class YSortCameraGroup(pygame.sprite.Group):
@@ -271,6 +397,11 @@ class YSortCameraGroup(pygame.sprite.Group):
             'new_map/MSmap_background.png').convert()
         self.floor_rect = self.floor_surf.get_rect(topleft=(0, 0))
 
+        self.dungeon0_surf = pygame.image.load(
+            'dungeontest\dungeontest.png').convert()
+        self.dungeon0_rect = self.dungeon0_surf.get_rect(
+            topleft=(-5000, -5000))
+
     def custom_draw(self, player):
 
         # getting the offset
@@ -280,6 +411,9 @@ class YSortCameraGroup(pygame.sprite.Group):
         # drawing the floor
         floor_offset_pos = self.floor_rect.topleft - self.offset
         self.display_surface.blit(self.floor_surf, floor_offset_pos)
+
+        dungeon0_offset_pos = self.dungeon0_rect.topleft - self.offset
+        self.display_surface.blit(self.dungeon0_surf, dungeon0_offset_pos)
 
         # for sprite in self.sprites():
         for sprite in sorted(self.sprites(), key=lambda sprite: sprite.rect.y):
