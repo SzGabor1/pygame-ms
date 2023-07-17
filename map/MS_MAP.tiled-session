@@ -27,16 +27,16 @@
             "scale": 0.5,
             "selectedLayer": 7,
             "viewCenter": {
-                "x": 55,
-                "y": 2132
+                "x": 164,
+                "y": 3388
             }
         },
         "E:/PROGRAMOZAS/Python/pygame/MS/new_map/dungeontest.tmx": {
             "scale": 0.5,
             "selectedLayer": 2,
             "viewCenter": {
-                "x": 832,
-                "y": 588
+                "x": 959,
+                "y": 641
             }
         },
         "MS_TILESET.tsx": {
@@ -44,7 +44,7 @@
             "scaleInEditor": 0.33
         }
     },
-    "last.exportedFilePath": "E:/PROGRAMOZAS/Python/pygame/MS/new_map",
+    "last.exportedFilePath": "E:/PROGRAMOZAS/Python/pygame/MS/dungeontest",
     "last.imagePath": "C:/Users/Gabor/Desktop/Tilesets",
     "map.lastUsedExportFilter": "CSV files (*.csv)",
     "map.lastUsedFormat": "tmx",

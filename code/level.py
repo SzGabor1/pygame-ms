@@ -132,9 +132,9 @@ class Level:
 
                             else:
                                 if col == '18':
-                                    monster_name = 'spirit'
+                                    monster_name = 'skeleton'
                                 elif col == '38':
-                                    monster_name = 'raccoon'
+                                    monster_name = 'crab'
                                 else:
                                     monster_name = 'squid'
 
@@ -186,9 +186,9 @@ class Level:
 
                         if style == 'entities':
                             if col == '18':
-                                monster_name = 'spirit'
+                                monster_name = 'skeleton'
                             elif col == '38':
-                                monster_name = 'raccoon'
+                                monster_name = 'crab'
                             else:
                                 monster_name = 'squid'
 
@@ -380,7 +380,6 @@ class Level:
             self.draw_and_collect_loot(self.player)
             self.is_player_in_range_of_dungeon_portal()
             self.teleport_to_dungeon()
-            debug(self.player.in_range_of_dungeon_portal)
 
 
 class YSortCameraGroup(pygame.sprite.Group):

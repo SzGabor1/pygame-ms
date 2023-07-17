@@ -20,8 +20,8 @@ class AnimationPlayer:
 
             # monster deaths
             'squid': import_folder('graphics/particles/smoke_orange'),
-            'raccoon': import_folder('graphics/particles/raccoon'),
-            'spirit': import_folder('graphics/particles/nova'),
+            'crab': import_folder('graphics/particles/crab'),
+            'skeleton': import_folder('graphics/particles/nova'),
             'bamboo': import_folder('graphics/particles/bamboo'),
 
             # leafs
