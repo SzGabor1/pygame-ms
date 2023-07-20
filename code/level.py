@@ -63,6 +63,8 @@ class Level:
 
         self.animation = Animation(self.settings)
 
+        self.night = True
+
     def create_map(self):
         layouts = {
             'boundary': import_csv_layout('new_map/MSmap._walls.csv'),
@@ -135,12 +137,14 @@ class Level:
                                     monster_name = 'skeleton'
                                 elif col == '38':
                                     monster_name = 'crab'
+                                elif col == '58':
+                                    monster_name = 'wizzard'
                                 else:
                                     monster_name = 'squid'
 
                                 Enemy(monster_name, (x, y), [
                                       self.visible_sprites, self.attackable_sprites], self.obstacle_sprites,
-                                      self.trigger_death_particles, self.update_quest_progress, self.settings, self.drop_loot)
+                                      self.trigger_death_particles, self.update_quest_progress, self.settings, self.drop_loot, self.spawn_projectile)
 
     def create_dungeon(self):
         layouts = {
@@ -189,12 +193,14 @@ class Level:
                                 monster_name = 'skeleton'
                             elif col == '38':
                                 monster_name = 'crab'
+                            elif col == '58':
+                                monster_name = 'wizzard'
                             else:
                                 monster_name = 'squid'
 
                             enemy = Enemy(monster_name, (x, y), [
                                 self.visible_sprites, self.attackable_sprites], self.obstacle_sprites,
-                                self.trigger_death_particles, self.update_quest_progress, self.settings, self.drop_loot)
+                                self.trigger_death_particles, self.update_quest_progress, self.settings, self.drop_loot, self.spawn_projectile)
                             # Add the enemy to the dungeon sprite group
                             dungeon_sprites.add(enemy)
 
@@ -352,6 +358,10 @@ class Level:
         self.particle_player.create_particles(particle_type, pos, [
                                               self.visible_sprites])
 
+    def spawn_projectile(self, begin_pos, pos, projectile_tpye):
+        self.particle_player.create_projectile_particles(projectile_tpye, begin_pos, pos, [
+            self.visible_sprites])
+
     def update_quest_progress(self, player):
         if player.current_quest != -1:
             if player.current_amount < player.max_amount:
@@ -361,9 +371,28 @@ class Level:
         self.menu_type = menu_type
         self.game_paused = not self.game_paused
 
+    def night_lights(self):
+        if self.night:
+            center_x = self.settings.WIDTH // 2
+            center_y = self.settings.HEIGHT // 2
+            radius = min(center_x, center_y) + 700
+            border_width = 1000
+            color = (0, 0, 0, 222)
+
+            # Create a new Surface with the appropriate dimensions to draw the circle
+            circle_surface = pygame.Surface(
+                (self.settings.WIDTH, self.settings.HEIGHT), pygame.SRCALPHA)
+
+            # Border size
+
+            pygame.draw.circle(circle_surface, color,
+                               (center_x, center_y), radius, border_width)
+
+            # Now, blit (draw) the circle_surface onto your display_surface
+            self.display_surface.blit(circle_surface, (0, 0))
+
     def run(self):
         self.visible_sprites.custom_draw(self.player)
-        self.ui.display(self.player)
 
         if self.game_paused:
             if self.menu_type == menuenums.TALENTS:
@@ -380,6 +409,8 @@ class Level:
             self.draw_and_collect_loot(self.player)
             self.is_player_in_range_of_dungeon_portal()
             self.teleport_to_dungeon()
+            self.night_lights()
+        self.ui.display(self.player)
 
 
 class YSortCameraGroup(pygame.sprite.Group):
