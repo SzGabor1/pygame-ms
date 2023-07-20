@@ -375,7 +375,8 @@ class Level:
         if self.night:
             center_x = self.settings.WIDTH // 2
             center_y = self.settings.HEIGHT // 2
-            radius = min(center_x, center_y) + 700
+            radius = min(center_x, center_y) + 700 - \
+                (math.sin(pygame.time.get_ticks() / 300) * 20)
             border_width = 1000
             color = (0, 0, 0, 222)
 
@@ -383,6 +384,7 @@ class Level:
             circle_surface = pygame.Surface(
                 (self.settings.WIDTH, self.settings.HEIGHT), pygame.SRCALPHA)
 
+            circle_surface.set_alpha(220)
             # Border size
 
             pygame.draw.circle(circle_surface, color,
