@@ -4,6 +4,7 @@ from entity import Entity
 from support import *
 import random
 import math
+from sound import Sounds
 
 
 class Enemy(Entity):
@@ -48,12 +49,8 @@ class Enemy(Entity):
         self.invincibility_duration = 300
 
         # sounds
-        self.death_sound = pygame.mixer.Sound('audio/death.wav')
-        self.hit_sound = pygame.mixer.Sound('audio/hit.wav')
-        self.attack_sound = pygame.mixer.Sound(monster_info['attack_sound'])
-        self.death_sound.set_volume(0.1)
-        self.hit_sound.set_volume(0.1)
-        self.attack_sound.set_volume(0.1)
+        self.sounds = Sounds(
+            self.settings, ('death', 'hit', self.attack_type))
 
         self.is_projectile_spawned = False
         self.spawn_projectile = spawn_projectile
@@ -97,7 +94,8 @@ class Enemy(Entity):
             self.attack_time = pygame.time.get_ticks()
             # self.damage_player(self.attack_damage, self.attack_type)
             player.get_damage(self.attack_damage)
-            self.attack_sound.play()
+            self.sounds[self.attack_type].play()
+
         elif self.status == 'move':
             self.direction = self.get_player_distance_direction(player)[1]
         else:
@@ -109,7 +107,7 @@ class Enemy(Entity):
                 self.health -= player.get_full_damage()
             self.hit_time = pygame.time.get_ticks()
             self.vulnerable = False
-            self.hit_sound.play()
+            self.sounds['hit'].play()
 
     def check_death(self, player):
         if self.health <= 0:
@@ -118,7 +116,7 @@ class Enemy(Entity):
                            self.rect.centery, self.monster_name)
             self.kill()
             self.trigger_death_particles(self.rect.center, self.monster_name)
-            self.death_sound.play()
+            self.sounds['death'].play()
             if not player.current_quest == -1:
                 if(self.monster_name == self.settings.quest_data[player.current_quest]['enemy_type']):
                     self.update_quest_progress(player)
@@ -166,41 +164,14 @@ class Enemy(Entity):
 
     def trigger_spawn_projectile(self, player):
         if self.monster_name == 'wizzard' and self.health < 0.75 * self.settings.monster_data[self.monster_name]['health'] and not self.is_projectile_spawned:
-            player_pos = player.rect.center
-            self.projectile_position = player_pos
             self.spawn_projectile(
-                self.rect.midleft, self.projectile_position, 'void')
+                self.rect.midleft, player.rect.center, 'void')
 
             self.is_projectile_spawned = True
             self.projectile_time = pygame.time.get_ticks()
 
-    def projectile_damage(self, player):
-        if self.projectile_position is not None:  # Check if projectile_position is set
-            player_pos = player.rect.center
-            projectile_position_vec = pygame.math.Vector2(
-                (self.projectile[0], self.projectile[1]))
-            player_pos_vec = pygame.math.Vector2(player_pos)
-            distance = projectile_position_vec.distance_to(player_pos_vec)
-            print(distance)
-            if distance <= 100:
-                player.get_damage(20)
-
-    def move_projectile(self):
-        if self.is_projectile_spawned:
-            direction_vector = (
-                self.projectile_position[0] - self.rect.midleft[0], self.projectile_position[1] - self.rect.midleft[1])
-            magnitude = math.sqrt(
-                direction_vector[0]**2 + direction_vector[1]**2)
-            normalized_direction = (
-                direction_vector[0] / magnitude, direction_vector[1] / magnitude)
-            speed = 10
-            self.projectile[0] += normalized_direction[0] * speed
-            self.projectile[1] += normalized_direction[1] * speed
-
     def enemy_update(self, player):
-        self.move_projectile()
         self.check_death(player)
         self.trigger_spawn_projectile(player)
         self.get_status(player)
         self.actions(player)
-        self.projectile_damage(player)

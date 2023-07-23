@@ -4,6 +4,7 @@ from support import import_folder
 from debug import debug
 from entity import Entity
 from inventory import Inventory
+from sound import Sounds
 
 
 class Player(Entity):
@@ -13,6 +14,9 @@ class Player(Entity):
         self.name = save_datas['player_name']
         self.character_id = save_datas['character_id']
         self.settings = settings
+
+        self.sounds = Sounds(self.settings, ('sword',))
+
         self.save_datas = save_datas
         self.image = pygame.image.load(
             'graphics/Characters/players/'+str(self.character_id)+'/down_idle/down_idle.png')
@@ -69,9 +73,9 @@ class Player(Entity):
         self.hurt_time = None
         self.invulnerable_duration = 500
 
-        # import sound
-        self.weapon_attack_sound = pygame.mixer.Sound('audio/sword.wav')
-        self.weapon_attack_sound.set_volume(0.1)
+        # # import sound
+        # self.weapon_attack_sound = pygame.mixer.Sound('audio/sword.wav')
+        # self.weapon_attack_sound.set_volume(0.1)
 
         # inventory
         self.inventory = Inventory(settings)
@@ -188,7 +192,7 @@ class Player(Entity):
                 self.attack_time = pygame.time.get_ticks()
                 self.create_attack()
                 self.attack_direction = self.direction
-                self.weapon_attack_sound.play()
+                self.sounds.play('sword')
 
         if keys[pygame.K_e] and self.can_switch_item:
             self.can_switch_item = False

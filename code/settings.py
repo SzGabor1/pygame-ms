@@ -27,6 +27,20 @@ class Settings:
             'dungeonportals': -64
         }
 
+        self.SOUNDS = {
+            'main': 'audio/main.mp3',
+            'sword': 'audio/sword.wav',
+            'potion': 'audio/potion.wav',
+            'click': 'audio/click.mp3',
+            'death': 'audio/death.wav',
+            'hit': 'audio/hit.wav',
+            'slash': 'audio/attack/slash.wav',
+            'claw': 'audio/attack/claw.wav',
+            'fireball': 'audio/attack/fireball.wav',
+            'potion': 'audio/potion.wav',
+
+        }
+
         self.map_animation_data = {
             '125': 'graphics/animated/tree1',
             '127': 'graphics/animated/tree2',
@@ -63,15 +77,15 @@ class Settings:
 
         # enemy
         self.monster_data = {
-            'squid': {'loots': {'xp_orb', 'gold_coin', 'gold_coins'}, 'health': 100, 'exp': 100, 'damage': 20, 'attack_type': 'slash', 'attack_sound': 'audio/attack/slash.wav', 'speed': 3, 'resistance': 3, 'attack_radius': 80, 'notice_radius': 360},
-            'crab': {'loots': {'xp_orb', 'gold_coin', 'gold_coins'}, 'health': 300, 'exp': 250, 'damage': 40, 'attack_type': 'claw',  'attack_sound': 'audio/attack/claw.wav', 'speed': 2, 'resistance': 3, 'attack_radius': 120, 'notice_radius': 400},
-            'wizzard': {'loots': {'xp_orb', 'gold_coin', 'gold_coins'}, 'health': 300, 'exp': 250, 'damage': 40, 'attack_type': 'slash',  'attack_sound': 'audio/attack/claw.wav', 'speed': 2, 'resistance': 3, 'attack_radius': 120, 'notice_radius': 400},
-            'skeleton': {'loots': {'xp_orb', 'gold_coin', 'gold_coins'}, 'health': 100, 'exp': 150, 'damage': 8, 'attack_type': 'thunder', 'attack_sound': 'audio/attack/fireball.wav', 'speed': 4, 'resistance': 3, 'attack_radius': 60, 'notice_radius': 350}
+            'squid': {'loots': {'xp_orb', 'gold_coin', 'gold_coins'}, 'health': 100, 'exp': 100, 'damage': 20, 'attack_type': 'slash', 'speed': 3, 'resistance': 3, 'attack_radius': 80, 'notice_radius': 360},
+            'crab': {'loots': {'xp_orb', 'gold_coin', 'gold_coins'}, 'health': 300, 'exp': 250, 'damage': 40, 'attack_type': 'claw', 'speed': 2, 'resistance': 3, 'attack_radius': 120, 'notice_radius': 400},
+            'wizzard': {'loots': {'xp_orb', 'gold_coin', 'gold_coins'}, 'health': 300, 'exp': 250, 'damage': 40, 'attack_type': 'slash', 'speed': 2, 'resistance': 3, 'attack_radius': 120, 'notice_radius': 400},
+            'skeleton': {'loots': {'xp_orb', 'gold_coin', 'gold_coins'}, 'health': 100, 'exp': 150, 'damage': 8, 'attack_type': 'fireball', 'speed': 4, 'resistance': 3, 'attack_radius': 60, 'notice_radius': 350}
         }
 
-        # sounds
-        self.potion_sound = pygame.mixer.Sound('audio/potion.wav')
-        self.potion_sound.set_volume(0.1)
+        self.projectile_data = {
+            'void': {'frames': 'graphics/particles/void', 'speed': 10, 'damage': 40, },
+        }
 
         # weapons
         self.weapon_data = {

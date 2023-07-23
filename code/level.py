@@ -19,6 +19,7 @@ from menuenums import menuenums
 from animation import Animation
 from questgiver import QuestGiver
 from merchant import Merchant
+from projectile import Projectile
 
 
 class Level:
@@ -63,7 +64,7 @@ class Level:
 
         self.animation = Animation(self.settings)
 
-        self.night = True
+        self.night = False
 
     def create_map(self):
         layouts = {
@@ -358,9 +359,9 @@ class Level:
         self.particle_player.create_particles(particle_type, pos, [
                                               self.visible_sprites])
 
-    def spawn_projectile(self, begin_pos, pos, projectile_tpye):
-        self.particle_player.create_projectile_particles(projectile_tpye, begin_pos, pos, [
-            self.visible_sprites])
+    def spawn_projectile(self, begin_pos, end_pos, projectile_tpye):
+        self.projectile = Projectile(
+            [self.visible_sprites], self.settings, begin_pos, end_pos, projectile_tpye)
 
     def update_quest_progress(self, player):
         if player.current_quest != -1:
@@ -405,6 +406,7 @@ class Level:
             self.visible_sprites.update()
             self.visible_sprites.enemy_update(self.player)
             self.visible_sprites.npc_update(self.player)
+            self.visible_sprites.projectile_update(self.player)
             if self.current_attack:
                 self.current_attack.update()
             self.player_attack_logic()
@@ -413,6 +415,7 @@ class Level:
             self.teleport_to_dungeon()
             self.night_lights()
         self.ui.display(self.player)
+        debug(self.player.health)
 
 
 class YSortCameraGroup(pygame.sprite.Group):
@@ -463,3 +466,9 @@ class YSortCameraGroup(pygame.sprite.Group):
             sprite, 'sprite_type') and sprite.sprite_type == 'npc']
         for npc in npc_sprites:
             npc.npc_update(player)
+
+    def projectile_update(self, player):
+        projectile_sprites = [sprite for sprite in self.sprites()if hasattr(
+            sprite, 'sprite_type') and sprite.sprite_type == 'projectile']
+        for projectile in projectile_sprites:
+            projectile.update_projectile(player)

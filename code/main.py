@@ -7,6 +7,7 @@ from mainmenu import MainMenu, SettingsMenu, NewGameMenu, LoadMenu
 from menuenums import menuenums
 from gamehandler import GameHandler
 from save import Save
+from sound import Sounds
 
 
 class Game:
@@ -26,6 +27,7 @@ class Game:
         self.state = menuenums.MENU
         self.mapGenerated = False
         self.save_parameters = None
+        self.sounds = Sounds(self.settings, ('main', 'click'))
 
     def init_screen(self):
         if self.settings.FULLSCREEN:
@@ -41,17 +43,21 @@ class Game:
                 self.menu.update()
                 self.menu.render()
             elif self.state == menuenums.SETTINGS:
+
                 if self.settings_menu is not None:
                     self.settings_menu.update()
                     self.settings_menu.render()
             if self.state == menuenums.LOAD_GAME:
+
                 self.load_menu.update()
                 self.load_menu.render()
             elif self.state == menuenums.NEW_GAME_MENU:
+
                 self.new_game_menu.update()
                 self.new_game_menu.render()
             elif self.state == menuenums.GAME:
                 if self.game_handler is None:
+                    self.sounds.play_loop('main')
                     self.game_handler = GameHandler(
                         self.settings, self.save_parameters)
                     self.mapGenerated = True
@@ -72,14 +78,17 @@ class Game:
                 self.clock.tick(self.settings.FPS)
 
     def open_new_game_menu(self):
+        self.sounds.play('click')
         self.new_game_menu = NewGameMenu(self)
         self.state = menuenums.NEW_GAME_MENU
 
     def open_load_menu(self):
+        self.sounds.play('click')
         self.load_menu = LoadMenu(self)
         self.state = menuenums.LOAD_GAME
 
     def open_settings_menu(self):
+        self.sounds.play('click')
         self.settings_menu = SettingsMenu(self)
         self.state = menuenums.SETTINGS
 

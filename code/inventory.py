@@ -1,5 +1,6 @@
 import pygame
 import time
+from sound import Sounds
 
 
 class Inventory:
@@ -8,6 +9,8 @@ class Inventory:
         self.settings = settings
         # id, name matrix
         self.items = []
+
+        self.sounds = Sounds(self.settings, ('potion',))
 
     def add_item(self, item):
         self.items.append(item)
@@ -44,16 +47,18 @@ class Inventory:
 
     def use_consumable(self, item_data, player, effect):
         if(effect == 'health'):
-            self.settings.potion_sound.play()
+            self.sounds['potion'].play()
             if (player.health + item_data['amount']) > player.stats[effect]:
                 player.health = player.stats[effect]
 
             else:
                 player.health += item_data['amount']
         elif(effect == 'energy'):
+            self.sounds['potion'].play()
             if (player.energy + item_data['amount']) > player.stats[effect]:
                 player.energy = player.stats[effect]
             else:
                 player.energy += item_data['amount']
         elif(effect == 'strength'):
+            self.sounds['potion'].play()
             player.use_strength_potion()
