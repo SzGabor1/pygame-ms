@@ -205,7 +205,7 @@ class SettingsMenu:
                                 print(self.fullscreen)
                                 width, height = self.selected_resolution
                                 self.game.settings.overwrite_settings(
-                                    width, height, False)
+                                    width, height, False, 1)
                                 self.game.init_screen()
                                 self.game.menu.init_main_menu()
                                 self.init_settings_menu()

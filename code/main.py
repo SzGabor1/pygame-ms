@@ -65,13 +65,6 @@ class Game:
                     if event.type == pygame.QUIT:
                         pygame.quit()
                         sys.exit()
-                    if event.type == pygame.KEYDOWN:
-                        if event.key == pygame.K_n:
-                            self.game_handler.level.toggle_menu(
-                                menuenums.TALENTS)
-                    if event.type == pygame.KEYDOWN:
-                        if event.key == pygame.K_ESCAPE:
-                            self.game_handler.pause_game()
                 self.screen.fill(self.settings.WATER_COLOR)
                 self.game_handler.run()
                 pygame.display.update()

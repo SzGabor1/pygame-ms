@@ -7,6 +7,7 @@ class Settings:
         self.WIDTH = data['settings']['WIDTH']
         self.HEIGHT = data['settings']['HEIGHT']
         self.FULLSCREEN = data['settings']['FULLSCREEN']
+        self.VOLUME = data['settings']['VOLUME']
 
         self.RESOLUTIONS = [
             (800, 600),
@@ -278,18 +279,29 @@ class Settings:
             },
         }
 
-    def overwrite_settings(self, WIDTH, HEIGHT, fullscreen):
+    def overwrite_settings(self, WIDTH, HEIGHT, fullscreen, volume):
         self.WIDTH = WIDTH
         self.HEIGHT = HEIGHT
         self.fullscreen = fullscreen
+        self.volume = volume
         print(self.fullscreen)
         dictionary = {
             "settings": {
                 "WIDTH": self.WIDTH,
                 "HEIGHT": self.HEIGHT,
-                "FULLSCREEN": self.fullscreen
+                "FULLSCREEN": self.fullscreen,
+                "VOLUME": self.volume
             }
         }
         json_object = json.dumps(dictionary, indent=4)
         with open("data/settings/settings.json", "w") as outfile:
             outfile.write(json_object)
+
+    def overwrite_volume(self, volume):
+        self.volume = volume
+        # Update settings in the JSON file with the new volume value
+        with open("data/settings/settings.json", "r") as infile:
+            data = json.load(infile)
+            data["settings"]["VOLUME"] = self.volume
+        with open("data/settings/settings.json", "w") as outfile:
+            json.dump(data, outfile, indent=4)

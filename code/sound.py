@@ -6,7 +6,7 @@ class Sounds():
         self.sounds = {}
         self.settings = settings
         self.load_sounds(sound_names)
-        self.set_volume(0.1)
+        self.set_volume(self.settings.VOLUME)
 
     def __getitem__(self, sound_name):
         return self.sounds[sound_name]

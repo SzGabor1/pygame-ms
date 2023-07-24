@@ -4,9 +4,10 @@ from mainmenu import SettingsMenu
 
 
 class IngameMenu:
-    def __init__(self, settings, pause_game, save_game):
+    def __init__(self, settings, pause_game, save_game, open_ingame_settings):
         self.display_surface = pygame.display.get_surface()
         self.pause_game = pause_game
+        self.open_ingame_settings = open_ingame_settings
         self.clock = pygame.time.Clock()
         self.font = pygame.font.Font(
             settings.UI_FONT, settings.UI_FONT_SIZE)
@@ -84,9 +85,7 @@ class IngameMenu:
                         # Save the game
                     elif selected_item == "Settings":
                         print("Settings button clicked!")
-                        # Open settings menu
-                        settings_menu = SettingsMenu()
-                        settings_menu.run()
+                        self.open_ingame_settings()
                     elif selected_item == "Exit":
                         print("Exit button clicked!")
                         pygame.quit()
@@ -111,6 +110,107 @@ class IngameMenu:
             self.display_surface.blit(item_surf, item_rect)
 
         self.show_game_saved()
+
+        pygame.display.flip()
+        self.clock.tick(self.settings.FPS)
+
+
+class Ingame_settings():
+    def __init__(self, settings, open_ingame_settings):
+        self.settings = settings
+        self.open_ingame_settings = open_ingame_settings
+        self.init_settings_menu()
+
+    def init_settings_menu(self):
+
+        self.screen = pygame.display.get_surface()
+        self.clock = pygame.time.Clock()
+        self.font = pygame.font.Font(
+            self.settings.UI_FONT, self.settings.UI_FONT_SIZE)
+        self.resolution_labels = []
+        self.resolution_rects = []
+        self.menu_bg = pygame.transform.scale(pygame.image.load(
+            "graphics/Backgrounds/menubg.jpg"), (self.settings.WIDTH, self.settings.HEIGHT))
+        # Define the rectangle for the menu background
+        menu_width = 400
+        menu_height = 500
+        menu_x = (self.settings.WIDTH - menu_width) // 2
+        # Adjust the value here
+        menu_y = (self.settings.HEIGHT - menu_height) // 2
+        self.menu_rect = pygame.Rect(
+            menu_x, menu_y - 25, menu_width, menu_height)
+
+        self.save_button = pygame.Rect(
+            menu_x + 100, menu_y + 400, 200, 50)
+        self.save_label = self.font.render(
+            "Save", True, self.settings.BLACK_TEXT_COLOR)
+        self.save_rect = self.save_label.get_rect(
+            center=self.save_button.center)
+        self.title_label = self.font.render(
+            "Settings", True, self.settings.BLACK_TEXT_COLOR)
+        self.title_rect = self.title_label.get_rect(
+            center=(self.settings.WIDTH // 2, self.settings.HEIGHT // 2 - 200))
+        self.volume_label = self.font.render(
+            "Volume:", True, self.settings.BLACK_TEXT_COLOR)
+        self.volume_rect = self.volume_label.get_rect(
+            center=(self.settings.WIDTH // 2, menu_y + 250))
+        self.volume_slider = pygame.Rect(
+            menu_x + 100, menu_y + 280, 200, 20)
+        self.volume_slider_handle = pygame.Rect(
+            menu_x + 100, menu_y + 275, 10, 30)
+        self.volume_min = 0
+        self.volume_max = 100
+        self.current_volume = 50
+
+    def update(self):
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                pygame.quit()
+                sys.exit()
+
+            elif event.type == pygame.MOUSEBUTTONDOWN:
+                if event.button == 1:
+                    if self.volume_slider.collidepoint(event.pos):
+                        mouse_x, _ = event.pos
+                        relative_x = mouse_x - self.volume_slider.x
+                        self.current_volume = int(
+                            relative_x / self.volume_slider.width * (self.volume_max - self.volume_min))
+                        self.current_volume = min(
+                            max(self.current_volume, self.volume_min), self.volume_max)
+
+                    if self.save_button.collidepoint(event.pos):
+                        print("Save button clicked!")
+                        self.settings.overwrite_volume(self.current_volume/100)
+                        self.open_ingame_settings()
+
+    def render(self):
+
+        self.screen.fill((0, 0, 0))
+        self.screen.blit(self.menu_bg, (0, 0))
+        # Draw the menu background rectangle
+        pygame.draw.rect(self.screen, pygame.Color(
+            self.settings.MENU_BG_COLOR), self.menu_rect)
+
+        # Draw the border around the menu rectangle
+        pygame.draw.rect(self.screen, pygame.Color(
+            self.settings.MENU_BORDER_COLOR), self.menu_rect, 5)
+
+        self.screen.blit(self.title_label, self.title_rect)
+        # Draw the volume label and slider
+        pygame.draw.rect(
+            self.screen, self.settings.MENU_BUTTON_BG_COLOR, self.volume_slider)
+        pygame.draw.rect(
+            self.screen, self.settings.MENU_BORDER_COLOR, self.volume_slider, 2)
+        self.volume_slider_handle.centerx = self.volume_slider.left + int(
+            self.volume_slider.width * (self.current_volume / self.volume_max))
+        pygame.draw.rect(
+            self.screen, self.settings.BLACK_TEXT_COLOR, self.volume_slider_handle)
+
+        self.screen.blit(self.volume_label, self.volume_rect)
+
+        pygame.draw.rect(
+            self.screen, self.settings.MENU_BUTTON_BG_COLOR, self.save_button)
+        self.screen.blit(self.save_label, self.save_rect)
 
         pygame.display.flip()
         self.clock.tick(self.settings.FPS)
