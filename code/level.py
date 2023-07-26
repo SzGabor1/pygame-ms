@@ -1,3 +1,4 @@
+from PIL import Image, ImageDraw
 import pygame
 from settings import *
 from tile import Tile
@@ -65,6 +66,9 @@ class Level:
         self.animation = Animation(self.settings)
 
         self.night = False
+        self.minimap_image = pygame.image.load(
+            'new_map/minimap_background.png')
+        self.is_minimap_open = False
 
     def create_map(self):
         layouts = {
@@ -394,6 +398,56 @@ class Level:
             # Now, blit (draw) the circle_surface onto your display_surface
             self.display_surface.blit(circle_surface, (0, 0))
 
+    def show_minimap(self, player):
+        if self.is_minimap_open:
+            # Calculate the scaling factor to fit the minimap on the screen (adjust as needed)
+            scale_factor = 0.13
+
+            # Calculate the size of the minimap
+            minimap_width = int(self.minimap_image.get_width() * scale_factor)
+            minimap_height = int(
+                self.minimap_image.get_height() * scale_factor)
+
+            # Create a new surface for the border
+            border_surface = pygame.Surface(
+                (minimap_width + 10, minimap_height + 10))
+
+            # Draw a rectangle on the border surface for the border
+            border_rect = pygame.Rect(
+                0, 0, minimap_width + 10, minimap_height + 10)
+            pygame.draw.rect(
+                border_surface, self.settings.MENU_BORDER_COLOR, border_rect)
+
+            # Create a new surface for the minimap
+            minimap = pygame.Surface((minimap_width, minimap_height))
+
+            # Scale the full image onto the minimap
+            minimap.blit(pygame.transform.scale(self.minimap_image,
+                         (minimap_width, minimap_height)), (0, 0))
+
+            # Calculate the player's position on the minimap using the rect attribute
+            player_pos_x = int(player.rect.centerx * scale_factor)
+            player_pos_y = int(player.rect.centery * scale_factor)
+
+            # Draw a red dot for the player's position on the minimap
+            dot_radius = 3
+            pygame.draw.circle(minimap, (255, 0, 0),
+                               (player_pos_x, player_pos_y), dot_radius)
+
+            # Blit the minimap onto the border surface with an offset for the border
+            border_surface.blit(minimap, (5, 5))
+
+            # Show the border with the minimap on the screen
+            border_x = self.settings.WIDTH / 2 - border_surface.get_width() / 2
+            border_y = 50
+            self.display_surface.blit(border_surface, (border_x, border_y))
+
+    def input(self):
+        keys = pygame.key.get_pressed()
+
+        if keys[pygame.K_m]:
+            self.is_minimap_open = not self.is_minimap_open
+
     def run(self):
         self.visible_sprites.custom_draw(self.player)
 
@@ -414,6 +468,8 @@ class Level:
             self.is_player_in_range_of_dungeon_portal()
             self.teleport_to_dungeon()
             self.night_lights()
+            self.input()
+            self.show_minimap(self.player)
         self.ui.display(self.player)
         debug(self.player.health)
 

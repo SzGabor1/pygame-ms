@@ -3,7 +3,7 @@
         "height": 4300,
         "width": 2
     },
-    "activeFile": "E:/PROGRAMOZAS/Python/pygame/MS/new_map/dungeontest.tmx",
+    "activeFile": "E:/PROGRAMOZAS/Python/pygame/MS/new_map/MSmap.tmx",
     "expandedProjectPaths": [
         "."
     ],
@@ -24,19 +24,19 @@
             "scaleInDock": 1
         },
         "E:/PROGRAMOZAS/Python/pygame/MS/new_map/MSmap.tmx": {
-            "scale": 0.5,
+            "scale": 0.125,
             "selectedLayer": 7,
             "viewCenter": {
-                "x": 2495,
-                "y": 3199
+                "x": 2492,
+                "y": 3196
             }
         },
         "E:/PROGRAMOZAS/Python/pygame/MS/new_map/dungeontest.tmx": {
             "scale": 0.25,
             "selectedLayer": 4,
             "viewCenter": {
-                "x": 1588,
-                "y": 812
+                "x": 958,
+                "y": 642
             }
         },
         "MS_TILESET.tsx": {
@@ -56,8 +56,8 @@
     ],
     "project": "MS_MAP.tiled-project",
     "recentFiles": [
-        "E:/PROGRAMOZAS/Python/pygame/MS/new_map/MSmap.tmx",
         "E:/PROGRAMOZAS/Python/pygame/MS/new_map/dungeontest.tmx",
+        "E:/PROGRAMOZAS/Python/pygame/MS/new_map/MSmap.tmx",
         "MS_TILESET.tsx"
     ],
     "tileset.lastUsedFormat": "tsx",
