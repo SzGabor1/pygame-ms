@@ -53,7 +53,7 @@ class Weapon(pygame.sprite.Sprite):
             center=self.player.rect.midleft)  # Change midleft to midtop
         self.image = rotated_image
 
-        offset_x = -16
+        offset_x = -5
         self.rect.x += offset_x
 
         # Adjust the position of the image based on the current state of the sin function
@@ -66,7 +66,7 @@ class Weapon(pygame.sprite.Sprite):
         self.rect = rotated_image.get_rect(center=self.player.rect.midright)
         self.image = rotated_image
 
-        offset_x = 16
+        offset_x = 5
         self.rect.x += offset_x
 
         offset_y = math.sin(self.angle) * amplitude * 0.5
@@ -78,7 +78,7 @@ class Weapon(pygame.sprite.Sprite):
         self.rect = rotated_image.get_rect(center=self.player.rect.midtop)
         self.image = rotated_image
 
-        offset_y = -20
+        offset_y = -5
         self.rect.y += offset_y
 
         offset_x = -math.sin(self.angle) * amplitude * 0.5
@@ -90,7 +90,8 @@ class Weapon(pygame.sprite.Sprite):
         self.rect = rotated_image.get_rect(center=self.player.rect.midbottom)
         self.image = rotated_image
 
-        offset_y = 20
+        offset_y = 5
+
         self.rect.y += offset_y
 
         offset_x = math.sin(self.angle) * amplitude * 0.5

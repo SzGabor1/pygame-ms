@@ -65,10 +65,13 @@ class Level:
 
         self.animation = Animation(self.settings)
 
-        self.night = False
         self.minimap_image = pygame.image.load(
             'new_map/minimap_background.png')
         self.is_minimap_open = False
+
+        self.game_start_time = pygame.time.get_ticks()
+        self.game_time = 0
+        self.reset_interval = 24 * 60 * 60 * 1000
 
     def create_map(self):
         layouts = {
@@ -377,7 +380,8 @@ class Level:
         self.game_paused = not self.game_paused
 
     def night_lights(self):
-        if self.night:
+
+        if 1080 <= self.game_time < 1440:
             center_x = self.settings.WIDTH // 2
             center_y = self.settings.HEIGHT // 2
             radius = min(center_x, center_y) + 700 - \
@@ -442,6 +446,23 @@ class Level:
             border_y = 50
             self.display_surface.blit(border_surface, (border_x, border_y))
 
+    def count_time(self):
+        # Get the current time in milliseconds
+        current_time = pygame.time.get_ticks()
+
+        # Calculate the elapsed time since the game started in milliseconds
+        elapsed_time = current_time - self.game_start_time
+
+        # Convert elapsed_time to seconds and add to the game_time
+        self.game_time = elapsed_time / 1000
+
+        # Reset the game_start_time if 24 minutes have passed
+        if elapsed_time >= self.reset_interval:
+            self.game_start_time = current_time
+            self.game_time = 0
+
+        print(self.game_time)
+
     def input(self):
         keys = pygame.key.get_pressed()
 
@@ -469,9 +490,10 @@ class Level:
             self.teleport_to_dungeon()
             self.night_lights()
             self.input()
+            self.count_time()
             self.show_minimap(self.player)
         self.ui.display(self.player)
-        debug(self.player.health)
+        debug(self.game_time)
 
 
 class YSortCameraGroup(pygame.sprite.Group):

@@ -57,7 +57,7 @@ class QuestGiver(NPC):
     def show_dialogue(self, player):
         if self.toggle_dialogue and self.range_of_player and self.quests != [] and player.current_quest == -1:
             self.dialogue.display(
-                self.npc_name, str(self.settings.quest_data[self.quests[0]]['text']))
+                self.name, str(self.settings.quest_data[self.quests[0]]['text']))
 
             if self.dialogue.should_close_dialogue():
                 self.toggle_dialogue = False
