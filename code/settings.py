@@ -269,7 +269,7 @@ class Settings:
         self.HEIGHT = HEIGHT
         self.fullscreen = fullscreen
         self.volume = volume
-        print(self.fullscreen)
+
         dictionary = {
             'settings': {
                 'WIDTH': self.WIDTH,
