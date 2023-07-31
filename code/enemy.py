@@ -8,12 +8,11 @@ from sound import Sounds
 
 
 class Enemy(Entity):
-    def __init__(self, monster_name, pos, groups, obstacle_sprites, trigger_death_particles, update_quest_progress, settings, drop_loot, spawn_projectile):
+    def __init__(self, monster_name, pos, groups, obstacle_sprites, trigger_death_particles, update_quest_progress, drop_loot, spawn_projectile):
         # general setup
         super().__init__(groups)
         self.sprite_type = 'enemy'
 
-        self.settings = settings
         # graphics setup
         self.import_graphics(monster_name)
         self.status = 'idle'
@@ -26,7 +25,7 @@ class Enemy(Entity):
 
         # stats
         self.monster_name = monster_name
-        monster_info = self.settings.monster_data[self.monster_name]
+        monster_info = Settings.monster_data[self.monster_name]
         self.health = monster_info['health']
         self.exp = monster_info['exp']
         self.speed = monster_info['speed']
@@ -47,10 +46,6 @@ class Enemy(Entity):
         self.vulnerable = True
         self.hit_time = None
         self.invincibility_duration = 300
-
-        # sounds
-        self.sounds = Sounds(
-            self.settings, ('death', 'hit', self.attack_type))
 
         self.is_projectile_spawned = False
         self.spawn_projectile = spawn_projectile
@@ -94,7 +89,7 @@ class Enemy(Entity):
             self.attack_time = pygame.time.get_ticks()
             # self.damage_player(self.attack_damage, self.attack_type)
             player.get_damage(self.attack_damage)
-            self.sounds[self.attack_type].play()
+            Sounds.play(self.attack_type)
 
         elif self.status == 'move':
             self.direction = self.get_player_distance_direction(player)[1]
@@ -107,7 +102,7 @@ class Enemy(Entity):
                 self.health -= player.get_full_damage()
             self.hit_time = pygame.time.get_ticks()
             self.vulnerable = False
-            self.sounds['hit'].play()
+            Sounds.play('hit')
 
     def check_death(self, player):
         if self.health <= 0:
@@ -116,9 +111,9 @@ class Enemy(Entity):
                            self.rect.centery, self.monster_name)
             self.kill()
             self.trigger_death_particles(self.rect.center, self.monster_name)
-            self.sounds['death'].play()
+            Sounds.play('death')
             if not player.current_quest == -1:
-                if(self.monster_name == self.settings.quest_data[player.current_quest]['enemy_type']):
+                if(self.monster_name == Settings.quest_data[player.current_quest]['enemy_type']):
                     self.update_quest_progress(player)
 
     def hit_reaction(self):
@@ -163,7 +158,7 @@ class Enemy(Entity):
         self.cooldown()
 
     def trigger_spawn_projectile(self, player):
-        if self.monster_name == 'wizzard' and self.health < 0.75 * self.settings.monster_data[self.monster_name]['health'] and not self.is_projectile_spawned:
+        if self.monster_name == 'wizzard' and self.health < 0.75 * Settings.monster_data[self.monster_name]['health'] and not self.is_projectile_spawned:
             self.spawn_projectile(
                 self.rect.midleft, player.rect.center, 'void')
 

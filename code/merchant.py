@@ -5,14 +5,14 @@ from shop import Shop
 
 
 class Merchant(NPC):
-    def __init__(self, npc_name, pos, groups, obstacle_sprites, settings, id, item_list):
-        super().__init__(npc_name, pos, groups, obstacle_sprites, settings, id)
+    def __init__(self, npc_name, pos, groups, obstacle_sprites, id, item_list):
+        super().__init__(npc_name, pos, groups, obstacle_sprites, id)
 
         self.itemlist = item_list
 
         self.toggle_shop = False
 
-        self.shop = Shop(self.settings, self.itemlist,
+        self.shop = Shop(self.itemlist,
                          self.update_toggle_shop, self.name)
 
     def show_shop_button(self, player):

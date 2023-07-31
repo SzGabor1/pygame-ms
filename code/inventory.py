@@ -1,16 +1,14 @@
 import pygame
 import time
 from sound import Sounds
+from settings import Settings
 
 
 class Inventory:
-    def __init__(self, settings):
+    def __init__(self):
         # general setup
-        self.settings = settings
         # id, name matrix
         self.items = []
-
-        self.sounds = Sounds(self.settings, ('potion',))
 
     def add_item(self, item):
         self.items.append(item)
@@ -23,19 +21,19 @@ class Inventory:
 
     def display_items(self):
         for item in self.items:
-            print(self.settings.items[item]['name'])
+            print(Settings.items[item]['name'])
 
     def display_item(self, inventory_index):
         try:
             item = self.items[inventory_index]
-            print(self.settings.items[item]['name'])
+            print(Settings.items[item]['name'])
         except IndexError:
             pass
 
     def use_item(self, inventory_index, player):
         try:
             item = self.items[inventory_index]
-            item_data = self.settings.items[item]
+            item_data = Settings.items[item]
 
             if item_data['type'] == 'consumable':
                 print("Used: " + item_data['name'])
@@ -47,18 +45,18 @@ class Inventory:
 
     def use_consumable(self, item_data, player, effect):
         if(effect == 'health'):
-            self.sounds['potion'].play()
+            Sounds.play('potion')
             if (player.health + item_data['amount']) > player.stats[effect]:
                 player.health = player.stats[effect]
 
             else:
                 player.health += item_data['amount']
         elif(effect == 'energy'):
-            self.sounds['potion'].play()
+            Sounds.play('potion')
             if (player.energy + item_data['amount']) > player.stats[effect]:
                 player.energy = player.stats[effect]
             else:
                 player.energy += item_data['amount']
         elif(effect == 'strength'):
-            self.sounds['potion'].play()
+            Sounds.play('potion')
             player.use_strength_potion()

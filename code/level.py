@@ -21,16 +21,16 @@ from animation import Animation
 from questgiver import QuestGiver
 from merchant import Merchant
 from projectile import Projectile
+from settings import Settings
 
 
 class Level:
-    def __init__(self, settings, save):
+    def __init__(self, save):
 
         # get the display surface
         self.display_surface = pygame.display.get_surface()
 
         self.save = save
-        self.settings = settings
 
         # sprite group setup
         self.visible_sprites = YSortCameraGroup()
@@ -49,8 +49,8 @@ class Level:
         self.current_attack = None
 
         # UI
-        self.ui = UI(self.settings)
-        self.talents = Talents(self.player, self.settings)
+        self.ui = UI()
+        self.talents = Talents(self.player)
         self.game_paused = False
         self.menu_type = None
 
@@ -63,7 +63,7 @@ class Level:
 
         self.loots = []
 
-        self.animation = Animation(self.settings)
+        self.animation = Animation()
 
         self.minimap_image = pygame.image.load(
             'new_map/minimap_background.png')
@@ -90,55 +90,55 @@ class Level:
             for row_index, row in enumerate(layout):
                 for col_index, col in enumerate(row):
                     if col != '-1':
-                        x = col_index * self.settings.TILESIZE
-                        y = row_index * self.settings.TILESIZE
+                        x = col_index * Settings.TILESIZE
+                        y = row_index * Settings.TILESIZE
                         if style == 'boundary':
                             Tile((x, y), [self.obstacle_sprites],
-                                 'invisible', self.settings, pygame.Surface(
-                                     (self.settings.TILESIZE, self.settings.TILESIZE)))
+                                 'invisible', pygame.Surface(
+                                     (Settings.TILESIZE, Settings.TILESIZE)))
                         if style == 'grass':
                             random_grass_image = choice(
                                 graphics['grass'])
                             Tile((x, y), [self.visible_sprites,
-                                 self.obstacle_sprites, self.attackable_sprites], 'grass', self.settings, random_grass_image)
+                                 self.obstacle_sprites, self.attackable_sprites], 'grass', random_grass_image)
 
                         if style == 'dungeonportals':
 
                             if col == '178':
                                 surf = graphics['object'][int(col)]
                                 self.dungeon_entrances.append(Tile((x, y+64), [self.visible_sprites,
-                                                                               self.obstacle_sprites], 'dungeonportals', self.settings, surf))
+                                                                               self.obstacle_sprites], 'dungeonportals', surf))
                         if style == 'object':
                             # create object tile
                             surf = graphics['object'][int(col)]
 
                             Tile((x, y+64), [self.visible_sprites,
-                                             self.obstacle_sprites], 'object', self.settings, surf)
+                                             self.obstacle_sprites], 'object', surf)
 
                         if style == 'entities':
                             if col == '39':
                                 if self.save[0] == "existing":
                                     self.player = Player(
-                                        self.save[1]['player_pos'], [self.visible_sprites], self.obstacle_sprites, self.create_attack, self.destroy_attack, self.settings, self.save[1], None)
+                                        self.save[1]['player_pos'], [self.visible_sprites], self.obstacle_sprites, self.create_attack, self.destroy_attack, self.save[1], None)
                                 else:
                                     self.player = Player(
-                                        (x, y), [self.visible_sprites], self.obstacle_sprites, self.create_attack, self.destroy_attack, self.settings, self.save[1], "newCharacter")
+                                        (x, y), [self.visible_sprites], self.obstacle_sprites, self.create_attack, self.destroy_attack, self.save[1], "newCharacter")
 
                             elif col == '59':
                                 self.create_npc(
-                                    col, x, y, self.settings.npc_data)
+                                    col, x, y, Settings.npc_data)
                             elif col == '79':
                                 self.create_npc(
-                                    col, x, y, self.settings.npc_data)
+                                    col, x, y, Settings.npc_data)
                             elif col == '139':
                                 self.create_npc(
-                                    col, x, y, self.settings.npc_data)
+                                    col, x, y, Settings.npc_data)
                             elif col == '99':
                                 self.create_npc(
-                                    col, x, y, self.settings.npc_data)
+                                    col, x, y, Settings.npc_data)
                             elif col == '119':
                                 self.create_npc(
-                                    col, x, y, self.settings.npc_data)
+                                    col, x, y, Settings.npc_data)
 
                             else:
                                 if col == '18':
@@ -152,7 +152,7 @@ class Level:
 
                                 Enemy(monster_name, (x, y), [
                                       self.visible_sprites, self.attackable_sprites], self.obstacle_sprites,
-                                      self.trigger_death_particles, self.update_quest_progress, self.settings, self.drop_loot, self.spawn_projectile)
+                                      self.trigger_death_particles, self.update_quest_progress, self.drop_loot, self.spawn_projectile)
 
     def create_dungeon(self):
         layouts = {
@@ -172,29 +172,29 @@ class Level:
             for row_index, row in enumerate(layout):
                 for col_index, col in enumerate(row):
                     if col != '-1':
-                        x = (col_index * self.settings.TILESIZE)-5000
-                        y = (row_index * self.settings.TILESIZE)-5000
+                        x = (col_index * Settings.TILESIZE)-5000
+                        y = (row_index * Settings.TILESIZE)-5000
                         if style == 'boundary':
                             Tile((x, y), [self.obstacle_sprites],
-                                 'invisible', self.settings, pygame.Surface(
-                                (self.settings.TILESIZE, self.settings.TILESIZE)))
+                                 'invisible',  pygame.Surface(
+                                (Settings.TILESIZE, Settings.TILESIZE)))
                         if style == 'object':
                             # create object tile
                             surf = graphics['object'][int(col)]
 
                             Tile((x, y+64), [self.visible_sprites,
-                                             self.obstacle_sprites], 'object', self.settings, surf)
+                                             self.obstacle_sprites], 'object', surf)
 
                         if style == 'dungeonportals':
 
                             if col == '178':
                                 surf = graphics['object'][int(col)]
                                 self.dungeon_exits.append(Tile((x, y), [self.visible_sprites,
-                                                                        self.obstacle_sprites], 'dungeonportals', self.settings, surf))
+                                                                        self.obstacle_sprites], 'dungeonportals', surf))
                             if col == '179':
                                 surf = graphics['object'][int(col)]
                                 self.dungeon_spawns.append(Tile((x, y), [self.visible_sprites,
-                                                                         self.obstacle_sprites], 'dungeonportals', self.settings, surf))
+                                                                         self.obstacle_sprites], 'dungeonportals', surf))
 
                         if style == 'entities':
                             if col == '18':
@@ -208,7 +208,7 @@ class Level:
 
                             enemy = Enemy(monster_name, (x, y), [
                                 self.visible_sprites, self.attackable_sprites], self.obstacle_sprites,
-                                self.trigger_death_particles, self.update_quest_progress, self.settings, self.drop_loot, self.spawn_projectile)
+                                self.trigger_death_particles, self.update_quest_progress, self.drop_loot, self.spawn_projectile)
                             # Add the enemy to the dungeon sprite group
                             dungeon_sprites.add(enemy)
 
@@ -265,7 +265,7 @@ class Level:
     def drop_loot(self, x, y, monster_name):
         x += random.randint(-100, 100)
         y += random.randint(-100, 100)
-        loot_types = list(self.settings.monster_data[monster_name]['loots'])
+        loot_types = list(Settings.monster_data[monster_name]['loots'])
 
         # Exclude xp_orb from the loot_types list
         loot_types.remove('xp_orb')
@@ -277,14 +277,14 @@ class Level:
         drop_xp_orb = random.random() >= no_drop_chance
 
         if drop_xp_orb:
-            xp_orb_amount = self.settings.monster_data[monster_name]['exp']
+            xp_orb_amount = Settings.monster_data[monster_name]['exp']
             self.loots.append(("xp_orb", xp_orb_amount, (x, y)))
 
         # Drop other loot types
         for loot_type in loot_types:
-            chance = self.settings.loots[loot_type]['chance']
+            chance = Settings.loots[loot_type]['chance']
             if random.random() < chance:
-                loot_amount = self.settings.loots[loot_type]['amount']
+                loot_amount = Settings.loots[loot_type]['amount']
                 loot_x = x
                 loot_y = y
 
@@ -301,10 +301,10 @@ class Level:
 
         for loot_type, loot_amount, loot_pos in self.loots:
             loot_x, loot_y = loot_pos
-            loot_offset_x = loot_x - player_x + self.settings.WIDTH // 2
-            loot_offset_y = loot_y - player_y + self.settings.HEIGHT // 2
+            loot_offset_x = loot_x - player_x + Settings.WIDTH // 2
+            loot_offset_y = loot_y - player_y + Settings.HEIGHT // 2
 
-            loot_graphics = self.settings.loots[loot_type]['graphics']
+            loot_graphics = Settings.loots[loot_type]['graphics']
             loot_image = pygame.image.load(loot_graphics)
             loot_rect = loot_image.get_rect(
                 center=(loot_offset_x, loot_offset_y))
@@ -327,12 +327,12 @@ class Level:
             self.loots.remove(loot)
 
     def create_npc(self, id, x, y, npc_data):
-        if self.settings.npc_data[id]['type'] == 'quest_giver':
+        if Settings.npc_data[id]['type'] == 'quest_giver':
             self.npc = QuestGiver(npc_data[id]['name'], (x, y), [
-                self.visible_sprites], self.obstacle_sprites, npc_data[id]['quest_ids'], self.settings, id,)
-        elif self.settings.npc_data[id]['type'] == 'merchant':
+                self.visible_sprites], self.obstacle_sprites, npc_data[id]['quest_ids'], id,)
+        elif Settings.npc_data[id]['type'] == 'merchant':
             self.npc = Merchant(npc_data[id]['name'], (x, y), [
-                self.visible_sprites], self.obstacle_sprites, self.settings, id, npc_data[id]['item_list'])
+                self.visible_sprites], self.obstacle_sprites, id, npc_data[id]['item_list'])
 
     def create_attack(self):
         self.current_attack = Weapon(
@@ -360,11 +360,9 @@ class Level:
                         else:
                             if target_sprite.vulnerable:
                                 self.particle_player.display_damage_numbers(target_sprite.rect.midtop, [
-                                    self.visible_sprites], self.player.get_full_damage(), self.settings)
+                                    self.visible_sprites], self.player.get_full_damage())
                             target_sprite.get_damage(
                                 self.player, attack_sprite.sprite_type)
-
-            # spawn particles
 
     def trigger_death_particles(self, pos, particle_type):
         self.particle_player.create_particles(particle_type, pos, [
@@ -372,7 +370,7 @@ class Level:
 
     def spawn_projectile(self, begin_pos, end_pos, projectile_tpye):
         self.projectile = Projectile(
-            [self.visible_sprites], self.settings, begin_pos, end_pos, projectile_tpye)
+            [self.visible_sprites], begin_pos, end_pos, projectile_tpye)
 
     def update_quest_progress(self, player):
         if player.current_quest != -1:
@@ -386,8 +384,8 @@ class Level:
     def night_lights(self):
 
         if 1080 <= self.game_time < 1440:
-            center_x = self.settings.WIDTH // 2
-            center_y = self.settings.HEIGHT // 2
+            center_x = Settings.WIDTH // 2
+            center_y = Settings.HEIGHT // 2
             radius = min(center_x, center_y) + 700 - \
                 (math.sin(pygame.time.get_ticks() / 300) * 20)
             border_width = 1000
@@ -395,7 +393,7 @@ class Level:
 
             # Create a new Surface with the appropriate dimensions to draw the circle
             circle_surface = pygame.Surface(
-                (self.settings.WIDTH, self.settings.HEIGHT), pygame.SRCALPHA)
+                (Settings.WIDTH, Settings.HEIGHT), pygame.SRCALPHA)
 
             circle_surface.set_alpha(220)
             # Border size
@@ -424,7 +422,7 @@ class Level:
             border_rect = pygame.Rect(
                 0, 0, minimap_width + 10, minimap_height + 10)
             pygame.draw.rect(
-                border_surface, self.settings.MENU_BORDER_COLOR, border_rect)
+                border_surface, Settings.MENU_BORDER_COLOR, border_rect)
 
             # Create a new surface for the minimap
             minimap = pygame.Surface((minimap_width, minimap_height))
@@ -446,7 +444,7 @@ class Level:
             border_surface.blit(minimap, (5, 5))
 
             # Show the border with the minimap on the screen
-            border_x = self.settings.WIDTH / 2 - border_surface.get_width() / 2
+            border_x = Settings.WIDTH / 2 - border_surface.get_width() / 2
             border_y = 50
             self.display_surface.blit(border_surface, (border_x, border_y))
 

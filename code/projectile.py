@@ -1,16 +1,16 @@
 import pygame
 from support import import_folder
 import math
+from settings import Settings
 
 
 class Projectile(pygame.sprite.Sprite):
-    def __init__(self,  groups, settings, begin_pos, end_pos, projectile_type):
+    def __init__(self,  groups, begin_pos, end_pos, projectile_type):
         super().__init__(groups)
         self.sprite_type = 'projectile'
-        self.settings = settings
         self.projectile_type = projectile_type
         self.frames = import_folder(
-            self.settings.projectile_data[self.projectile_type]['frames'])
+            Settings.projectile_data[self.projectile_type]['frames'])
 
         self.animation_start_time = pygame.time.get_ticks()
         self.frame_index = 0
@@ -31,7 +31,7 @@ class Projectile(pygame.sprite.Sprite):
         current_time = pygame.time.get_ticks()
         elapsed_time = current_time - self.animation_start_time
         progress = elapsed_time / self.animation_time * \
-            self.settings.projectile_data[self.projectile_type]['speed']
+            Settings.projectile_data[self.projectile_type]['speed']
 
         if progress >= 1.0:
             self.rect.x = self.end_pos[0]
@@ -54,7 +54,7 @@ class Projectile(pygame.sprite.Sprite):
         if self.rect.colliderect(player.rect):
             self.kill()
             player.get_damage(
-                self.settings.projectile_data[self.projectile_type]['damage'])
+                Settings.projectile_data[self.projectile_type]['damage'])
         elif math.sqrt((self.rect.x - self.end_pos[0]) ** 2 + (self.rect.y - self.end_pos[1]) ** 2) <= 10:
             self.kill()
 

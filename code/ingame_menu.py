@@ -1,32 +1,33 @@
 import sys
 import pygame
 from mainmenu import SettingsMenu
+from sound import Sounds
+from settings import Settings
 
 
 class IngameMenu:
-    def __init__(self, settings, pause_game, save_game, open_ingame_settings):
+    def __init__(self, pause_game, save_game, open_ingame_settings):
         self.display_surface = pygame.display.get_surface()
         self.pause_game = pause_game
         self.open_ingame_settings = open_ingame_settings
         self.clock = pygame.time.Clock()
         self.font = pygame.font.Font(
-            settings.UI_FONT, settings.UI_FONT_SIZE)
+            Settings.UI_FONT, Settings.UI_FONT_SIZE)
 
         self.menu_bg = pygame.transform.scale(pygame.image.load(
-            "graphics/Backgrounds/menubg.jpg"), (settings.WIDTH, settings.HEIGHT))
+            "graphics/Backgrounds/menubg.jpg"), (Settings.WIDTH, Settings.HEIGHT))
 
         self.menu_items = ["Resume", "Save", "Settings", "Exit"]
         self.menu_item_height = self.font.get_height() + 10
         self.menu_width = 400
         self.menu_height = len(self.menu_items) * self.menu_item_height + 20
-        self.menu_x = (settings.WIDTH - self.menu_width) // 2
-        self.menu_y = (settings.HEIGHT - self.menu_height) // 2 + 50
+        self.menu_x = (Settings.WIDTH - self.menu_width) // 2
+        self.menu_y = (Settings.HEIGHT - self.menu_height) // 2 + 50
         self.menu_rect = pygame.Rect(
             self.menu_x, self.menu_y, self.menu_width, self.menu_height)
         self.menu_items_rects = []
         self.selected_item = 0
 
-        self.settings = settings
         self.cooldown_time = 500  # milliseconds
         self.last_click_time = 0
 
@@ -41,9 +42,9 @@ class IngameMenu:
     def show_game_saved(self):
         if not self.is_game_saved:
             text_surf = self.font.render(
-                "Game saved!", True, self.settings.BLACK_TEXT_COLOR)
+                "Game saved!", True, Settings.BLACK_TEXT_COLOR)
             text_rect = text_surf.get_rect(center=(
-                self.settings.WIDTH // 2, self.settings.HEIGHT // 2-250))
+                Settings.WIDTH // 2, Settings.HEIGHT // 2-250))
             self.display_surface.blit(text_surf, text_rect)
 
     def cooldown(self):
@@ -95,15 +96,15 @@ class IngameMenu:
         self.display_surface.blit(self.menu_bg, (0, 0))
 
         pygame.draw.rect(self.display_surface, pygame.Color(
-            self.settings.MENU_BG_COLOR), self.menu_rect)
+            Settings.MENU_BG_COLOR), self.menu_rect)
         pygame.draw.rect(self.display_surface, pygame.Color(
-            self.settings.MENU_BORDER_COLOR), self.menu_rect, 5)
+            Settings.MENU_BORDER_COLOR), self.menu_rect, 5)
 
         self.menu_items_rects = []  # Clear the previous menu item rectangles
 
         for index, item in enumerate(self.menu_items):
             item_surf = self.font.render(
-                item, True, self.settings.BLACK_TEXT_COLOR)
+                item, True, Settings.BLACK_TEXT_COLOR)
             item_rect = item_surf.get_rect(center=(
                 self.menu_rect.centerx, self.menu_rect.top + self.menu_item_height * index + self.menu_item_height // 2))
             self.menu_items_rects.append(item_rect)
@@ -112,12 +113,11 @@ class IngameMenu:
         self.show_game_saved()
 
         pygame.display.flip()
-        self.clock.tick(self.settings.FPS)
+        self.clock.tick(Settings.FPS)
 
 
 class Ingame_settings():
-    def __init__(self, settings, open_ingame_settings):
-        self.settings = settings
+    def __init__(self, open_ingame_settings):
         self.open_ingame_settings = open_ingame_settings
         self.init_settings_menu()
 
@@ -126,34 +126,34 @@ class Ingame_settings():
         self.screen = pygame.display.get_surface()
         self.clock = pygame.time.Clock()
         self.font = pygame.font.Font(
-            self.settings.UI_FONT, self.settings.UI_FONT_SIZE)
+            Settings.UI_FONT, Settings.UI_FONT_SIZE)
         self.resolution_labels = []
         self.resolution_rects = []
         self.menu_bg = pygame.transform.scale(pygame.image.load(
-            "graphics/Backgrounds/menubg.jpg"), (self.settings.WIDTH, self.settings.HEIGHT))
+            "graphics/Backgrounds/menubg.jpg"), (Settings.WIDTH, Settings.HEIGHT))
         # Define the rectangle for the menu background
         menu_width = 400
         menu_height = 500
-        menu_x = (self.settings.WIDTH - menu_width) // 2
+        menu_x = (Settings.WIDTH - menu_width) // 2
         # Adjust the value here
-        menu_y = (self.settings.HEIGHT - menu_height) // 2
+        menu_y = (Settings.HEIGHT - menu_height) // 2
         self.menu_rect = pygame.Rect(
             menu_x, menu_y - 25, menu_width, menu_height)
 
         self.save_button = pygame.Rect(
             menu_x + 100, menu_y + 400, 200, 50)
         self.save_label = self.font.render(
-            "Save", True, self.settings.BLACK_TEXT_COLOR)
+            "Save", True, Settings.BLACK_TEXT_COLOR)
         self.save_rect = self.save_label.get_rect(
             center=self.save_button.center)
         self.title_label = self.font.render(
-            "Settings", True, self.settings.BLACK_TEXT_COLOR)
+            "Settings", True, Settings.BLACK_TEXT_COLOR)
         self.title_rect = self.title_label.get_rect(
-            center=(self.settings.WIDTH // 2, self.settings.HEIGHT // 2 - 200))
+            center=(Settings.WIDTH // 2, Settings.HEIGHT // 2 - 200))
         self.volume_label = self.font.render(
-            "Volume:", True, self.settings.BLACK_TEXT_COLOR)
+            "Volume:", True, Settings.BLACK_TEXT_COLOR)
         self.volume_rect = self.volume_label.get_rect(
-            center=(self.settings.WIDTH // 2, menu_y + 250))
+            center=(Settings.WIDTH // 2, menu_y + 250))
         self.volume_slider = pygame.Rect(
             menu_x + 100, menu_y + 280, 200, 20)
         self.volume_slider_handle = pygame.Rect(
@@ -180,7 +180,8 @@ class Ingame_settings():
 
                     if self.save_button.collidepoint(event.pos):
                         print("Save button clicked!")
-                        self.settings.overwrite_volume(self.current_volume/100)
+                        Settings.overwrite_volume(self.current_volume/100)
+                        Sounds.set_static_volume(self.current_volume/100)
                         self.open_ingame_settings()
 
     def render(self):
@@ -189,28 +190,28 @@ class Ingame_settings():
         self.screen.blit(self.menu_bg, (0, 0))
         # Draw the menu background rectangle
         pygame.draw.rect(self.screen, pygame.Color(
-            self.settings.MENU_BG_COLOR), self.menu_rect)
+            Settings.MENU_BG_COLOR), self.menu_rect)
 
         # Draw the border around the menu rectangle
         pygame.draw.rect(self.screen, pygame.Color(
-            self.settings.MENU_BORDER_COLOR), self.menu_rect, 5)
+            Settings.MENU_BORDER_COLOR), self.menu_rect, 5)
 
         self.screen.blit(self.title_label, self.title_rect)
         # Draw the volume label and slider
         pygame.draw.rect(
-            self.screen, self.settings.MENU_BUTTON_BG_COLOR, self.volume_slider)
+            self.screen, Settings.MENU_BUTTON_BG_COLOR, self.volume_slider)
         pygame.draw.rect(
-            self.screen, self.settings.MENU_BORDER_COLOR, self.volume_slider, 2)
+            self.screen, Settings.MENU_BORDER_COLOR, self.volume_slider, 2)
         self.volume_slider_handle.centerx = self.volume_slider.left + int(
             self.volume_slider.width * (self.current_volume / self.volume_max))
         pygame.draw.rect(
-            self.screen, self.settings.BLACK_TEXT_COLOR, self.volume_slider_handle)
+            self.screen, Settings.BLACK_TEXT_COLOR, self.volume_slider_handle)
 
         self.screen.blit(self.volume_label, self.volume_rect)
 
         pygame.draw.rect(
-            self.screen, self.settings.MENU_BUTTON_BG_COLOR, self.save_button)
+            self.screen, Settings.MENU_BUTTON_BG_COLOR, self.save_button)
         self.screen.blit(self.save_label, self.save_rect)
 
         pygame.display.flip()
-        self.clock.tick(self.settings.FPS)
+        self.clock.tick(Settings.FPS)

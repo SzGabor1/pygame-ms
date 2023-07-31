@@ -1,29 +1,44 @@
 import pygame
+from settings import Settings
 
 
 class Sounds():
-    def __init__(self, settings, sound_names):
-        self.sounds = {}
-        self.settings = settings
-        self.load_sounds(sound_names)
-        self.set_volume(self.settings.VOLUME)
+    VOLUME = 0.5
 
-    def __getitem__(self, sound_name):
-        return self.sounds[sound_name]
+    SOUNDS = {}
 
-    def load_sounds(self, sound_names):
-        for tag in sound_names:
-            self.sounds[tag] = pygame.mixer.Sound(self.settings.SOUNDS[tag])
+    @classmethod
+    def load_sounds(cls, sound_names):
+        for sound_name in sound_names:
+            cls.SOUNDS[sound_name] = pygame.mixer.Sound(
+                Settings.SOUNDS[sound_name])
 
-        # self.sounds['sword'] = pygame.mixer.Sound('audio/sword.wav')
-        # self.sounds['main'] = pygame.mixer.Sound('audio/main.mp3')
+    def __init__(self):
+        self.volume_validation()
+        self.update_volumes()
 
-    def set_volume(self, amount):
-        for sound in self.sounds.values():
-            sound.set_volume(amount)
+    def volume_validation(self):
+        if not 0 <= Settings.VOLUME <= 1:
+            Settings.VOLUME = 0.5
 
-    def play(self, tag):
-        self.sounds[tag].play()
+    def update_volumes(self):
+        for sound in Sounds.SOUNDS.values():
+            sound.set_volume(Settings.VOLUME)
 
-    def play_loop(self, tag):
-        self.sounds[tag].play(-1)
+    @classmethod
+    def set_static_volume(cls, amount):
+        cls.VOLUME = amount
+        # Call the instance method directly without using cls
+        Sounds().update_volumes()
+
+    @classmethod
+    def play(cls, sound_name):
+        cls.SOUNDS[sound_name].play()
+
+    @classmethod
+    def play_loop(cls, sound_name):
+        cls.SOUNDS[sound_name].play(-1)
+
+
+# Load the sounds using the sound names from the Settings class
+Sounds.load_sounds(Settings.SOUNDS)

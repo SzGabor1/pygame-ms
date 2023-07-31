@@ -1,10 +1,11 @@
 import pygame
 import sys
+from settings import Settings
 
 
 class Shop():
-    def __init__(self, settings, item_list, toggle_shop, npc_name):
-        self.settings = settings
+    def __init__(self, item_list, toggle_shop, npc_name):
+
         self.itemlist = item_list
         self.npc_name = npc_name
 
@@ -16,19 +17,19 @@ class Shop():
         self.display_surface = pygame.display.get_surface()
         self.clock = pygame.time.Clock()
         self.font = pygame.font.Font(
-            self.settings.UI_FONT, self.settings.UI_FONT_SIZE)
+            Settings.UI_FONT, Settings.UI_FONT_SIZE)
 
         self.title_label = self.font.render(
-            self.npc_name, True, self.settings.BLACK_TEXT_COLOR)
+            self.npc_name, True, Settings.BLACK_TEXT_COLOR)
         self.title_rect = self.title_label.get_rect(
-            center=(self.settings.WIDTH // 2, self.settings.HEIGHT // 2 - 200))
+            center=(Settings.WIDTH // 2, Settings.HEIGHT // 2 - 200))
 
         # Define the rectangle for the menu background
         menu_width = 400
         menu_height = 600
-        menu_x = (self.settings.WIDTH - menu_width) // 2
+        menu_x = (Settings.WIDTH - menu_width) // 2
         # Adjust the value here
-        menu_y = (self.settings.HEIGHT - menu_height) // 2
+        menu_y = (Settings.HEIGHT - menu_height) // 2
 
         self.menu_rect = pygame.Rect(
             menu_x, menu_y+50, menu_width, menu_height)
@@ -36,19 +37,19 @@ class Shop():
         self.close_button = pygame.Rect(
             menu_x + 50, menu_y + 550, 300, 50)
         self.close_label = self.font.render(
-            "Close", True, self.settings.BLACK_TEXT_COLOR)
+            "Close", True, Settings.BLACK_TEXT_COLOR)
         self.close_rect = self.close_label.get_rect(
             center=self.close_button.center)
 
     def display(self, player, events):
         pygame.draw.rect(self.display_surface, pygame.Color(
-            self.settings.MENU_BG_COLOR), self.menu_rect)
+            Settings.MENU_BG_COLOR), self.menu_rect)
 
         pygame.draw.rect(self.display_surface, pygame.Color(
-            self.settings.MENU_BORDER_COLOR), self.menu_rect, 5)
+            Settings.MENU_BORDER_COLOR), self.menu_rect, 5)
 
         self.display_surface.blit(self.title_label, self.title_rect)
-        pygame.draw.rect(self.display_surface, self.settings.MENU_BUTTON_BG_COLOR,
+        pygame.draw.rect(self.display_surface, Settings.MENU_BUTTON_BG_COLOR,
                          self.close_button)
         self.display_surface.blit(self.close_label, self.close_rect)
 
@@ -59,7 +60,7 @@ class Shop():
         item_start_y = self.menu_rect.top + 100
 
         for index, item_id in enumerate(self.itemlist):
-            item = self.settings.items[item_id]
+            item = Settings.items[item_id]
 
             item_rect = pygame.Rect(
                 item_start_x + (item_size + item_padding) * (index % 3),
@@ -76,7 +77,7 @@ class Shop():
             # Display item cost
             item_cost = item['cost']
             item_cost_label = self.font.render(
-                f"{item_cost}", True, self.settings.BLACK_TEXT_COLOR)
+                f"{item_cost}", True, Settings.BLACK_TEXT_COLOR)
             item_cost_rect = item_cost_label.get_rect(
                 bottomleft=(item_rect.left, item_rect.bottom + 15))
             self.display_surface.blit(item_cost_label, item_cost_rect)
@@ -88,7 +89,7 @@ class Shop():
                 item_info = f"{item_name}: {item_description}"
 
                 item_info_label = self.font.render(
-                    item_info, True, self.settings.BLACK_TEXT_COLOR)
+                    item_info, True, Settings.BLACK_TEXT_COLOR)
                 item_info_rect = item_info_label.get_rect(
                     bottomleft=(self.menu_rect.left + 20, self.menu_rect.bottom - 20))
                 self.display_surface.blit(item_info_label, item_info_rect)
@@ -105,20 +106,20 @@ class Shop():
 
         # Display player's balance
         balance_label = self.font.render(
-            f"Balance: {player.balance}", True, self.settings.BLACK_TEXT_COLOR)
+            f"Balance: {player.balance}", True, Settings.BLACK_TEXT_COLOR)
         balance_rect = balance_label.get_rect(
             bottomleft=(self.menu_rect.left + 20, self.menu_rect.bottom - 170))
         self.display_surface.blit(balance_label, balance_rect)
 
     def display_shop_button(self):
         text_surf = self.font.render(
-            "E", False, self.settings.BLACK_TEXT_COLOR)
+            "E", False, Settings.BLACK_TEXT_COLOR)
         text_rect = text_surf.get_rect(bottomright=(
-            self.settings.WIDTH - 20, self.settings.HEIGHT - 80))
-        pygame.draw.rect(self.display_surface, self.settings.UI_BG_COLOR,
+            Settings.WIDTH - 20, Settings.HEIGHT - 80))
+        pygame.draw.rect(self.display_surface, Settings.UI_BG_COLOR,
                          text_rect.inflate(20, 20))
         self.display_surface.blit(text_surf, text_rect)
-        pygame.draw.rect(self.display_surface, self.settings.UI_BORDER_COLOR,
+        pygame.draw.rect(self.display_surface, Settings.UI_BORDER_COLOR,
                          text_rect.inflate(20, 20), 3)
 
     def update(self):

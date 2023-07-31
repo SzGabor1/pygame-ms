@@ -8,21 +8,18 @@ from sound import Sounds
 
 
 class Player(Entity):
-    def __init__(self, pos, groups, obstacle_sprites, create_attack, destroy_attack, settings, save_datas, newGame):
+    def __init__(self, pos, groups, obstacle_sprites, create_attack, destroy_attack, save_datas, newGame):
         super().__init__(groups)
         self.newGame = newGame
         self.name = save_datas['player_name']
         self.character_id = save_datas['character_id']
-        self.settings = settings
-
-        self.sounds = Sounds(self.settings, ('sword',))
 
         self.save_datas = save_datas
         self.image = pygame.image.load(
             'graphics/Characters/players/'+str(self.character_id)+'/down_idle/down_idle.png')
         self.rect = self.image.get_rect(topleft=pos)
         self.hitbox = self.rect.inflate(-6,
-                                        self.settings.HITBOX_OFFSET['player'])
+                                        Settings.HITBOX_OFFSET['player'])
 
         # graphics setup
         self.import_player_assets()
@@ -38,7 +35,7 @@ class Player(Entity):
         # weapon
         self.create_attack = create_attack
         self.weapon_index = 1
-        self.weapon = list(self.settings.weapon_data.keys())[self.weapon_index]
+        self.weapon = list(Settings.weapon_data.keys())[self.weapon_index]
         self.destroy_attack = destroy_attack
         self.can_switch_item = True
         self.item_switch_time = None
@@ -78,7 +75,7 @@ class Player(Entity):
         # self.weapon_attack_sound.set_volume(0.1)
 
         # inventory
-        self.inventory = Inventory(settings)
+        self.inventory = Inventory()
         self.inventory_index = 0
 
         self.init_stats()
@@ -90,7 +87,7 @@ class Player(Entity):
         # strength potion timer
         self.strength_potion_time = None
         self.used_strength_potion = False
-        self.strength_potion_duration = self.settings.items[2]['duration']*1000
+        self.strength_potion_duration = Settings.items[2]['duration']*1000
 
         self.in_range_of_dungeon_portal = False
         self.is_inside_dungeon = False
@@ -161,7 +158,7 @@ class Player(Entity):
         if not self.used_strength_potion:
             self.strength_potion_time = pygame.time.get_ticks()
             self.used_strength_potion = True
-            self.stats['attack'] += self.settings.items[2]['amount']
+            self.stats['attack'] += Settings.items[2]['amount']
 
     def input(self):
         keys = pygame.key.get_pressed()
@@ -192,17 +189,17 @@ class Player(Entity):
                 self.attack_time = pygame.time.get_ticks()
                 self.create_attack()
                 self.attack_direction = self.direction
-                self.sounds.play('sword')
+                Sounds.play('sword')
 
         if keys[pygame.K_e] and self.can_switch_item:
             self.can_switch_item = False
             self.item_switch_time = pygame.time.get_ticks()
 
-            if self.weapon_index < len(list(self.settings.weapon_data.keys()))-1:
+            if self.weapon_index < len(list(Settings.weapon_data.keys()))-1:
                 self.weapon_index += 1
             else:
                 self.weapon_index = 0
-            self.weapon = list(self.settings.weapon_data.keys())[
+            self.weapon = list(Settings.weapon_data.keys())[
                 self.weapon_index]
         # sprint
         if keys[pygame.K_LSHIFT]:
@@ -293,7 +290,7 @@ class Player(Entity):
             self.image.set_alpha(255)
 
     def get_full_damage(self):
-        return self.stats['attack'] + self.settings.weapon_data[self.weapon]['damage']
+        return self.stats['attack'] + Settings.weapon_data[self.weapon]['damage']
 
     def get_value_by_index(self, index):
         return list(self.stats.values())[index]

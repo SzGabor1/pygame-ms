@@ -4,20 +4,19 @@ from level import Level
 from save import Save
 from ingame_menu import IngameMenu, Ingame_settings
 from menuenums import menuenums
+from settings import Settings
 
 
 class GameHandler():
-    def __init__(self, settings, what_to_load):
+    def __init__(self, what_to_load):
         self.save = Save(what_to_load)
         self.game_paused = False
-        self.settings = settings
-        self.level = Level(self.settings, self.save.load_data())
+        self.level = Level(self.save.load_data())
         self.ingame_menu = IngameMenu(
-            self.settings, self.pause_game, self.save_game, self.open_ingame_settings)
+            self.pause_game, self.save_game, self.open_ingame_settings)
 
         self.is_settings_menu_open = False
-        self.Ingame_settings = Ingame_settings(
-            self.settings, self.open_ingame_settings)
+        self.Ingame_settings = Ingame_settings(self.open_ingame_settings)
 
         self.is_talent_menu_open = False
         self.talent_menu_open_time = None
