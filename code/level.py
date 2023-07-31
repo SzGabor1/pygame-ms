@@ -461,8 +461,6 @@ class Level:
             self.game_start_time = current_time
             self.game_time = 0
 
-        print(self.game_time)
-
     def input(self):
         keys = pygame.key.get_pressed()
 
@@ -493,7 +491,6 @@ class Level:
             self.count_time()
             self.show_minimap(self.player)
         self.ui.display(self.player)
-        debug(self.game_time)
 
 
 class YSortCameraGroup(pygame.sprite.Group):

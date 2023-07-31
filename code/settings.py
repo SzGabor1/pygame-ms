@@ -139,142 +139,126 @@ class Settings:
 
         self.quest_data = {
             0: {
-                "text": "Öld meg a szellemeket",
-                "objective": "Ölj meg 3 szellemet",
-                "max_amount": 3,
-                "enemy_type": "spirit",
-                "rewardMoney": 200,
-                "rewardXP": 3010
+                'text': 'Go near to the dungeon entrance and kill 3 skeletons',
+                'objective': 'Kill 3 skeletons',
+                'max_amount': 3,
+                'enemy_type': 'skeleton',
+                'rewardMoney': 200,
+                'rewardXP': 3010
             },
 
             1: {
-                "text": "Öld meg a crabt",
-                "objective": "Öld meg a crabt",
-                "max_amount": 1,
-                "enemy_type": "crab",
-                "rewardMoney": 500,
-                "rewardXP": 4000
+                'text': 'Kill the Crab in front of the dungeon entrance',
+                'objective': 'Kill the Crab',
+                'max_amount': 1,
+                'enemy_type': 'crab',
+                'rewardMoney': 500,
+                'rewardXP': 4000
             },
 
             2: {
-                "text": "Kutass az elveszett város romjaiban",
-                "objective": "Fedezd fel az elveszett város romjait",
-                "max_amount": 1,
-                "enemy_type": "spirit",
-                "rewardMoney": 300,
-                "rewardXP": 2500
+                'text': 'Go into the dungeon and kill the Wizzard',
+                'objective': 'Kill the Wizzard',
+                'max_amount': 1,
+                'enemy_type': 'wizzard',
+                'rewardMoney': 300,
+                'rewardXP': 2500
             },
 
             3: {
-                "text": "Harcold le a sárkányt",
-                "objective": "Öld meg a hatalmas sárkányt",
-                "max_amount": 1,
-                "enemy_type": "",
-                "rewardMoney": 1000,
-                "rewardXP": 8000
+                'text': 'Buy some potions from the merchant',
+                'objective': 'Buy any potion from the merchant',
+                'max_amount': 3,
+                'enemy_type': '',
+                'quest_type': 'potion',
+                'rewardMoney': 1000,
+                'rewardXP': 8000
             },
 
             4: {
-                "text": "Szerezd vissza az elveszett varázskönyvet",
-                "objective": "Keresd meg az elveszett varázskönyvet",
-                "max_amount": 1,
-                "enemy_type": "",
-                "rewardMoney": 400,
-                "rewardXP": 3500
+                'text': 'Use a heal potion',
+                'objective': 'Use a heal potion',
+                'max_amount': 1,
+                'enemy_type': '',
+                'quest_type': 'use_potion',
+                'rewardMoney': 400,
+                'rewardXP': 3500
             },
 
             5: {
-                "text": "Teljesíts egy veszélyes küldetést",
-                "objective": "Teljesíts egy veszélyes küldetést a kiképződ segítségével",
-                "max_amount": 1,
-                "enemy_type": "",
-                "rewardMoney": 800,
-                "rewardXP": 6000
+                'text': 'Open the control panel',
+                'objective': 'Press f1 to open the control panel',
+                'max_amount': 1,
+                'enemy_type': '',
+                'rewardMoney': 800,
+                'rewardXP': 6000
             },
-
-            6: {
-                "text": "Keress meg egy rejtélyes tárgyat",
-                "objective": "Találd meg a rejtélyes tárgyat",
-                "max_amount": 1,
-                "enemy_type": "",
-                "rewardMoney": 600,
-                "rewardXP": 4500
-            },
-
-            7: {
-                "text": "Tisztítsd meg a mocsarat a szörnyektől",
-                "objective": "Ölj meg 5 mocsári szörnyet",
-                "max_amount": 5,
-                "enemy_type": "",
-                "rewardMoney": 300,
-                "rewardXP": 2800
-            }
         }
 
         self.items = {
 
             0: {
-                "id": 0,
-                "name": "Health Potion",
-                "description": "Regenerate a small amount of health.",
-                "type": "consumable",
-                "effect": "health",
-                "amount": 60,
-                "duration": 0,
-                "graphic": "graphics/items/health_potion.png",
-                "cost": 1000
+                'id': 0,
+                'name': 'Health Potion',
+                'description': 'Regenerate a small amount of health.',
+                'type': 'consumable',
+                'effect': 'health',
+                'amount': 60,
+                'duration': 0,
+                'graphic': 'graphics/items/health_potion.png',
+                'cost': 1000
             },
             1: {
-                "id": 1,
-                "name": "Energy Potion",
-                "description": "Restores a small amount of mana.",
-                "type": "consumable",
-                "effect": "energy",
-                "amount": 30,
-                "duration": 0,
-                "graphic": "graphics/items/energy_potion.png",
-                "cost": 1600
+                'id': 1,
+                'name': 'Energy Potion',
+                'description': 'Restores a small amount of mana.',
+                'type': 'consumable',
+                'effect': 'energy',
+                'amount': 30,
+                'duration': 0,
+                'graphic': 'graphics/items/energy_potion.png',
+                'cost': 1600
             },
             2: {
-                "id": 2,
-                "name": "Strength Potion",
-                "description": "Temporarily increases your strength.",
-                "type": "consumable",
-                "effect": "strength",
-                "amount": 10,
-                "duration": 60,
-                "graphic": "graphics/items/strength_potion.png",
-                "cost": 2000
+                'id': 2,
+                'name': 'Strength Potion',
+                'description': 'Temporarily increases your strength.',
+                'type': 'consumable',
+                'effect': 'strength',
+                'amount': 10,
+                'duration': 60,
+                'graphic': 'graphics/items/strength_potion.png',
+                'cost': 2000
             },            3: {
-                "id": 3,
-                "name": "Strength Potion",
-                "description": "Temporarily increases your strength.",
-                "type": "consumable",
-                "effect": "strength",
-                "amount": 10,
-                "duration": 60,
-                "graphic": "graphics/items/strength_potion.png",
-                "cost": 2000
+                'id': 3,
+                'name': 'Strength Potion',
+                'description': 'Temporarily increases your strength.',
+                'type': 'consumable',
+                'effect': 'strength',
+                'amount': 10,
+                'duration': 60,
+                'graphic': 'graphics/items/strength_potion.png',
+                'cost': 2000
             },            4: {
-                "id": 4,
-                "name": "Strength Potion",
-                "description": "Temporarily increases your strength.",
-                "type": "consumable",
-                "effect": "strength",
-                "amount": 10,
-                "duration": 60,
-                "graphic": "graphics/items/strength_potion.png",
-                "cost": 2000
+                'id': 4,
+                'name': 'Strength Potion',
+                'description': 'Temporarily increases your strength.',
+                'type': 'consumable',
+                'effect': 'strength',
+                'amount': 10,
+                'duration': 60,
+                'graphic': 'graphics/items/strength_potion.png',
+                'cost': 2000
             },            5: {
-                "id": 5,
-                "name": "Strength Potion",
-                "description": "Temporarily increases your strength.",
-                "type": "consumable",
-                "effect": "strength",
-                "amount": 10,
-                "duration": 60,
-                "graphic": "graphics/items/strength_potion.png",
-                "cost": 2000
+                'id': 5,
+                'name': 'Strength Potion',
+                'description': 'Temporarily increases your strength.',
+                'type': 'consumable',
+                'effect': 'strength',
+                'amount': 10,
+                'duration': 60,
+                'graphic': 'graphics/items/strength_potion.png',
+                'cost': 2000
             },
         }
 
@@ -285,22 +269,22 @@ class Settings:
         self.volume = volume
         print(self.fullscreen)
         dictionary = {
-            "settings": {
-                "WIDTH": self.WIDTH,
-                "HEIGHT": self.HEIGHT,
-                "FULLSCREEN": self.fullscreen,
-                "VOLUME": self.volume
+            'settings': {
+                'WIDTH': self.WIDTH,
+                'HEIGHT': self.HEIGHT,
+                'FULLSCREEN': self.fullscreen,
+                'VOLUME': self.volume
             }
         }
         json_object = json.dumps(dictionary, indent=4)
-        with open("data/settings/settings.json", "w") as outfile:
+        with open('data/settings/settings.json', 'w') as outfile:
             outfile.write(json_object)
 
     def overwrite_volume(self, volume):
         self.volume = volume
         # Update settings in the JSON file with the new volume value
-        with open("data/settings/settings.json", "r") as infile:
+        with open('data/settings/settings.json', 'r') as infile:
             data = json.load(infile)
-            data["settings"]["VOLUME"] = self.volume
-        with open("data/settings/settings.json", "w") as outfile:
+            data['settings']['VOLUME'] = self.volume
+        with open('data/settings/settings.json', 'w') as outfile:
             json.dump(data, outfile, indent=4)

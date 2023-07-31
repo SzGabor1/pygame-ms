@@ -54,7 +54,7 @@ class UI:
         text_surf = self.font.render(
             (objective), False, self.settings.WHITE_TEXT_COLOR)
         text_rect = text_surf.get_rect(
-            topright=(self.settings.WIDTH-10, 200))  # Módosított sor
+            topright=(self.settings.WIDTH-10, 200))
         pygame.draw.rect(self.display_surface, self.settings.UI_BG_COLOR,
                          text_rect.inflate(20, 20))
         self.display_surface.blit(text_surf, text_rect)
@@ -166,6 +166,40 @@ class UI:
             self.display_surface.blit(rewardXP_surf, rewardXP_rect)
             self.display_surface.blit(rewardMoney_surf, rewardMoney_rect)
 
+    def caculate_strength_potion_time(self, player):
+        current_time = pygame.time.get_ticks()
+        return int((player.strength_potion_duration)/1000)-(int((current_time - player.strength_potion_time) / 1000))
+
+    def show_strength_potion_duration(self, player):
+        if player.used_strength_potion:
+
+            # Draw background and border
+            pygame.draw.rect(self.display_surface,
+                             self.settings.UI_BG_COLOR, (100, 100, 40, 40))
+            pygame.draw.rect(self.display_surface,
+                             self.settings.UI_BORDER_COLOR, (100, 100, 40, 40), 2)
+
+            # Load the strength potion image here
+            strength_potion_image = pygame.image.load(
+                "graphics/items/strength_potion.png")
+
+            strength_potion_image = pygame.transform.scale(
+                strength_potion_image, (40, 40))
+
+            # Calculate the blit position to center the image inside the rectangle
+            image_x = 100 + (40 - strength_potion_image.get_width()) // 2
+            image_y = 100 + (40 - strength_potion_image.get_height()) // 2
+
+            self.display_surface.blit(
+                strength_potion_image, (image_x, image_y))
+
+            # Display the potion duration on top of the image
+            text_surf = self.font.render(
+                f"{self.caculate_strength_potion_time(player)}", True, self.settings.WHITE_TEXT_COLOR)
+            text_rect = text_surf.get_rect(
+                center=(100 + 40 // 2, 100 + 40 // 2))
+            self.display_surface.blit(text_surf, text_rect)
+
     def display(self, player):
         self.show_bar(
             player.health, player.stats['health'], self.health_bar_rect, self.settings.HEALTH_COLOR)
@@ -182,3 +216,4 @@ class UI:
                                     ) + "/" + str(player.current_amount))
         self.show_inventory(player)
         self.show_completed_quest(player)
+        self.show_strength_potion_duration(player)
