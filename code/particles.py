@@ -65,6 +65,41 @@ class AnimationPlayer:
         animation_frames = self.frames[animation_type]
         ParticleEffect(pos, animation_frames, groups)
 
+    def display_damage_numbers(self, pos, groups, damage, settings):
+        DamageNumber(pos, damage, groups, settings)
+
+
+class DamageNumber(pygame.sprite.Sprite):
+
+    def __init__(self, pos, damage, groups, settings):
+        self.settings = settings
+        self.font = pygame.font.Font(
+            self.settings.UI_FONT, self.settings.UI_FONT_SIZE)
+        super().__init__(groups)
+        self.damage = str(damage)
+        self.image = self.font.render(
+            self.damage, True, self.settings.DAMAGE_NUMBER_COLOR)
+        self.rect = self.image.get_rect(center=pos)
+        self.duration = 1000  # 1 second in milliseconds
+        self.speed = 0.01
+        self.dy = -self.speed
+        self.animation_offset = self.dy * self.duration
+        self.start_time = pygame.time.get_ticks()
+
+    def animate(self):
+        current_time = pygame.time.get_ticks()
+        if current_time >= self.start_time + self.duration:
+            self.kill()
+        else:
+            progress = (current_time - self.start_time) / self.duration
+            self.rect.y += int(self.animation_offset * progress)
+
+    def update(self):
+        self.animate()
+
+    def draw(self, surface):
+        surface.blit(self.image, self.rect)
+
 
 class ParticleEffect(pygame.sprite.Sprite):
     def __init__(self, pos, animation_frames, groups):

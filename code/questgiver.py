@@ -20,9 +20,9 @@ class QuestGiver(NPC):
     def update_questgiver(self, player):
         self.complete_quest(player)
         self.get_rid_of_completed_quests(player)
-        self.show_dialogue(player)
+        self.display_dialogue(player)
         self.in_range_of_player(player)
-        self.show_dialogue_button(player)
+        self.display_dialogue_button(player)
 
         if self.accept_quest_bool:
             self.accept_quest(player)
@@ -54,7 +54,7 @@ class QuestGiver(NPC):
             player.quest_accepted = True
             self.accept_quest_bool = False
 
-    def show_dialogue(self, player):
+    def display_dialogue(self, player):
         if self.toggle_dialogue and self.range_of_player and self.quests != [] and player.current_quest == -1:
             self.dialogue.display(
                 self.name, str(self.settings.quest_data[self.quests[0]]['text']))
@@ -62,7 +62,7 @@ class QuestGiver(NPC):
             if self.dialogue.should_close_dialogue():
                 self.toggle_dialogue = False
 
-    def show_dialogue_button(self, player):
+    def display_dialogue_button(self, player):
         if self.quests != [] and player.current_quest == -1 and self.range_of_player and not self.toggle_dialogue:
             self.dialogue.display_dialogue_button()
 
@@ -72,9 +72,9 @@ class QuestGiver(NPC):
     def npc_update(self, player):
         self.complete_quest(player)
         self.get_rid_of_completed_quests(player)
-        self.show_dialogue(player)
+        self.display_dialogue(player)
         self.in_range_of_player(player)
-        self.show_dialogue_button(player)
+        self.display_dialogue_button(player)
 
         if self.accept_quest_bool:
             self.accept_quest(player)

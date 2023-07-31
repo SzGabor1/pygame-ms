@@ -129,6 +129,8 @@ class Settings:
         self.BAR_COLOR_SELECTED = '#111111'
         self.TALENT_BG_COLOR_SELECTED = '#EEEEEE'
 
+        self.DAMAGE_NUMBER_COLOR = '#ff7200'
+
         self.npc_data = {
             '59': {'name': 'Laci 59', 'skin': 'Villager1', 'quest_ids': [1], 'type': 'quest_giver', 'item_list': None},
             '79': {'name': 'Roli 79', 'skin': 'Villager1', 'quest_ids': [2], 'type': 'quest_giver', 'item_list': None},

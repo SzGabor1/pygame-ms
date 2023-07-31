@@ -358,10 +358,14 @@ class Level:
                                     pos-offset, [self.visible_sprites])
                             target_sprite.kill()
                         else:
+                            if target_sprite.vulnerable:
+                                self.particle_player.display_damage_numbers(target_sprite.rect.midtop, [
+                                    self.visible_sprites], self.player.get_full_damage(), self.settings)
                             target_sprite.get_damage(
                                 self.player, attack_sprite.sprite_type)
 
             # spawn particles
+
     def trigger_death_particles(self, pos, particle_type):
         self.particle_player.create_particles(particle_type, pos, [
                                               self.visible_sprites])
