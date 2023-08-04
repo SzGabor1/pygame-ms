@@ -14,7 +14,7 @@ class Weapon(pygame.sprite.Sprite):
         # placement
         self.rect = self.image.get_rect()
         self.direction = self.player.status.split('_')[0]
-        self.angle = 0  # Initialize the angle of rotation
+        self.angle = 0
 
         self.update_weapon_position()
 
@@ -25,15 +25,10 @@ class Weapon(pygame.sprite.Sprite):
 
     def update_weapon_position(self):
         direction = self.player.status.split('_')[0]
+        self.direction = direction
 
-        # Check if the player's direction has changed
-        if direction != self.direction:
-            self.image = self.load_weapon_image()  # Load the new weapon image
-            self.direction = direction  # Update the stored direction
-
-        # Update the rotation angle based on a sinusoidal function
-        angular_speed = 0.1  # Adjust this value to control the speed of rotation
-        amplitude = 60  # Adjust this value to control the amplitude of rotation
+        angular_speed = 0.1
+        amplitude = 60
         self.angle += angular_speed
         rotation = math.sin(self.angle) * amplitude
 

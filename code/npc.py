@@ -3,9 +3,6 @@ import pygame
 from entity import Entity
 from support import *
 from settings import *
-from dialogue import Dialogue
-
-# ha quest felvételnél tapasztalható lesz lag, akkor kell egy quest osztály és memóriába kell tárolni az adatokat.
 
 
 class NPC(Entity):
@@ -40,7 +37,7 @@ class NPC(Entity):
         keys = pygame.key.get_pressed()
         if keys[pygame.K_e]:
             self.toggle_dialogue = True
-            self.toggle_shop = True
+            self.is_shop_open = True
 
     def in_range_of_player(self, player):
         player_pos = player.rect.center
@@ -50,3 +47,4 @@ class NPC(Entity):
         else:
             self.range_of_player = False
             self.toggle_dialogue = False
+            self.is_shop_open = False

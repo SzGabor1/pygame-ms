@@ -160,7 +160,7 @@ class Ingame_settings():
             menu_x + 100, menu_y + 275, 10, 30)
         self.volume_min = 0
         self.volume_max = 100
-        self.current_volume = 50
+        self.current_volume = Settings.VOLUME * 100
 
     def update(self):
         for event in pygame.event.get():

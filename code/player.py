@@ -203,7 +203,7 @@ class Player(Entity):
                 self.weapon_index]
         # sprint
         if keys[pygame.K_LSHIFT]:
-            self.speed = self.stats['speed']*5.5
+            self.speed = self.stats['speed']*1.5
         else:
             self.speed = self.stats['speed']
 

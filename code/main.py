@@ -7,7 +7,6 @@ from mainmenu import MainMenu, SettingsMenu, NewGameMenu, LoadMenu
 from menuenums import menuenums
 from gamehandler import GameHandler
 from save import Save
-from sound import Sounds
 from settings import Settings
 from sound import Sounds
 
