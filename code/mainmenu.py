@@ -401,7 +401,7 @@ class NewGameMenu:
                     if self.save_button.collidepoint(mouse_pos):
                         print("Save button clicked!")
                         self.game.save_parameters = ("new",
-                                                     self.character_name, self.current_character_index)
+                                                     self.character_name, self.current_character_index, input('Difficulty: '))
                         self.game.state = menuenums.GAME
 
                     # Check if the back button is clicked

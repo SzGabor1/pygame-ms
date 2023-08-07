@@ -11,13 +11,6 @@ class Settings:
     FULLSCREEN = data['settings']['FULLSCREEN']
     VOLUME = data['settings']['VOLUME']
 
-    RESOLUTIONS = [
-        (800, 600),
-        (1024, 768),
-        (1280, 720),
-        (1680, 950)
-    ]
-
     @staticmethod
     def overwrite_settings(width, height, fullscreen, volume):
         WIDTH = width

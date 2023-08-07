@@ -13,42 +13,42 @@ class Save:
             print(json.load(open(full_path)))
             return "existing", json.load(open(full_path))
         else:
-            return "new", {'player_name': self.save_parameters[1], 'character_id': self.save_parameters[2]}
+            return "new", {'player_name': self.save_parameters[1], 'character_id': self.save_parameters[2], 'difficulty': self.save_parameters[3]}
 
     def create_save(self, player):
         print("save class, create_save")
         print("player name" + player.name)
 
         player_name = player.name
-        character_id = player.character_id
+        skin_id = player.character_id
         player_pos = player.rect.topleft
         player_stats = player.stats
         player_health = player.health
         player_energy = player.energy
-        player_speed = player.speed
         player_exp = player.exp
-        player_balance = player.balance
+        balance = player.balance
         player_completed_quests = player.completed_quests
         player_current_quest = player.current_quest
         player_current_amount = player.current_amount
         player_max_amount = player.max_amount
         player_inventory_item_ids = player.inventory.get_items()
+        difficulty = player.difficulty
 
         save_data = {
             'player_name': player_name,
-            'character_id': character_id,
+            'skin_id': skin_id,
             'player_pos': player_pos,
             'player_stats': player_stats,
             'player_health': player_health,
             'player_energy': player_energy,
-            'player_speed': player_speed,
             'player_exp': player_exp,
-            'player_balance': player_balance,
+            'balance': balance,
             'player_completed_quests': player_completed_quests,
             'player_current_quest': player_current_quest,
             'player_current_amount': player_current_amount,
             'player_max_amount': player_max_amount,
-            'player_inventory_item_ids': player_inventory_item_ids
+            'player_inventory_item_ids': player_inventory_item_ids,
+            'difficulty': difficulty,
 
         }
 

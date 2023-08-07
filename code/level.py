@@ -119,10 +119,10 @@ class Level:
                             if col == '39':
                                 if self.save[0] == "existing":
                                     self.player = Player(
-                                        self.save[1]['player_pos'], [self.visible_sprites], self.obstacle_sprites, self.create_attack, self.destroy_attack, self.save[1], None)
+                                        self.save[1]['player_pos'], [self.visible_sprites], self.obstacle_sprites, self.create_attack, self.destroy_attack, self.save[1], None, (x, y), self.save[1]['difficulty'])
                                 else:
                                     self.player = Player(
-                                        (x, y), [self.visible_sprites], self.obstacle_sprites, self.create_attack, self.destroy_attack, self.save[1], "newCharacter")
+                                        (x, y), [self.visible_sprites], self.obstacle_sprites, self.create_attack, self.destroy_attack, self.save[1], "newCharacter", (x, y), self.save[1]['difficulty'])
 
                             elif col == '59':
                                 self.create_npc(

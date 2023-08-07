@@ -8,12 +8,12 @@ from sound import Sounds
 
 
 class Player(Entity):
-    def __init__(self, pos, groups, obstacle_sprites, create_attack, destroy_attack, save_datas, newGame):
+    def __init__(self, pos, groups, obstacle_sprites, create_attack, destroy_attack, save_datas, newGame, spawn_point, difficulty):
         super().__init__(groups)
         self.newGame = newGame
         self.name = save_datas['player_name']
-        self.character_id = save_datas['character_id']
-
+        self.character_id = save_datas['skin_id']
+        self.spawn_point = spawn_point
         self.save_datas = save_datas
         self.image = pygame.image.load(
             'graphics/Characters/players/'+str(self.character_id)+'/down_idle/down_idle.png')
@@ -24,6 +24,8 @@ class Player(Entity):
         # graphics setup
         self.import_player_assets()
         self.status = 'down'
+
+        self.difficulty = difficulty
 
         # movement
         self.speed = 2
@@ -83,7 +85,7 @@ class Player(Entity):
         self.can_use_item = True
         self.item_use_time = None
         self.item_usage_cooldown = 1000
-
+        self.speed = self.stats['speed']
         # strength potion timer
         self.strength_potion_time = None
         self.used_strength_potion = False
@@ -98,9 +100,8 @@ class Player(Entity):
                           ['energy'], 'attack': self.save_datas['player_stats']['attack'], 'speed': self.save_datas['player_stats']['speed']}
             self.health = self.save_datas['player_health']
             self.energy = self.save_datas['player_energy']
-            self.speed = self.save_datas['player_speed']
             self.exp = self.save_datas['player_exp']
-            self.balance = self.save_datas['player_balance']
+            self.balance = self.save_datas['balance']
             self.completed_quests = self.save_datas['player_completed_quests']
             self.current_quest = self.save_datas['player_current_quest']
             self.current_amount = self.save_datas['player_current_amount']
@@ -303,6 +304,20 @@ class Player(Entity):
             self.health -= amount
             self.hurt_time = pygame.time.get_ticks()
             self.vulnerable = False
+
+        if self.health < 0:
+            self.handle_death()
+
+    def handle_death(self):
+
+        if self.difficulty == 0:
+            # self.print_death_text("You died!")
+            self.hitbox.topleft = self.spawn_point
+        else:
+
+            #self.print_death_text("Game over!")
+            # self.delete_save()
+            pygame.quit()
 
     def update_experience(self, amount):
         self.exp += amount
