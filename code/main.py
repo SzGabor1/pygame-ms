@@ -9,11 +9,23 @@ from gamehandler import GameHandler
 from save import Save
 from settings import Settings
 from sound import Sounds
+import game_api_client
+from user_auth import UserAuth
+from user import User
 
 
 class Game:
-
     def __init__(self):
+        self.online = True
+        if self.online:
+            # UserAuth.register()
+            response = UserAuth.login()
+            if response is not False:
+                print("User logged in successfully")
+                self.user = User(response['username'], response['user_id'])
+            else:
+                print("User login failed")
+
         pygame.init()
         self.init_screen()
         pygame.display.set_caption("Marooned Sailor")
@@ -74,7 +86,10 @@ class Game:
 
     def open_load_menu(self):
         Sounds.play('click')
-        self.load_menu = LoadMenu(self)
+        if self.online:
+            self.load_menu = LoadMenu(self, self.user.characters)
+        else:
+            self.load_menu = LoadMenu(self, None)
         self.state = menuenums.LOAD_GAME
 
     def open_settings_menu(self):

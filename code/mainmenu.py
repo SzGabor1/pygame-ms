@@ -438,7 +438,7 @@ class NewGameMenu:
 
 
 class LoadMenu:
-    def __init__(self, game):
+    def __init__(self, game, online_characters):
         self.game = game
         self.init_load_menu()
 
@@ -475,7 +475,7 @@ class LoadMenu:
         self.saves_folder = "saves/"
         self.save_files = get_save_files(self.saves_folder)
 
-        self.save_buttons = []  # Új sor: inicializálja a save_buttons listát
+        self.save_buttons = []
 
         # Slider változók
         self.slider_rect = pygame.Rect(
@@ -501,7 +501,6 @@ class LoadMenu:
                     elif self.slider_button_rect.collidepoint(event.pos):
                         self.slider_dragging = True
                     else:
-                        # Ellenőrizd, hogy a kattintás a save gombok valamelyikénél történt-e
                         for i, button_rect in enumerate(self.save_buttons):
                             if button_rect.collidepoint(event.pos):
                                 self.game.save_parameters = ("existing",
@@ -553,11 +552,10 @@ class LoadMenu:
             Settings.MENU_BUTTON_BG_COLOR), self.slider_button_rect)
 
         # Draw save buttons
-        self.save_buttons = []  # Inicializáld a save_buttons listát
+        self.save_buttons = []
         for i, save_file in enumerate(self.visible_save_files):
             button_rect = pygame.Rect(
                 self.menu_rect.left + 50, self.menu_rect.top + 100 + i * 60, self.menu_rect.width - 100, 50)
-            # Adj hozzá gombokat a save_buttons listához
             self.save_buttons.append(button_rect)
             save_label = self.font.render(
                 save_file, True, Settings.BLACK_TEXT_COLOR)
