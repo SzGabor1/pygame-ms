@@ -18,9 +18,6 @@ def register_user(username, password):
         "content": response.text
     }
 
-    print("Response status code:", response.status_code)
-    print("Response content:", response.text)
-
     return response_dict
 
 
@@ -42,7 +39,6 @@ def login_user(username, password):
 def get_characters(user_id):
     url = f"{BASE_URL}/get_characters/"
     response = requests.get(url, json={"user_id": user_id})
-    print(response.json())
     return response.json()
 
 

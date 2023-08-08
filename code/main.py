@@ -9,13 +9,15 @@ from gamehandler import GameHandler
 from save import Save
 from settings import Settings
 from sound import Sounds
-import game_api_client
 from user_auth import UserAuth
 from user import User
 
 
 class Game:
     def __init__(self):
+
+        self.user = None
+
         self.online = True
         if self.online:
             # UserAuth.register()
@@ -68,7 +70,8 @@ class Game:
             elif self.state == menuenums.GAME:
                 if self.game_handler is None:
                     Sounds.play_loop('main')
-                    self.game_handler = GameHandler(self.save_parameters)
+                    self.game_handler = GameHandler(
+                        self.user, self.save_parameters)
                     self.mapGenerated = True
                 for event in pygame.event.get():
                     if event.type == pygame.QUIT:

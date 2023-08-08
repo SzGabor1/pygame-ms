@@ -8,8 +8,12 @@ from settings import Settings
 
 
 class GameHandler():
-    def __init__(self, what_to_load):
-        self.save = Save(what_to_load)
+    def __init__(self, user, what_to_load):
+        self.user = user
+        if self.user is not None:
+            self.save = Save(what_to_load, self.user.characters)
+        else:
+            self.save = Save(what_to_load, None)
         self.game_paused = False
         self.level = Level(self.save.load_data())
         self.ingame_menu = IngameMenu(
@@ -53,7 +57,12 @@ class GameHandler():
 
     def save_game(self):
         print("gamehandler save")
-        self.save.create_save(self.level.player)
+
+        if self.user is not None:
+            self.save.create_online_save(
+                self.level.player, self.save.load_data()[1]['id'], self.user.id)
+        else:
+            self.save.create_save(self.level.player)
 
     def pause_game(self):
         self.game_paused = not self.game_paused

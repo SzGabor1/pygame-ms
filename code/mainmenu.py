@@ -440,6 +440,7 @@ class NewGameMenu:
 class LoadMenu:
     def __init__(self, game, online_characters):
         self.game = game
+        self.online_characters = online_characters
         self.init_load_menu()
 
     def init_load_menu(self):
@@ -475,6 +476,10 @@ class LoadMenu:
         self.saves_folder = "saves/"
         self.save_files = get_save_files(self.saves_folder)
 
+        if self.online_characters is not None:
+            for character in self.online_characters:
+                self.save_files.append(character.player_name)
+
         self.save_buttons = []
 
         # Slider változók
@@ -486,6 +491,24 @@ class LoadMenu:
         self.slider_value = 0
         self.visible_save_files = []
         self.update_visible_save_files()
+
+    def handle_button_click(self, button_index):
+        if 0 <= button_index < len(self.visible_save_files):
+            selected_button_text = self.visible_save_files[button_index]
+            if self.is_online_character(selected_button_text):
+
+                self.game.save_parameters = ("online", selected_button_text)
+
+            else:
+                self.game.save_parameters = ("existing", selected_button_text)
+            self.game.state = menuenums.GAME
+
+    def is_online_character(self, name):
+        if self.online_characters is not None:
+            for character in self.online_characters:
+                if character.player_name == name:
+                    return True
+        return False
 
     def update(self):
         for event in pygame.event.get():
@@ -503,9 +526,7 @@ class LoadMenu:
                     else:
                         for i, button_rect in enumerate(self.save_buttons):
                             if button_rect.collidepoint(event.pos):
-                                self.game.save_parameters = ("existing",
-                                                             self.visible_save_files[i])
-                                self.game.state = menuenums.GAME
+                                self.handle_button_click(i)
             elif event.type == pygame.MOUSEBUTTONUP:
                 if event.button == 1:
                     self.slider_dragging = False
@@ -523,9 +544,9 @@ class LoadMenu:
 
     def update_visible_save_files(self):
         num_files = len(self.save_files)
+
         num_visible_files = min(4, num_files)
-        start_index = int(self.slider_value *
-                          (num_files - num_visible_files))
+        start_index = int(self.slider_value * (num_files - num_visible_files))
         self.visible_save_files = self.save_files[start_index: start_index + num_visible_files]
 
     def render(self):

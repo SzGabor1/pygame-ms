@@ -94,6 +94,8 @@ class Player(Entity):
         self.in_range_of_dungeon_portal = False
         self.is_inside_dungeon = False
 
+        Player.level = 2
+
     def init_stats(self):
         if not self.newGame:
             self.stats = {'health': self.save_datas['player_stats']['health'], 'energy': self.save_datas['player_stats']

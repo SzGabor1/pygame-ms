@@ -26,7 +26,6 @@ from settings import Settings
 
 class Level:
     def __init__(self, save):
-
         # get the display surface
         self.display_surface = pygame.display.get_surface()
 
@@ -117,7 +116,7 @@ class Level:
 
                         if style == 'entities':
                             if col == '39':
-                                if self.save[0] == "existing":
+                                if self.save[0] == "existing" or self.save[0] == "online":
                                     self.player = Player(
                                         self.save[1]['player_pos'], [self.visible_sprites], self.obstacle_sprites, self.create_attack, self.destroy_attack, self.save[1], None, (x, y), self.save[1]['difficulty'])
                                 else:
