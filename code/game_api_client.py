@@ -29,8 +29,10 @@ def login_user(username, password):
 
     if response.status_code == 200:
         data = response.json()
+
         return {"username": data["username"], "user_id": data["user_id"]}
     elif response.status_code == 401:
+        return response.status_code
         raise ValueError("Invalid credentials")
     else:
         raise ValueError("An error occurred during login")

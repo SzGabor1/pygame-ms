@@ -10,3 +10,4 @@ class menuenums(Enum):
     SETTINGS = 'settings'
     MENU = 'menu'
     LOAD_GAME = 'load_game'
+    LOGIN = 'login'

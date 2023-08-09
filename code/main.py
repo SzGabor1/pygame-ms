@@ -11,22 +11,24 @@ from settings import Settings
 from sound import Sounds
 from user_auth import UserAuth
 from user import User
+from user_auth import LoginPanel
 
 
 class Game:
     def __init__(self):
 
-        self.user = None
+        # self.online = True
+        # if self.online:
+        #     # UserAuth.register()
+        #     response = UserAuth.login()
+        #     if response is not False:
+        #         print("User logged in successfully")
+        #         self.user = User(response['username'], response['user_id'])
+        #     else:
+        #         print("User login failed")
 
-        self.online = True
-        if self.online:
-            # UserAuth.register()
-            response = UserAuth.login()
-            if response is not False:
-                print("User logged in successfully")
-                self.user = User(response['username'], response['user_id'])
-            else:
-                print("User login failed")
+        self.user = None
+        self.online = False
 
         pygame.init()
         self.init_screen()
@@ -37,9 +39,10 @@ class Game:
         self.settings_menu = None
         self.load_menu = None
         self.new_game_menu = None
-        self.state = menuenums.MENU
+        self.state = menuenums.LOGIN
         self.mapGenerated = False
         self.save_parameters = None
+        self.login_panel = LoginPanel(self)
 
     def init_screen(self):
         if Settings.FULLSCREEN:
@@ -51,6 +54,10 @@ class Game:
 
     def run(self):
         while True:
+            if self.state == menuenums.LOGIN:
+                self.login_panel.update()
+                self.login_panel.render()
+
             if self.state == menuenums.MENU:
                 self.menu.update()
                 self.menu.render()

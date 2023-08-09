@@ -264,6 +264,17 @@ class NewGameMenu:
         self.font = pygame.font.Font(
             Settings.UI_FONT, Settings.UI_FONT_SIZE)
 
+        self.button_state = 0
+        # Calculate the dimensions of the button based on the text size
+        button_text = "Challenge Mode"  # Longer text to determine dimensions
+        self.button_width = self.font.size(button_text)[0] + 10
+        self.button_height = self.font.size(button_text)[1] + 10
+
+        self.button_rect = pygame.Rect(
+            Settings.WIDTH // 2 - self.button_width // 2,
+            Settings.HEIGHT // 2 + 100 - self.button_height // 2,
+            self.button_width, self.button_height)
+
         self.title_label = self.font.render(
             "Create New Game", True, Settings.BLACK_TEXT_COLOR)
         self.title_rect = self.title_label.get_rect(
@@ -385,6 +396,27 @@ class NewGameMenu:
             (right_triangle_x, right_triangle_y + self.triangle_size // 2)
         ])
 
+        if self.button_state == 0:
+            button_label = self.font.render(
+                "Normal Mode", True, Settings.BLACK_TEXT_COLOR)
+        else:
+            button_label = self.font.render(
+                "Challenge Mode", True, Settings.BLACK_TEXT_COLOR)
+
+        # Update the button dimensions based on the text size
+        self.button_width = button_label.get_width() + 10
+        self.button_height = button_label.get_height() + 10
+        self.button_rect.width = self.button_width
+        self.button_rect.height = self.button_height
+
+        # Adjust the text position to center it vertically
+        button_label_rect = button_label.get_rect(
+            center=self.button_rect.center)
+
+        pygame.draw.rect(self.screen, pygame.Color(
+            Settings.MENU_BUTTON_BG_COLOR), self.button_rect)
+        self.screen.blit(button_label, button_label_rect.topleft)
+
         pygame.display.flip()
         self.clock.tick(Settings.FPS)
 
@@ -400,8 +432,18 @@ class NewGameMenu:
                     # Check if the save button is clicked
                     if self.save_button.collidepoint(mouse_pos):
                         print("Save button clicked!")
-                        self.game.save_parameters = ("new",
-                                                     self.character_name, self.current_character_index, input('Difficulty: '))
+                        if self.game.online:
+
+                            for character in self.game.user.characters:
+                                if character.player_name == self.character_name:
+                                    print("Character name already exists!")
+                                    return
+
+                            self.game.save_parameters = ("new_online",
+                                                         self.character_name, self.current_character_index, self.button_state, self.game.user.id)
+                        else:
+                            self.game.save_parameters = ("new",
+                                                         self.character_name, self.current_character_index, self.button_state)
                         self.game.state = menuenums.GAME
 
                     # Check if the back button is clicked
@@ -425,6 +467,10 @@ class NewGameMenu:
                         if self.current_character_index >= len(self.character_images):
                             self.current_character_index = 0
                         self.current_character_image = self.character_images[self.current_character_index]
+
+                    elif self.button_rect.collidepoint(mouse_pos) and self.game.online:
+                        print("Button clicked!")
+                        self.button_state = 1 - self.button_state  # Toggle between 0 and 1
 
             elif event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_BACKSPACE:
@@ -547,7 +593,8 @@ class LoadMenu:
 
         num_visible_files = min(4, num_files)
         start_index = int(self.slider_value * (num_files - num_visible_files))
-        self.visible_save_files = self.save_files[start_index: start_index + num_visible_files]
+        self.visible_save_files = self.save_files[start_index: start_index +
+                                                  num_visible_files]
 
     def render(self):
         self.screen.blit(self.menu_bg, (0, 0))
