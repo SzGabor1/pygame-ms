@@ -16,17 +16,6 @@ from user_auth import LoginPanel
 
 class Game:
     def __init__(self):
-
-        # self.online = True
-        # if self.online:
-        #     # UserAuth.register()
-        #     response = UserAuth.login()
-        #     if response is not False:
-        #         print("User logged in successfully")
-        #         self.user = User(response['username'], response['user_id'])
-        #     else:
-        #         print("User login failed")
-
         self.user = None
         self.online = False
 

@@ -67,7 +67,7 @@ class AnimationPlayer:
         ParticleEffect(pos, animation_frames, groups)
 
     def display_damage_numbers(self, pos, groups, damage):
-        DamageNumber(pos, damage, groups)
+        DamageNumber(pos, int(damage), groups)
 
 
 class DamageNumber(pygame.sprite.Sprite):

@@ -158,7 +158,7 @@ class Settings:
         '59': {'name': 'Laci 59', 'skin': 'Villager1', 'quest_ids': [1], 'type': 'quest_giver', 'item_list': None},
         '79': {'name': 'Roli 79', 'skin': 'Villager1', 'quest_ids': [2], 'type': 'quest_giver', 'item_list': None},
         '119': {'name': 'Matyi 119', 'skin': 'Villager1', 'type': 'merchant', 'item_list': [0, 1, 2, 3, 4, 5]},
-        '99': {'name': 'Kevin 99', 'skin': 'Villager1', 'quest_ids': [3], 'type': 'merchant', 'item_list': [1, 2]},
+        '99': {'name': 'Kevin 99', 'skin': 'Villager1', 'type': 'merchant', 'item_list': [1, 2]},
         '139': {'name': 'Mate 139 ', 'skin': 'Villager1', 'quest_ids': [0], 'type': 'quest_giver', 'item_list': None}
     }
 

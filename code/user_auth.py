@@ -183,8 +183,7 @@ class LoginPanel():
                     print('user_auth Invalid credentials', response)
 
             if self.offline_button.collidepoint(mouse_pos):
-                # Handle offline button click
-                # Enter offline mode logic here
+                self.game.state = menuenums.MENU
                 pass
 
             if self.register_button.collidepoint(mouse_pos):

@@ -25,7 +25,7 @@ class Player(Entity):
         self.import_player_assets()
         self.status = 'down'
 
-        self.difficulty = difficulty
+        self.difficulty = int(difficulty)
 
         # movement
         self.speed = 2
@@ -206,7 +206,7 @@ class Player(Entity):
                 self.weapon_index]
         # sprint
         if keys[pygame.K_LSHIFT]:
-            self.speed = self.stats['speed']*1.5
+            self.speed = self.stats['speed']*3
         else:
             self.speed = self.stats['speed']
 
@@ -307,17 +307,18 @@ class Player(Entity):
             self.hurt_time = pygame.time.get_ticks()
             self.vulnerable = False
 
-        if self.health < 0:
-            self.handle_death()
+            if self.health < 0:
+                self.handle_death()
 
     def handle_death(self):
-
         if self.difficulty == 0:
+            print("You died!")
             # self.print_death_text("You died!")
+            self.health = self.stats['health']
             self.hitbox.topleft = self.spawn_point
         else:
 
-            #self.print_death_text("Game over!")
+            # self.print_death_text("Game over!")
             # self.delete_save()
             pygame.quit()
 
