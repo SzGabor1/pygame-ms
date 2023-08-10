@@ -3,7 +3,7 @@ from pygame.locals import *
 import sys
 from settings import Settings
 from support import import_settings
-from mainmenu import MainMenu, SettingsMenu, NewGameMenu, LoadMenu
+from mainmenu import MainMenu, SettingsMenu, NewGameMenu, LoadMenu, CreditsMenu
 from menuenums import menuenums
 from gamehandler import GameHandler
 from save import Save
@@ -55,6 +55,12 @@ class Game:
                 if self.settings_menu is not None:
                     self.settings_menu.update()
                     self.settings_menu.render()
+
+            elif self.state == menuenums.CREDITS:
+                self.credits_menu = CreditsMenu(self)
+                self.credits_menu.update()
+                self.credits_menu.render()
+
             if self.state == menuenums.LOAD_GAME:
 
                 self.load_menu.update()

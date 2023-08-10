@@ -13,16 +13,15 @@ class Settings:
 
     @staticmethod
     def overwrite_settings(width, height, fullscreen, volume):
-        WIDTH = width
-        HEIGHT = height
-        FULLSCREEN = fullscreen
-        VOLUME = volume
+        with open('data/settings/settings.json', 'r') as infile:
+            existing_settings = json.load(infile)
+            VOLUME = existing_settings['settings']['VOLUME'] if volume is None else volume
 
         dictionary = {
             'settings': {
-                'WIDTH': WIDTH,
-                'HEIGHT': HEIGHT,
-                'FULLSCREEN': FULLSCREEN,
+                'WIDTH': width,
+                'HEIGHT': height,
+                'FULLSCREEN': fullscreen,
                 'VOLUME': VOLUME
             }
         }

@@ -103,7 +103,7 @@ class MainMenu:
         self.screen.blit(self.settings_label, self.settings_rect)
 
         pygame.display.flip()
-        self.clock.tick(Settings.FPS)
+        # self.clock.tick(Settings.FPS)
 
 
 class SettingsMenu:
@@ -136,7 +136,7 @@ class SettingsMenu:
             menu_x, menu_y - 25, menu_width, menu_height)
 
         self.save_button = pygame.Rect(
-            menu_x + 100, menu_y + 400, 200, 50)
+            menu_x + 100, menu_y + 200, 200, 50)
         self.save_label = self.font.render(
             "Save Settings", True, Settings.BLACK_TEXT_COLOR)
         self.save_rect = self.save_label.get_rect(
@@ -147,7 +147,7 @@ class SettingsMenu:
         self.fullscreen_label = self.font.render(
             "Fullscreen:", True, Settings.BLACK_TEXT_COLOR)
         self.fullscreen_rect = self.fullscreen_label.get_rect(
-            center=(Settings.WIDTH // 2, menu_y + 300))
+            center=(Settings.WIDTH // 2, menu_y + 100))
 
         # Create the "yes" and "no" text labels
         self.fullscreen_option_labels = [
@@ -163,12 +163,21 @@ class SettingsMenu:
             self.fullscreen_option_labels[0].get_height() // 2
         self.fullscreen_option_rects = [
             self.fullscreen_option_labels[0].get_rect(
-                center=(Settings.WIDTH // 2-70, menu_y + 340)),
+                center=(Settings.WIDTH // 2-70, menu_y + 140)),
             self.fullscreen_option_labels[1].get_rect(
-                center=(Settings.WIDTH // 2+70, menu_y + 340))
+                center=(Settings.WIDTH // 2+70, menu_y + 140))
         ]
 
+        self.credits_button = pygame.Rect(
+            (Settings.WIDTH - 200) // 2, self.menu_rect.centery + 100, 200, 50)
+        self.credits_label = self.font.render(
+            "Credits", True, Settings.BLACK_TEXT_COLOR)
+        self.credits_rect = self.credits_label.get_rect(
+            center=self.credits_button.center)
+
     def update(self):
+        self.clock.tick(Settings.FPS)
+
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 pygame.quit()
@@ -180,6 +189,10 @@ class SettingsMenu:
                         if rect.collidepoint(event.pos):
                             self.fullscreen = i == 0  # 0 represents "Yes", 1 represents "No"
                             break
+
+                        if self.credits_button.collidepoint(event.pos):
+                            print("Credits button clicked!")
+                            self.game.state = menuenums.CREDITS
 
                     if self.save_button.collidepoint(event.pos):
                         print("Save Settings button clicked!")
@@ -193,7 +206,7 @@ class SettingsMenu:
                         print("Monitor size: {}x{}".format(width, height))
                         if self.fullscreen:
                             Settings.overwrite_settings(
-                                width, height, fullscreen=self.fullscreen, volume=1)
+                                width, height, fullscreen=self.fullscreen,  volume=None)
 
                             self.game.init_screen()
                             self.game.menu.init_main_menu()
@@ -204,7 +217,7 @@ class SettingsMenu:
                         else:
                             height = height - 50
                             Settings.overwrite_settings(
-                                width, height, fullscreen=self.fullscreen, volume=1)
+                                width, height, fullscreen=self.fullscreen, volume=None)
 
                             self.game.init_screen()
                             self.game.menu.init_main_menu()
@@ -228,6 +241,11 @@ class SettingsMenu:
 
         self.screen.blit(self.title_label, self.title_rect)
 
+        # Draw the "Credits" button
+        pygame.draw.rect(
+            self.screen, Settings.MENU_BUTTON_BG_COLOR, self.credits_button)
+        self.screen.blit(self.credits_label, self.credits_rect)
+
         # Draw the fullscreen label
         self.screen.blit(self.fullscreen_label, self.fullscreen_rect)
 
@@ -249,7 +267,7 @@ class SettingsMenu:
             self.screen, Settings.MENU_BUTTON_BG_COLOR, self.save_button)
         self.screen.blit(self.save_label, self.save_rect)
         pygame.display.flip()
-        self.clock.tick(Settings.FPS)
+        # self.clock.tick(Settings.FPS)
 
 
 class NewGameMenu:
@@ -418,7 +436,7 @@ class NewGameMenu:
         self.screen.blit(button_label, button_label_rect.topleft)
 
         pygame.display.flip()
-        self.clock.tick(Settings.FPS)
+        # self.clock.tick(Settings.FPS)
 
     def update(self):
         for event in pygame.event.get():
@@ -636,3 +654,90 @@ class LoadMenu:
             self.screen.blit(save_label, save_rect)
 
         pygame.display.flip()
+
+
+class CreditsMenu:
+    def __init__(self, game):
+        self.game = game
+        self.init_credit_menu()
+
+    def init_credit_menu(self):
+
+        self.menu_bg = pygame.transform.scale(pygame.image.load(
+            "graphics/Backgrounds/menubg.jpg"), (Settings.WIDTH, Settings.HEIGHT))
+
+        self.screen = pygame.display.get_surface()
+        self.clock = pygame.time.Clock()
+        self.font = pygame.font.Font(Settings.UI_FONT, Settings.UI_FONT_SIZE)
+
+        self.title_label = self.font.render(
+            "Credits", True, Settings.BLACK_TEXT_COLOR)
+        self.title_rect = self.title_label.get_rect(
+            center=(Settings.WIDTH // 2, Settings.HEIGHT // 2 - 200))
+
+        self.menu_width = 500
+        self.menu_height = 500
+        self.menu_x = (Settings.WIDTH - self.menu_width) // 2
+        self.menu_y = (Settings.HEIGHT - self.menu_height) // 2 - 100
+
+        self.menu_rect = pygame.Rect(
+            self.menu_x, self.menu_y + 100, self.menu_width, self.menu_height)
+
+        self.back_button = pygame.Rect(
+            (Settings.WIDTH - 200) // 2, (Settings.HEIGHT + 200) // 2, 200, 50)
+        self.back_label = self.font.render(
+            "Back", True, Settings.BLACK_TEXT_COLOR)
+        self.back_rect = self.back_label.get_rect(
+            center=self.back_button.center)
+
+        # Text labels
+        self.text_labels = [
+            self.font.render("AMtech Rendszerház", True,
+                             Settings.BLACK_TEXT_COLOR),
+            self.font.render("Készítette:", True,
+                             Settings.BLACK_TEXT_COLOR),
+            self.font.render("Szendrei Gábor", True,
+                             Settings.BLACK_TEXT_COLOR),
+            self.font.render("2023", True, Settings.BLACK_TEXT_COLOR)
+        ]
+        self.text_rects = [
+            self.text_labels[0].get_rect(
+                center=(Settings.WIDTH // 2, Settings.HEIGHT // 2 - 100)),
+            self.text_labels[1].get_rect(
+                center=(Settings.WIDTH // 2, Settings.HEIGHT // 2 - 50)),
+            self.text_labels[2].get_rect(
+                center=(Settings.WIDTH // 2, Settings.HEIGHT // 2 + 0)),
+            self.text_labels[3].get_rect(
+                center=(Settings.WIDTH // 2, Settings.HEIGHT // 2 + 50))
+        ]
+
+    def update(self):
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                pygame.quit()
+                sys.exit()
+            elif event.type == pygame.MOUSEBUTTONDOWN:
+                if event.button == 1:
+
+                    if self.back_button.collidepoint(event.pos):
+                        print("Back button clicked!")
+                        self.game.state = menuenums.SETTINGS  # Set the game state to SETTINGS
+                        # Handle the action you want to take when the "Back" button is clicked
+
+    def render(self):
+        self.screen.blit(self.menu_bg, (0, 0))
+        pygame.draw.rect(self.screen, pygame.Color(
+            Settings.MENU_BG_COLOR), self.menu_rect)
+        pygame.draw.rect(self.screen, pygame.Color(
+            Settings.MENU_BORDER_COLOR), self.menu_rect, 5)
+        self.screen.blit(self.title_label, self.title_rect)
+
+        for label, rect in zip(self.text_labels, self.text_rects):
+            self.screen.blit(label, rect)
+
+        pygame.draw.rect(
+            self.screen, Settings.MENU_BUTTON_BG_COLOR, self.back_button)
+        self.screen.blit(self.back_label, self.back_rect)
+
+        pygame.display.flip()
+        # self.clock.tick(Settings.FPS)

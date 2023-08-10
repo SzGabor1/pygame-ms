@@ -11,3 +11,4 @@ class menuenums(Enum):
     MENU = 'menu'
     LOAD_GAME = 'load_game'
     LOGIN = 'login'
+    CREDITS = 'credits'
