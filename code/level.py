@@ -42,6 +42,14 @@ class Level:
         self.dungeon_spawns = []
         self.dungeon_id = None
 
+        self.enemy_sprites = []
+        self.quest_givers = []
+
+        if save[0] == 'online':
+            self.level = save[1]['level']
+        else:
+            self.level = 0
+
         # sprite setup
         self.create_map()
         # attack sprites
@@ -57,6 +65,9 @@ class Level:
         self.key_press_cooldown = 500
         self.is_key_pressed = False
 
+        self.minimap_open_time = None
+        self.minimap_cooldown = 500
+
         # particles
         self.particle_player = AnimationPlayer()
 
@@ -67,6 +78,7 @@ class Level:
         self.minimap_image = pygame.image.load(
             'new_map/minimap_background.png')
         self.is_minimap_open = False
+        self.is_minimap_able_to_open = True
 
         self.game_start_time = pygame.time.get_ticks()
         self.game_time = 0
@@ -143,17 +155,70 @@ class Level:
                                 if col == '18':
                                     monster_name = 'skeleton'
                                 elif col == '38':
-                                    if not 1 in self.save[1]['player_completed_quests']:
-
+                                    if self.save[0] == "new":
+                                        monster_name = 'crab'
+                                    elif not 1 in self.save[1]['player_completed_quests']:
                                         monster_name = 'crab'
                                 elif col == '58':
                                     monster_name = 'wizzard'
                                 else:
                                     monster_name = 'squid'
 
-                                Enemy(monster_name, (x, y), [
-                                      self.visible_sprites, self.attackable_sprites], self.obstacle_sprites,
-                                      self.trigger_death_particles, self.update_quest_progress, self.drop_loot, self.spawn_projectile)
+                                self.enemy_sprites.append(Enemy(monster_name, (x, y), [
+                                    self.visible_sprites, self.attackable_sprites], self.obstacle_sprites,
+                                    self.trigger_death_particles, self.player.update_quest_progress, self.drop_loot, self.spawn_projectile, self.level))
+
+    def is_all_quests_completed(self):
+        for questgiver in self.quest_givers:
+            if questgiver.quests != []:
+                return False
+        print("all quests completed")
+
+        if self.save[0] == "online" or self.save[0] == "new_online":
+            self.level += 1
+            self.player.handle_new_level()
+
+            # have to reload npc quest lists
+            self.restart_level()
+
+    def restart_level(self):
+        for questgiver in self.quest_givers:
+            questgiver.load_quests()
+
+        self.kill_all_enemies()
+
+        self.spawn_enemies()
+
+    def kill_all_enemies(self):
+        for enemy in self.enemy_sprites:
+            enemy.kill()
+
+    def spawn_enemies(self):
+        layouts = {
+            'entities': import_csv_layout('new_map/MSmap._entities.csv'),
+        }
+
+        for style, layout in layouts.items():
+            for row_index, row in enumerate(layout):
+                for col_index, col in enumerate(row):
+                    if col != '-1':
+                        x = col_index * Settings.TILESIZE
+                        y = row_index * Settings.TILESIZE
+                        if style == 'entities':
+                            passSpawn = False
+                            if col == '18':
+                                monster_name = 'skeleton'
+                            elif col == '38':
+                                monster_name = 'crab'
+                            elif col == '58':
+                                monster_name = 'wizzard'
+                            else:
+                                passSpawn = True
+                            if not passSpawn:
+                                enemy = Enemy(monster_name, (x, y), [
+                                    self.visible_sprites, self.attackable_sprites], self.obstacle_sprites,
+                                    self.trigger_death_particles, self.player.update_quest_progress, self.drop_loot, self.spawn_projectile, self.level)
+                                self.enemy_sprites.append(enemy)
 
     def create_dungeon(self):
         layouts = {
@@ -209,11 +274,13 @@ class Level:
 
                             enemy = Enemy(monster_name, (x, y), [
                                 self.visible_sprites, self.attackable_sprites], self.obstacle_sprites,
-                                self.trigger_death_particles, self.update_quest_progress, self.drop_loot, self.spawn_projectile)
-                            # Add the enemy to the dungeon sprite group
+                                self.trigger_death_particles, self.player.update_quest_progress, self.drop_loot, self.spawn_projectile, self.level)
+
+                            self.enemy_sprites.append(enemy)
+
                             dungeon_sprites.add(enemy)
 
-        return dungeon_sprites  # Return the dungeon sprite group
+        return dungeon_sprites
 
     def is_player_in_range_of_dungeon_portal(self):
         if not self.player.is_inside_dungeon:
@@ -242,6 +309,10 @@ class Level:
         if self.is_key_pressed:
             if current_time - self.key_press_time >= self.key_press_cooldown:
                 self.is_key_pressed = False
+
+        if not self.is_minimap_able_to_open:
+            if current_time - self.minimap_open_time >= self.minimap_cooldown:
+                self.is_minimap_able_to_open = True
 
     def teleport_to_dungeon(self):
         keys = pygame.key.get_pressed()
@@ -330,7 +401,8 @@ class Level:
     def create_npc(self, id, x, y, npc_data):
         if Settings.npc_data[id]['type'] == 'quest_giver':
             self.npc = QuestGiver(npc_data[id]['name'], (x, y), [
-                self.visible_sprites], self.obstacle_sprites, npc_data[id]['quest_ids'], id,)
+                self.visible_sprites], self.obstacle_sprites, id,)
+            self.quest_givers.append(self.npc)
         elif Settings.npc_data[id]['type'] == 'merchant':
             self.npc = Merchant(npc_data[id]['name'], (x, y), [
                 self.visible_sprites], self.obstacle_sprites, id, npc_data[id]['item_list'])
@@ -372,11 +444,6 @@ class Level:
     def spawn_projectile(self, begin_pos, end_pos, projectile_tpye):
         self.projectile = Projectile(
             [self.visible_sprites], begin_pos, end_pos, projectile_tpye)
-
-    def update_quest_progress(self, player):
-        if player.current_quest != -1:
-            if player.current_amount < player.max_amount:
-                player.current_amount += 1
 
     def toggle_menu(self, menu_type):
         self.menu_type = menu_type
@@ -451,8 +518,10 @@ class Level:
     def input(self):
         keys = pygame.key.get_pressed()
 
-        if keys[pygame.K_m]:
+        if keys[pygame.K_m] and self.is_minimap_able_to_open:
             self.is_minimap_open = not self.is_minimap_open
+            self.minimap_open_time = pygame.time.get_ticks()
+            self.is_minimap_able_to_open = False
 
     def run(self):
         self.visible_sprites.custom_draw(self.player)
@@ -477,7 +546,9 @@ class Level:
             self.input()
             self.count_time()
             self.show_minimap(self.player)
+            self.is_all_quests_completed()
         self.ui.display(self.player)
+        debug(self.level)
 
 
 class YSortCameraGroup(pygame.sprite.Group):

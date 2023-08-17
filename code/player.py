@@ -292,6 +292,11 @@ class Player(Entity):
         else:
             self.image.set_alpha(255)
 
+    def update_quest_progress(self):
+        if self.current_quest != -1:
+            if self.current_amount < self.max_amount:
+                self.current_amount += 1
+
     def get_full_damage(self):
         return self.stats['attack'] + Settings.weapon_data[self.weapon]['damage']
 
@@ -316,11 +321,18 @@ class Player(Entity):
             # self.print_death_text("You died!")
             self.health = self.stats['health']
             self.hitbox.topleft = self.spawn_point
+            self.is_inside_dungeon = False
         else:
 
             # self.print_death_text("Game over!")
             # self.delete_save()
             pygame.quit()
+
+    def handle_new_level(self):
+        self.health = self.stats['health']
+        self.hitbox.topleft = self.spawn_point
+        self.is_inside_dungeon = False
+        self.completed_quests = []
 
     def update_experience(self, amount):
         self.exp += amount

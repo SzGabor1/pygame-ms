@@ -8,7 +8,7 @@ from sound import Sounds
 
 
 class Enemy(Entity):
-    def __init__(self, monster_name, pos, groups, obstacle_sprites, trigger_death_particles, update_quest_progress, drop_loot, spawn_projectile):
+    def __init__(self, monster_name, pos, groups, obstacle_sprites, trigger_death_particles, update_quest_progress, drop_loot, spawn_projectile, stat_scale):
         # general setup
         super().__init__(groups)
         self.sprite_type = 'enemy'
@@ -35,6 +35,8 @@ class Enemy(Entity):
         self.notice_radius = monster_info['notice_radius']
         self.attack_type = monster_info['attack_type']
 
+        self.scale_stats(stat_scale)
+
         # player interaction
         self.can_attack = True
         self.attack_time = None
@@ -53,6 +55,18 @@ class Enemy(Entity):
         self.projectile_time = None
         self.projectile_cooldown = 4000
         self.projectile = [0, 0]
+        self.able_to_shoot = True
+
+    def scale_stats(self, stat_scale):
+        if stat_scale == 0:
+            return
+
+        for x in range(stat_scale):
+            self.health *= 1.25
+            self.exp *= 1.25
+            self.speed *= 1.1
+            self.attack_damage *= 1.1
+            self.resistance *= 1.1
 
     def import_graphics(self, name):
         self.animations = {'idle': [], 'move': [], 'attack': []}
@@ -81,8 +95,10 @@ class Enemy(Entity):
             self.status = 'attack'
         elif distance <= self.notice_radius:
             self.status = 'move'
+            self.able_to_shoot = True
         else:
             self.status = 'idle'
+            self.able_to_shoot = False
 
     def actions(self, player):
         if self.status == 'attack':
@@ -114,7 +130,7 @@ class Enemy(Entity):
             Sounds.play('death')
             if not player.current_quest == -1:
                 if(self.monster_name == Settings.quest_data[player.current_quest]['enemy_type']):
-                    self.update_quest_progress(player)
+                    self.update_quest_progress()
 
     def hit_reaction(self):
         if not self.vulnerable:
@@ -158,7 +174,7 @@ class Enemy(Entity):
         self.cooldown()
 
     def trigger_spawn_projectile(self, player):
-        if self.monster_name == 'wizzard' and self.health < 0.75 * Settings.monster_data[self.monster_name]['health'] and not self.is_projectile_spawned:
+        if self.monster_name == 'wizzard' and self.health < 0.75 * Settings.monster_data[self.monster_name]['health'] and not self.is_projectile_spawned and self.able_to_shoot:
             self.spawn_projectile(
                 self.rect.midleft, player.rect.center, 'void')
 

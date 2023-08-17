@@ -5,10 +5,17 @@ from settings import Settings
 
 
 class QuestGiver(NPC):
-    def __init__(self, npc_name, pos, groups, obstacle_sprites, quests, id):
+    def __init__(self, npc_name, pos, groups, obstacle_sprites, id):
         super().__init__(npc_name, pos, groups, obstacle_sprites, id)
 
-        self.quests = quests
+        self.type = 'questgiver'
+
+        self.id = id
+
+        self.quests = []
+        self.load_quests()
+
+        print(self.quests)
 
         self.toggle_dialogue = False
         self.dialogue = Dialogue(self.accepting_quest,
@@ -17,6 +24,12 @@ class QuestGiver(NPC):
         self.accept_quest_bool = False
 
         self.range_of_player = False
+
+    def load_quests(self):
+        quest_ids = Settings.npc_data[self.id]['quest_ids']
+
+        for quest_id in quest_ids:
+            self.quests.append(quest_id)
 
     def update_questgiver(self, player):
         self.complete_quest(player)

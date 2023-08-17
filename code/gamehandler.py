@@ -62,7 +62,7 @@ class GameHandler():
 
         if self.user is not None and self.load_data[0] == 'online':
             self.save.create_online_save(
-                self.level.player, self.save.load_data()[1]['id'], self.user.id)
+                self.level.player, self.save.load_data()[1]['id'], self.user.id, self.level.level)
 
         elif self.user is not None and self.load_data[0] == 'new':
 
@@ -78,7 +78,7 @@ class GameHandler():
                     return
 
             self.save.create_new_online_save(
-                self.level.player, self.user.id)
+                self.level.player, self.user.id, self.level.level)
 
         else:
             self.save.create_save(self.level.player)

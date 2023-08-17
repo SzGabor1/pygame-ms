@@ -69,7 +69,7 @@ class Save:
 
         print(f"Save created: {save_path}")
 
-    def create_new_online_save(self, player, user_id):
+    def create_new_online_save(self, player, user_id, level):
 
         print("new online player name " + player.name)
         player_name = player.name
@@ -86,6 +86,7 @@ class Save:
         player_max_amount = player.max_amount
         player_inventory_item_ids = player.inventory.get_items()
         difficulty = player.difficulty
+        level = level
 
         save_data = {
             'player_name': player_name,
@@ -106,14 +107,14 @@ class Save:
             'player_max_amount': player_max_amount,
             'player_inventory_item_ids': str(player_inventory_item_ids),
             'difficulty': difficulty,
-            'level': 0,
-            "id": 0,  # ???????? placeholder for sturcture stuff
+            'level': level,
+            "id": 0,  # placeholder only
             'uid': user_id,
         }
 
         print(game_api_client.create_character(save_data))
 
-    def create_online_save(self, player, character_id, user_id):
+    def create_online_save(self, player, character_id, user_id, level):
 
         print("player name" + player.name)
         player_name = player.name
@@ -150,7 +151,7 @@ class Save:
             'player_max_amount': player_max_amount,
             'player_inventory_item_ids': str(player_inventory_item_ids),
             'difficulty': difficulty,
-            'level': player.level,
+            'level': level,
             'uid': user_id,
             'id': character_id
         }
