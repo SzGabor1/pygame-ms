@@ -14,8 +14,9 @@ class Animation():
         self.animation_frames = []
         self.animation_tiles = []
 
-        self.animation_layout = import_csv_layout(
-            'new_map/MSmap._animated.csv')
+        self.animation_layouts = {
+            'trees': import_csv_layout('new_map/MSmap._animated.csv'),
+            'borders': import_csv_layout('new_map/MSmap._animatedwalls.csv'), }
 
         self.load_animation_frames()
 
@@ -33,16 +34,17 @@ class Animation():
             for tile in self.animation_tiles:
                 tile.kill()  # Remove all old animated tiles
 
-            for row_index, row in enumerate(self.animation_layout):
-                for col_index, col in enumerate(row):
-                    if col != '-1':
-                        x = col_index * Settings.TILESIZE
-                        y = row_index * Settings.TILESIZE
+            for layout_key, animation_layout in self.animation_layouts.items():
+                for row_index, row in enumerate(animation_layout):
+                    for col_index, col in enumerate(row):
+                        if col != '-1':
+                            x = col_index * Settings.TILESIZE
+                            y = row_index * Settings.TILESIZE
 
-                        for tile_id, animation_frame in self.animation_frames:
-                            if col == tile_id:
-                                self.animation_tiles.append(Tile((x, y + 64), [visible_sprites,
-                                                                               obstacle_sprites], 'object',  animation_frame[self.animation_index]))
+                            for tile_id, animation_frame in self.animation_frames:
+                                if col == tile_id:
+                                    self.animation_tiles.append(Tile((x, y), [visible_sprites,
+                                                                              obstacle_sprites], layout_key, animation_frame[self.animation_index]))
 
             self.animation_time = pygame.time.get_ticks()
             self.can_get_new_animation_frame = False

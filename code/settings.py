@@ -44,11 +44,13 @@ class Settings:
     HITBOX_OFFSET = {
         'player': -20,
         'object': -40,
+        'trees': -60,
         'building': -40,
         'grass': -10,
         'invisible': 0,
         'water': 20,
-        'dungeonportals': -64
+        'dungeonportals': -64,
+        'borders': 20
     }
 
     SOUNDS = {
