@@ -331,6 +331,9 @@ class Leaderboard:
 
         self.top_players = game_api_client.get_top_ten_highest_level_users()
 
+    def update_top_players(self):
+        self.top_players = game_api_client.get_top_ten_highest_level_users()
+
     def display(self):
         self.update()
         self.render()

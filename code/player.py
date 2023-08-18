@@ -82,6 +82,9 @@ class Player(Entity):
 
         self.init_stats()
 
+        if self.completed_quests == []:
+            self.current_quest = 0
+
         self.can_use_item = True
         self.item_use_time = None
         self.item_usage_cooldown = 1000
@@ -276,6 +279,11 @@ class Player(Entity):
                 self.is_quest_completed = False
                 self.current_quest = -1
 
+    def progress_quest(self, quest_type):
+        if self.current_quest != -1:
+            if Settings.quest_data[self.current_quest]['quest_type'] == quest_type:
+                self.update_quest_progress()
+
     def animate(self):
         animation = self.animations[self.status]
 
@@ -338,7 +346,7 @@ class Player(Entity):
         self.health = self.stats['health']
         self.hitbox.topleft = self.spawn_point
         self.is_inside_dungeon = False
-        self.completed_quests = []
+        self.completed_quests = [0]
 
     def update_experience(self, amount):
         self.exp += amount

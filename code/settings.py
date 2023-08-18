@@ -159,15 +159,49 @@ class Settings:
     DAMAGE_NUMBER_COLOR = '#ff7200'
 
     npc_data = {
-        '59': {'name': 'Laci 59', 'skin': 'Villager1', 'quest_ids': [1], 'type': 'quest_giver', 'item_list': None},
-        '79': {'name': 'Roli 79', 'skin': 'Villager1', 'quest_ids': [2], 'type': 'quest_giver', 'item_list': None},
-        '119': {'name': 'Matyi 119', 'skin': 'Villager1', 'type': 'merchant', 'item_list': [0, 1, 2, 3, 4, 5]},
-        '99': {'name': 'Kevin 99', 'skin': 'Villager1', 'type': 'merchant', 'item_list': [1, 2]},
-        '139': {'name': 'Mate 139 ', 'skin': 'Villager1', 'quest_ids': [0], 'type': 'quest_giver', 'item_list': None}
+        '59': {'name': 'Laci 59', 'skin': 'Villager1', 'quest_ids': [2], 'type': 'quest_giver', 'item_list': None},
+        '79': {'name': 'Roli 79', 'skin': 'Villager1', 'quest_ids': [1], 'type': 'quest_giver', 'item_list': None},
+        '119': {'name': 'Matyi 119', 'skin': 'Villager1', 'type': 'merchant', 'item_list': [0, 1, 2]},
+        '99': {'name': 'Kevin 99', 'skin': 'Villager1', 'type': 'quest_giver', 'quest_ids': [], 'item_list': None},
+        '139': {'name': 'Mate 139 ', 'skin': 'Villager1', 'quest_ids': [], 'type': 'quest_giver', 'item_list': None}
     }
+    # npc_data = {
+    #     '59': {'name': 'Laci 59', 'skin': 'Villager1', 'quest_ids': [4, 6], 'type': 'quest_giver', 'item_list': None},
+    #     '79': {'name': 'Roli 79', 'skin': 'Villager1', 'quest_ids': [5], 'type': 'quest_giver', 'item_list': None},
+    #     '119': {'name': 'Matyi 119', 'skin': 'Villager1', 'type': 'merchant', 'item_list': [0, 1, 2]},
+    #     '99': {'name': 'Kevin 99', 'skin': 'Villager1', 'type': 'quest_giver', 'quest_ids': [3, 7], 'item_list': None},
+    #     '139': {'name': 'Mate 139 ', 'skin': 'Villager1', 'quest_ids': [1, 2], 'type': 'quest_giver', 'item_list': None}
+    # }
 
     quest_data = {
         0: {
+            'text': 'Open the control panel',
+            'objective': 'Press f1 to open the controls panel',
+            'max_amount': 1,
+            'quest_type': 'open_control_panel',
+            'rewardMoney': 800,
+            'rewardXP': 6000
+        },
+        1: {
+            'text': 'Create a save',
+            'objective': 'Save the game',
+            'max_amount': 1,
+            'quest_type': 'save_game',
+            'rewardMoney': 800,
+            'rewardXP': 6000
+        },
+
+
+        2: {
+            'text': 'Cut some grass',
+            'objective': 'Grass cutted',
+            'max_amount': 50,
+            'quest_type': 'cut_grass',
+            'rewardMoney': 800,
+            'rewardXP': 6000
+        },
+
+        3: {
             'text': 'Go near to the dungeon entrance and kill 3 skeletons',
             'objective': 'Kill 3 skeletons',
             'max_amount': 3,
@@ -176,7 +210,25 @@ class Settings:
             'rewardXP': 3010
         },
 
-        1: {
+        4: {
+            'text': 'Buy some potions from the merchant',
+            'objective': 'Buy potions',
+            'max_amount': 3,
+            'quest_type': 'buy_potion',
+            'rewardMoney': 1000,
+            'rewardXP': 8000
+        },
+
+        5: {
+            'text': 'Use a heal potion',
+            'objective': 'Use a heal potion',
+            'max_amount': 1,
+            'quest_type': 'use_potion',
+            'rewardMoney': 400,
+            'rewardXP': 3500
+        },
+
+        6: {
             'text': 'Kill the Crab in front of the dungeon entrance',
             'objective': 'Kill the Crab',
             'max_amount': 1,
@@ -185,43 +237,14 @@ class Settings:
             'rewardXP': 4000
         },
 
-        2: {
+        7: {
             'text': 'Go into the dungeon and kill the Wizzard',
             'objective': 'Kill the Wizzard',
             'max_amount': 1,
             'enemy_type': 'wizzard',
             'rewardMoney': 300,
             'rewardXP': 2500
-        },
-
-        3: {
-            'text': 'Buy some potions from the merchant',
-            'objective': 'Buy any potion from the merchant',
-            'max_amount': 3,
-            'enemy_type': '',
-            'quest_type': 'potion',
-            'rewardMoney': 1000,
-            'rewardXP': 8000
-        },
-
-        4: {
-            'text': 'Use a heal potion',
-            'objective': 'Use a heal potion',
-            'max_amount': 1,
-            'enemy_type': '',
-            'quest_type': 'use_potion',
-            'rewardMoney': 400,
-            'rewardXP': 3500
-        },
-
-        5: {
-            'text': 'Open the control panel',
-            'objective': 'Press f1 to open the control panel',
-            'max_amount': 1,
-            'enemy_type': '',
-            'rewardMoney': 800,
-            'rewardXP': 6000
-        },
+        }
     }
 
     items = {

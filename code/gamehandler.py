@@ -69,12 +69,15 @@ class GameHandler():
         if keys[pygame.K_F1] and self.is_how_to_play_openable:
             self.open_how_to_play()
 
+            self.level.player.progress_quest('open_control_panel')
+
         if keys[pygame.K_F2] and self.is_leaderboard_openable and self.user is not None:
             self.open_leaderboard()
 
     def open_leaderboard(self):
         self.is_leaderboard_openable = False
         self.is_leaderboard_open = not self.is_leaderboard_open
+        self.leaderboard.update_top_players()
         self.leaderboard_open_time = pygame.time.get_ticks()
 
     def open_how_to_play(self):
@@ -97,30 +100,35 @@ class GameHandler():
                 self.is_leaderboard_openable = True
 
     def save_game(self):
-        print("gamehandler save")
 
-        if self.user is not None and self.load_data[0] == 'online':
-            self.save.create_online_save(
-                self.level.player, self.save.load_data()[1]['id'], self.user.id, self.level.level)
+        if self.level.player.current_quest != len(Settings.quest_data):
 
-        elif self.user is not None and self.load_data[0] == 'new':
+            print("gamehandler save")
 
-            characters = self.user.load_characters()
+            self.level.player.progress_quest('save_game')
 
-            for character in characters:
-                print(character.player_name)
+            if self.user is not None and self.load_data[0] == 'online':
+                self.save.create_online_save(
+                    self.level.player, self.save.load_data()[1]['id'], self.user.id, self.level.level)
 
-                if character.player_name == self.level.player.name:
-                    self.save.create_online_save(
-                        self.level.player, character.id, self.user.id)
+            elif self.user is not None and self.load_data[0] == 'new':
 
-                    return
+                characters = self.user.load_characters()
 
-            self.save.create_new_online_save(
-                self.level.player, self.user.id, self.level.level)
+                for character in characters:
+                    print(character.player_name)
 
-        else:
-            self.save.create_save(self.level.player)
+                    if character.player_name == self.level.player.name:
+                        self.save.create_online_save(
+                            self.level.player, character.id, self.user.id)
+
+                        return
+
+                self.save.create_new_online_save(
+                    self.level.player, self.user.id, self.level.level)
+
+            else:
+                self.save.create_save(self.level.player)
 
     def pause_game(self):
         self.game_paused = not self.game_paused

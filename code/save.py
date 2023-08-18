@@ -1,6 +1,7 @@
 import os
 import json
 import game_api_client
+from settings import Settings
 
 
 class Save:

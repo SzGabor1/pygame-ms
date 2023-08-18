@@ -63,6 +63,7 @@ class QuestGiver(NPC):
 
     def accept_quest(self, player):
         if not self.quest_accepted and player.current_quest == -1:
+            player.current_amount = 0
             player.current_quest = self.quests[0]
             player.max_amount = Settings.quest_data[self.quests[0]
                                                     ]['max_amount']

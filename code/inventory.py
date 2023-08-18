@@ -48,6 +48,7 @@ class Inventory:
             Sounds.play('potion')
             if (player.health + item_data['amount']) > player.stats[effect]:
                 player.health = player.stats[effect]
+                player.progress_quest('use_potion')
 
             else:
                 player.health += item_data['amount']

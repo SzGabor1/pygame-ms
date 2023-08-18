@@ -44,6 +44,7 @@ class Level:
 
         self.enemy_sprites = []
         self.quest_givers = []
+        self.grass_tiles = []
 
         if save[0] == 'online':
             self.level = save[1]['level']
@@ -110,8 +111,8 @@ class Level:
                         if style == 'grass':
                             random_grass_image = choice(
                                 graphics['grass'])
-                            Tile((x, y), [self.visible_sprites,
-                                 self.obstacle_sprites, self.attackable_sprites], 'grass', random_grass_image)
+                            self.grass_tiles.append(Tile((x, y), [self.visible_sprites,
+                                                                  self.obstacle_sprites, self.attackable_sprites], 'grass', random_grass_image))
 
                         if style == 'dungeonportals':
 
@@ -174,7 +175,7 @@ class Level:
                 return False
         print("all quests completed")
 
-        if self.save[0] == "online" or self.save[0] == "new_online":
+        if self.player.difficulty == 1:
             self.level += 1
             self.player.handle_new_level()
 
@@ -188,10 +189,38 @@ class Level:
         self.kill_all_enemies()
 
         self.spawn_enemies()
+        self.spawn_grass()
 
     def kill_all_enemies(self):
         for enemy in self.enemy_sprites:
             enemy.kill()
+
+    def spawn_grass(self):
+        layouts = {
+            'grass': import_csv_layout('new_map/MSmap._grass.csv'),
+        }
+        graphics = {
+            'grass': import_folder('graphics/grass'),
+        }
+
+        for style, layout in layouts.items():
+            for row_index, row in enumerate(layout):
+                for col_index, col in enumerate(row):
+                    if col != '-1':
+                        x = col_index * Settings.TILESIZE
+                        y = row_index * Settings.TILESIZE
+
+                        if not self.tile_exists_at_position(x, y, 'grass'):
+                            if style == 'grass':
+                                random_grass_image = choice(graphics['grass'])
+                                Tile((x, y), [self.visible_sprites,
+                                              self.obstacle_sprites, self.attackable_sprites], 'grass', random_grass_image)
+
+    def tile_exists_at_position(self, x, y, sprite_type):
+        for tile in self.grass_tiles:
+            if tile.sprite_type == sprite_type and tile.rect.x == x and tile.rect.y == y:
+                return True
+        return False
 
     def spawn_enemies(self):
         layouts = {
@@ -430,6 +459,7 @@ class Level:
                                 self.particle_player.create_grass_particles(
                                     pos-offset, [self.visible_sprites])
                             target_sprite.kill()
+                            self.player.progress_quest('cut_grass')
                         else:
                             if target_sprite.vulnerable:
                                 self.particle_player.display_damage_numbers(target_sprite.rect.midtop, [

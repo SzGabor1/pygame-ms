@@ -167,7 +167,7 @@ class Shop():
                     if player.balance >= item_cost:
                         player.inventory.add_item(item_id)
                         player.balance -= item_cost
-                        print(f"Purchased {item['name']}")
+                        player.progress_quest('buy_potion')
                     else:
                         print("Insufficient funds!")
 
