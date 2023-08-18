@@ -70,7 +70,7 @@ class QuestGiver(NPC):
             self.accept_quest_bool = False
 
     def display_dialogue(self, player):
-        if self.toggle_dialogue and self.range_of_player and self.quests != [] and player.current_quest == -1:
+        if self.toggle_dialogue and self.range_of_player and self.quests != [] and player.current_quest == -1 and self.is_questgiver_contains_player_next_quest(player):
             self.dialogue.display(
                 self.name, str(Settings.quest_data[self.quests[0]]['text']))
 
@@ -78,8 +78,16 @@ class QuestGiver(NPC):
                 self.toggle_dialogue = False
 
     def display_dialogue_button(self, player):
-        if self.quests != [] and player.current_quest == -1 and self.range_of_player and not self.toggle_dialogue:
+        if self.quests != [] and player.current_quest == -1 and self.range_of_player and not self.toggle_dialogue and self.is_questgiver_contains_player_next_quest(player):
             self.dialogue.display_dialogue_button()
+
+    def is_questgiver_contains_player_next_quest(self, player):
+        if player.completed_quests == [] and 0 in self.quests:
+            return True
+        elif player.completed_quests != [] and player.completed_quests[-1]+1 in self.quests:
+            return True
+        else:
+            False
 
     def update(self):
         self.input()
