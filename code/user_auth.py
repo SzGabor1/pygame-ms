@@ -4,6 +4,7 @@ from settings import Settings
 import sys
 from user import User
 from menuenums import menuenums
+from requests.exceptions import ConnectionError, RequestException
 
 
 class UserAuth:
@@ -17,27 +18,29 @@ class UserAuth:
 
     @staticmethod
     def register(username, password):
-        username = username
-        password = password
-        response_info = game_api_client.register_user(username, password)
-        print(response_info)
+        try:
+            response_info = game_api_client.register_user(username, password)
+            print(response_info)
 
-        if response_info['status_code'] == 200:
-            print("User registered successfully")
-            return True
-        else:
-            print("User registration failed")
+            if response_info['status_code'] == 200:
+                print("User registered successfully")
+                return True
+            else:
+                print("User registration failed")
+                return False
+        except (ConnectionError, RequestException) as e:
+            print("Connection error:", e)
             return False
 
     @staticmethod
     def login(username, password):
-        username = username
-        password = password
-
         try:
             response = game_api_client.login_user(username, password)
             print(response)
             return response
+        except (ConnectionError, RequestException) as e:
+            print("Connection error:", e)
+            return False
         except ValueError as e:
             print("Login error:", e)
             return False

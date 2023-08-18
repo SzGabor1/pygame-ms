@@ -599,7 +599,6 @@ class Level:
             self.show_minimap(self.player)
             self.is_all_quests_completed()
         self.ui.display(self.player)
-        debug(self.level)
 
 
 class YSortCameraGroup(pygame.sprite.Group):
