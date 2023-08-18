@@ -469,6 +469,22 @@ class Level:
 
             self.display_surface.blit(circle_surface, (0, 0))
 
+    def what_is_the_next_quest(self):
+        if self.player.completed_quests == []:
+            return 0
+        last_quest = self.player.completed_quests[-1]
+        length_of_quest_data = len(Settings.quest_data)
+        if last_quest < length_of_quest_data:
+            next_quest = last_quest + 1
+            return next_quest
+
+    def next_quest_npc_position(self):
+        next_quest = self.what_is_the_next_quest()
+        for questgiver in self.quest_givers:
+            if next_quest in questgiver.quests:
+                return questgiver.rect.center
+        return None
+
     def show_minimap(self, player):
         if self.is_minimap_open:
             scale_factor = 0.13
@@ -479,14 +495,12 @@ class Level:
 
             border_surface = pygame.Surface(
                 (minimap_width + 10, minimap_height + 10))
-
             border_rect = pygame.Rect(
                 0, 0, minimap_width + 10, minimap_height + 10)
             pygame.draw.rect(
                 border_surface, Settings.MENU_BORDER_COLOR, border_rect)
 
             minimap = pygame.Surface((minimap_width, minimap_height))
-
             minimap.blit(pygame.transform.scale(self.minimap_image,
                          (minimap_width, minimap_height)), (0, 0))
 
@@ -496,6 +510,13 @@ class Level:
             dot_radius = 3
             pygame.draw.circle(minimap, (255, 0, 0),
                                (player_pos_x, player_pos_y), dot_radius)
+
+            npc_position = self.next_quest_npc_position()
+            if npc_position is not None:
+                npc_pos_x = int(npc_position[0] * scale_factor)
+                npc_pos_y = int(npc_position[1] * scale_factor)
+                pygame.draw.circle(minimap, (255, 255, 0),
+                                   (npc_pos_x, npc_pos_y), dot_radius)
 
             border_surface.blit(minimap, (5, 5))
 
