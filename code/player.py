@@ -49,14 +49,14 @@ class Player(Entity):
         self.stats = None
         self.max_stats = {'health': 300,
                           'energy': 160, 'attack': 110, 'speed': 20}
-        self.upgrade_cost = {'health': 100,
-                             'energy': 600, 'attack': 140, 'speed': 60}
+        self.upgrade_cost = {'health': 300,
+                             'energy': 100, 'attack': 400, 'speed': 60}
         self.health = None
         self.energy = None
         self.speed = None
         self.exp = None
         self.balance = None
-
+        self.last_energy_regeneration_time = pygame.time.get_ticks()
         # quest
         # self.completed_quests = [2, 4, 6, 7]
         self.completed_quests = None
@@ -210,11 +210,6 @@ class Player(Entity):
                 self.weapon_index = 0
             self.weapon = list(Settings.weapon_data.keys())[
                 self.weapon_index]
-        # sprint
-        if keys[pygame.K_LSHIFT]:
-            self.speed = self.stats['speed']*3
-        else:
-            self.speed = self.stats['speed']
 
         # inventory
         if keys[pygame.K_1] and self.can_switch_item:
@@ -242,6 +237,27 @@ class Player(Entity):
             self.item_use_time = pygame.time.get_ticks()
 
             self.inventory.use_item(self.inventory_index, self)
+
+    def handle_sprinting(self):
+        keys = pygame.key.get_pressed()
+
+        if keys[pygame.K_LSHIFT] and self.energy > 0:
+            # Player is sprinting
+            self.speed = self.stats['speed'] * 2
+            energy_consumed = Settings.ENERGY_CONSUMPTION_PER_FRAME
+            self.energy -= energy_consumed
+        else:
+            self.speed = self.stats['speed']
+
+    def handle_energy_regeneration(self):
+        current_time = pygame.time.get_ticks()
+
+        if self.energy < self.stats['energy'] and current_time - self.last_energy_regeneration_time >= Settings.ENERGY_REGENERATION_INTERVAL:
+            # Regenerate energy if it's below the maximum
+            energy_regeneration = Settings.ENERGY_REGENERATION_PER_INTERVAL
+            self.energy = min(self.stats['energy'],
+                              self.energy + energy_regeneration)
+            self.last_energy_regeneration_time = current_time
 
     def check_direction(self):
         # if the player changes direction, the attack will be destroyed
@@ -361,3 +377,5 @@ class Player(Entity):
         self.animate()
         self.move(self.speed)
         self.end_challange_mode()
+        self.handle_sprinting()
+        self.handle_energy_regeneration()

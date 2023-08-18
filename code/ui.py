@@ -40,7 +40,7 @@ class UI:
 
     def show_exp(self, exp):
         text_surf = self.font.render(
-            f"Xp {exp}", False, Settings.BLACK_TEXT_COLOR)
+            f"Xp {int(exp)}", False, Settings.BLACK_TEXT_COLOR)
         text_rect = text_surf.get_rect(bottomright=(
             Settings.WIDTH-10, Settings.HEIGHT-10))
         pygame.draw.rect(self.display_surface, Settings.UI_BG_COLOR,

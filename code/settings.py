@@ -119,6 +119,10 @@ class Settings:
         'axe': {'cooldown': 300, 'damage': 20, 'graphic': 'graphics/weapons/axe/up.png'},
         'sai': {'cooldown': 80, 'damage': 10, 'graphic': 'graphics/weapons/sai/up.png'}}
 
+    ENERGY_CONSUMPTION_PER_FRAME = 0.5
+    ENERGY_REGENERATION_PER_INTERVAL = 4
+    ENERGY_REGENERATION_INTERVAL = 1000
+
     # MENU UI
     MENU_BORDER_COLOR = '#551C03'
     MENU_BG_COLOR = '#F9AA5E'
@@ -159,19 +163,12 @@ class Settings:
     DAMAGE_NUMBER_COLOR = '#ff7200'
 
     npc_data = {
-        '59': {'name': 'Laci 59', 'skin': 'Villager1', 'quest_ids': [2], 'type': 'quest_giver', 'item_list': None},
-        '79': {'name': 'Roli 79', 'skin': 'Villager1', 'quest_ids': [1], 'type': 'quest_giver', 'item_list': None},
+        '59': {'name': 'Laci 59', 'skin': 'Villager1', 'quest_ids': [4, 6], 'type': 'quest_giver', 'item_list': None},
+        '79': {'name': 'Roli 79', 'skin': 'Villager1', 'quest_ids': [5], 'type': 'quest_giver', 'item_list': None},
         '119': {'name': 'Matyi 119', 'skin': 'Villager1', 'type': 'merchant', 'item_list': [0, 1, 2]},
-        '99': {'name': 'Kevin 99', 'skin': 'Villager1', 'type': 'quest_giver', 'quest_ids': [], 'item_list': None},
-        '139': {'name': 'Mate 139 ', 'skin': 'Villager1', 'quest_ids': [], 'type': 'quest_giver', 'item_list': None}
+        '99': {'name': 'Kevin 99', 'skin': 'Villager1', 'type': 'quest_giver', 'quest_ids': [3, 7], 'item_list': None},
+        '139': {'name': 'Mate 139 ', 'skin': 'Villager1', 'quest_ids': [1, 2], 'type': 'quest_giver', 'item_list': None}
     }
-    # npc_data = {
-    #     '59': {'name': 'Laci 59', 'skin': 'Villager1', 'quest_ids': [4, 6], 'type': 'quest_giver', 'item_list': None},
-    #     '79': {'name': 'Roli 79', 'skin': 'Villager1', 'quest_ids': [5], 'type': 'quest_giver', 'item_list': None},
-    #     '119': {'name': 'Matyi 119', 'skin': 'Villager1', 'type': 'merchant', 'item_list': [0, 1, 2]},
-    #     '99': {'name': 'Kevin 99', 'skin': 'Villager1', 'type': 'quest_giver', 'quest_ids': [3, 7], 'item_list': None},
-    #     '139': {'name': 'Mate 139 ', 'skin': 'Villager1', 'quest_ids': [1, 2], 'type': 'quest_giver', 'item_list': None}
-    # }
 
     quest_data = {
         0: {
@@ -179,71 +176,64 @@ class Settings:
             'objective': 'Press f1 to open the controls panel',
             'max_amount': 1,
             'quest_type': 'open_control_panel',
-            'rewardMoney': 800,
-            'rewardXP': 6000
+            'rewardMoney': 400,
+            'rewardXP': 300
         },
         1: {
             'text': 'Create a save',
             'objective': 'Save the game',
             'max_amount': 1,
             'quest_type': 'save_game',
-            'rewardMoney': 800,
-            'rewardXP': 6000
+            'rewardMoney': 400,
+            'rewardXP': 400
         },
-
-
         2: {
             'text': 'Cut some grass',
-            'objective': 'Grass cutted',
+            'objective': 'Grass cut',
             'max_amount': 50,
             'quest_type': 'cut_grass',
-            'rewardMoney': 800,
-            'rewardXP': 6000
+            'rewardMoney': 600,
+            'rewardXP': 400
         },
-
         3: {
-            'text': 'Go near to the dungeon entrance and kill 3 skeletons',
+            'text': 'Go near the dungeon entrance and kill 3 skeletons',
             'objective': 'Kill 3 skeletons',
             'max_amount': 3,
             'enemy_type': 'skeleton',
-            'rewardMoney': 200,
-            'rewardXP': 3010
+            'rewardMoney': 800,
+            'rewardXP': 300
         },
-
         4: {
             'text': 'Buy some potions from the merchant',
             'objective': 'Buy potions',
             'max_amount': 3,
             'quest_type': 'buy_potion',
             'rewardMoney': 1000,
-            'rewardXP': 8000
+            'rewardXP': 500
         },
-
         5: {
             'text': 'Use a heal potion',
             'objective': 'Use a heal potion',
             'max_amount': 1,
             'quest_type': 'use_potion',
             'rewardMoney': 400,
-            'rewardXP': 3500
+            'rewardXP': 250
         },
-
         6: {
             'text': 'Kill the Crab in front of the dungeon entrance',
             'objective': 'Kill the Crab',
             'max_amount': 1,
             'enemy_type': 'crab',
-            'rewardMoney': 500,
-            'rewardXP': 4000
+            'rewardMoney': 1500,
+            'rewardXP': 600
         },
-
         7: {
-            'text': 'Go into the dungeon and kill the Wizzard',
-            'objective': 'Kill the Wizzard',
+            'text': 'Go into the dungeon and kill the Wizard',
+            'objective': 'Kill the Wizard',
             'max_amount': 1,
-            'enemy_type': 'wizzard',
-            'rewardMoney': 300,
-            'rewardXP': 2500
+            'enemy_type': 'wizard',
+            'rewardMoney': 1500,
+            'rewardXP': 800
         }
     }
 
@@ -281,35 +271,5 @@ class Settings:
             'duration': 60,
             'graphic': 'graphics/items/strength_potion.png',
             'cost': 2000
-        },            3: {
-            'id': 3,
-            'name': 'Strength Potion',
-            'description': 'Temporarily increases your strength.',
-            'type': 'consumable',
-            'effect': 'strength',
-            'amount': 10,
-            'duration': 60,
-            'graphic': 'graphics/items/strength_potion.png',
-            'cost': 2000
-        },            4: {
-            'id': 4,
-            'name': 'Strength Potion',
-            'description': 'Temporarily increases your strength.',
-            'type': 'consumable',
-            'effect': 'strength',
-            'amount': 10,
-            'duration': 60,
-            'graphic': 'graphics/items/strength_potion.png',
-            'cost': 2000
-        },            5: {
-            'id': 5,
-            'name': 'Strength Potion',
-            'description': 'Temporarily increases your strength.',
-            'type': 'consumable',
-            'effect': 'strength',
-            'amount': 10,
-            'duration': 60,
-            'graphic': 'graphics/items/strength_potion.png',
-            'cost': 2000
-        },
+        }
     }
