@@ -200,7 +200,7 @@ class Player(Entity):
                 self.attack_direction = self.direction
                 Sounds.play('sword')
 
-        if keys[pygame.K_e] and self.can_switch_item:
+        if keys[pygame.K_TAB] and self.can_switch_item:
             self.can_switch_item = False
             self.item_switch_time = pygame.time.get_ticks()
 

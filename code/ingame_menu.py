@@ -249,7 +249,7 @@ class HowToPlay():
 
         self.instructions = [
             "WASD - Movement",
-            "E - Switch weapon.",
+            "TAB - Switch weapon.",
             "E - interact with NPCs, dungeon.",
             "M - Map",
             "N - Stats",
@@ -319,7 +319,7 @@ class Leaderboard:
             menu_x, menu_y - 25, menu_width, menu_height)
 
         self.back_button = pygame.Rect(
-            menu_x + 150, menu_y + 400, 200, 50)
+            menu_x + 150, menu_y + 500, 200, 50)
         self.back_label = self.font.render(
             "Back", True, Settings.BLACK_TEXT_COLOR)
         self.back_rect = self.back_label.get_rect(
