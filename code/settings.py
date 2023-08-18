@@ -242,7 +242,7 @@ class Settings:
         0: {
             'id': 0,
             'name': 'Health Potion',
-            'description': 'Regenerate a small amount of health.',
+            'description': '',
             'type': 'consumable',
             'effect': 'health',
             'amount': 60,
@@ -253,7 +253,7 @@ class Settings:
         1: {
             'id': 1,
             'name': 'Energy Potion',
-            'description': 'Restores a small amount of mana.',
+            'description': '',
             'type': 'consumable',
             'effect': 'energy',
             'amount': 30,
@@ -264,7 +264,7 @@ class Settings:
         2: {
             'id': 2,
             'name': 'Strength Potion',
-            'description': 'Temporarily increases your strength.',
+            'description': '',
             'type': 'consumable',
             'effect': 'strength',
             'amount': 10,
