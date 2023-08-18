@@ -126,6 +126,9 @@ class Settings:
     INVENTORY_BORDER_COLOR = '#551C03'
     INVENTORY_SELECTED_BG_COLOR = '#c56307'
 
+    GREEN_TEXT_COLOR = '#00FF00'
+    RED_TEXT_COLOR = '#FF0000'
+
     # UI
     BAR_HEIGHT = 20
     HEALTH_BAR_WIDTH = 200
@@ -142,7 +145,7 @@ class Settings:
 
     # UI colors
     HEALTH_COLOR = 'red'
-    ENERGY_COLOR = 'blue'
+    ENERGY_COLOR = '#013220'
 
     # talent menu
     BLACK_TEXT_COLOR = '#111111'

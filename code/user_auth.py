@@ -7,6 +7,13 @@ from menuenums import menuenums
 
 
 class UserAuth:
+    @staticmethod
+    def is_valid_username(username):
+        return len(username) >= 5 and username.isalnum()
+
+    @staticmethod
+    def is_valid_password(password):
+        return len(password) >= 5 and password.isalnum()
 
     @staticmethod
     def register(username, password):
@@ -101,6 +108,25 @@ class LoginPanel():
 
         self.active_input = None
 
+        self.success_message = self.font.render(
+            "Successful registration!", True, Settings.GREEN_TEXT_COLOR)
+        self.success_message_rect = self.success_message.get_rect(
+            center=(Settings.WIDTH // 2, Settings.HEIGHT // 2 + 200))
+
+        self.failure_message = self.font.render(
+            "Registration failed.", True, Settings.RED_TEXT_COLOR)
+        self.failure_message_rect = self.failure_message.get_rect(
+            center=(Settings.WIDTH // 2, Settings.HEIGHT // 2 + 200))
+
+        self.login_failure_message = self.font.render(
+            "Login failed: Invalid credentials", True, Settings.RED_TEXT_COLOR)
+        self.login_failure_message_rect = self.login_failure_message.get_rect(
+            center=(Settings.WIDTH // 2, Settings.HEIGHT // 2 + 200))
+
+        self.show_success_message = False
+        self.show_failure_message = False
+        self.show_login_failure_message = False
+
     def render(self):
         self.screen.blit(self.menu_bg, (0, 0))
         pygame.draw.rect(self.screen, Settings.MENU_BG_COLOR, self.menu_rect)
@@ -144,6 +170,16 @@ class LoginPanel():
         self.screen.blit(
             password_input, (self.password_input_rect.x + 5, self.password_input_rect.y + 5))
 
+        if self.show_success_message:
+            self.screen.blit(self.success_message, self.success_message_rect)
+
+        if self.show_failure_message:
+            self.screen.blit(self.failure_message, self.failure_message_rect)
+
+        if self.show_login_failure_message:
+            self.screen.blit(self.login_failure_message,
+                             self.login_failure_message_rect)
+
         pygame.display.flip()
 
     def update(self):
@@ -173,28 +209,34 @@ class LoginPanel():
             if self.login_button.collidepoint(mouse_pos):
                 # Handle login button click
                 response = UserAuth.login(self.username, self.password)
-                if response != 401:
+                if response and response != 401:
                     self.game.user = User(
                         response['username'], response['user_id'])
                     self.game.online = True
                     self.game.state = menuenums.MENU
                 else:
-                    # Handle login failure, e.g., display an error message
-                    print('user_auth Invalid credentials', response)
+                    # Display login failure message
+                    self.show_login_failure_message = True
+                    self.show_success_message = False
+                    self.show_failure_message = False
 
             if self.offline_button.collidepoint(mouse_pos):
                 self.game.state = menuenums.MENU
                 pass
 
             if self.register_button.collidepoint(mouse_pos):
-                # Handle register button click
-                response = UserAuth.register(self.username, self.password)
-                if response:
-                    # Handle successful registration, e.g., display a success message
-                    pass
+                if UserAuth.is_valid_username(self.username) and UserAuth.is_valid_password(self.password):
+                    response = UserAuth.register(self.username, self.password)
+                    if response:
+                        self.show_success_message = True
+                        self.show_login_failure_message = False
+                        self.show_failure_message = False
+                    else:
+                        self.show_failure_message = True
+                        self.show_login_failure_message = False
+                        self.show_success_message = False
                 else:
-                    # Handle registration failure, e.g., display an error message
-                    pass
+                    self.show_failure_message = True
 
         if event.type == pygame.KEYDOWN and self.active_input:
             if self.active_input == "username":
@@ -205,14 +247,5 @@ class LoginPanel():
             elif self.active_input == "password":
                 if event.key == pygame.K_BACKSPACE:
                     self.password = self.password[:-1]
-                elif event.key == pygame.K_RETURN:
-                    # Handle login button click
-                    response = UserAuth.login(self.username, self.password)
-                    if response:
-                        # Handle successful login, e.g., transition to the main game
-                        pass
-                    else:
-                        # Handle login failure, e.g., display an error message
-                        pass
                 else:
                     self.password += event.unicode
