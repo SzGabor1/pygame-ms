@@ -95,8 +95,8 @@ class Settings:
     character_ids = ['0', '1']
 
     loots = {
-        'gold_coin': {'chance': 0.8, 'graphics': 'graphics/items/gold_coin.png', 'amount': 1000},
-        'gold_coins': {'chance': 0.2, 'graphics': 'graphics/items/gold_coins.png', 'amount': 5000},
+        'gold_coin': {'chance': 0.8, 'graphics': 'graphics/items/gold_coin.png', 'amount': 25},
+        'gold_coins': {'chance': 0.2, 'graphics': 'graphics/items/gold_coins.png', 'amount': 75},
         'xp_orb': {'chance': 0, 'graphics': 'graphics/items/xp_orb.png', 'amount': 0}
     }
 
