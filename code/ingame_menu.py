@@ -3,6 +3,7 @@ import pygame
 from mainmenu import SettingsMenu
 from sound import Sounds
 from settings import Settings
+import game_api_client
 
 
 class IngameMenu:
@@ -127,8 +128,6 @@ class Ingame_settings():
         self.clock = pygame.time.Clock()
         self.font = pygame.font.Font(
             Settings.UI_FONT, Settings.UI_FONT_SIZE)
-        self.resolution_labels = []
-        self.resolution_rects = []
         self.menu_bg = pygame.transform.scale(pygame.image.load(
             "graphics/Backgrounds/menubg.jpg"), (Settings.WIDTH, Settings.HEIGHT))
         # Define the rectangle for the menu background
@@ -215,3 +214,160 @@ class Ingame_settings():
 
         pygame.display.flip()
         self.clock.tick(Settings.FPS)
+
+
+class HowToPlay():
+    def __init__(self, open_how_to_play):
+        self.open_how_to_play = open_how_to_play
+        self.init_how_to_play()
+
+    def init_how_to_play(self):
+
+        self.screen = pygame.display.get_surface()
+        self.clock = pygame.time.Clock()
+        self.font = pygame.font.Font(
+            Settings.UI_FONT, Settings.UI_FONT_SIZE)
+
+        menu_width = 500
+        menu_height = 600
+        menu_x = (Settings.WIDTH - menu_width) // 2
+        # Adjust the value here
+        menu_y = (Settings.HEIGHT - menu_height) // 2
+        self.menu_rect = pygame.Rect(
+            menu_x, menu_y - 25, menu_width, menu_height)
+
+        self.back_button = pygame.Rect(
+            menu_x + 150, menu_y + 400, 200, 50)
+        self.back_label = self.font.render(
+            "Back", True, Settings.BLACK_TEXT_COLOR)
+        self.save_rect = self.back_label.get_rect(
+            center=self.back_button.center)
+        self.title_label = self.font.render(
+            "How to play", True, Settings.BLACK_TEXT_COLOR)
+        self.title_rect = self.title_label.get_rect(
+            center=(Settings.WIDTH // 2, Settings.HEIGHT // 2 - 200))
+
+        self.instructions = [
+            "WASD - Movement",
+            "E - Switch weapon.",
+            "E - interact with NPCs, dungeon.",
+            "M - Map",
+            "N - Stats",
+            "Space - Upgrade Stat",
+            "Q - Use Potion",
+        ]
+
+    def display(self):
+        self.update()
+        self.render()
+
+    def update(self):
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                pygame.quit()
+                sys.exit()
+
+            elif event.type == pygame.MOUSEBUTTONDOWN:
+                if event.button == 1:
+                    if self.back_button.collidepoint(event.pos):
+                        print("Save button clicked!")
+                        self.open_how_to_play()
+
+    def render(self):
+
+        pygame.draw.rect(self.screen, pygame.Color(
+            Settings.MENU_BG_COLOR), self.menu_rect)
+
+        # Draw the border around the menu rectangle
+        pygame.draw.rect(self.screen, pygame.Color(
+            Settings.MENU_BORDER_COLOR), self.menu_rect, 5)
+
+        self.screen.blit(self.title_label, self.title_rect)
+
+        pygame.draw.rect(
+            self.screen, Settings.MENU_BUTTON_BG_COLOR, self.back_button)
+        self.screen.blit(self.back_label, self.save_rect)
+
+        y_offset = self.title_rect.bottom + 20
+        line_height = 30
+
+        for instruction in self.instructions:
+            instruction_label = self.font.render(
+                instruction, True, Settings.BLACK_TEXT_COLOR)
+            instruction_rect = instruction_label.get_rect(
+                center=(self.menu_rect.centerx, y_offset))
+            self.screen.blit(instruction_label, instruction_rect)
+            y_offset += line_height
+
+
+class Leaderboard:
+    def __init__(self, open_leaderboard):
+        self.open_leaderboard = open_leaderboard
+        self.init_leaderboard()
+
+    def init_leaderboard(self):
+        self.screen = pygame.display.get_surface()
+        self.clock = pygame.time.Clock()
+        self.font = pygame.font.Font(
+            Settings.UI_FONT, Settings.UI_FONT_SIZE)
+
+        menu_width = 500
+        menu_height = 600
+        menu_x = (Settings.WIDTH - menu_width) // 2
+        menu_y = (Settings.HEIGHT - menu_height) // 2
+        self.menu_rect = pygame.Rect(
+            menu_x, menu_y - 25, menu_width, menu_height)
+
+        self.back_button = pygame.Rect(
+            menu_x + 150, menu_y + 400, 200, 50)
+        self.back_label = self.font.render(
+            "Back", True, Settings.BLACK_TEXT_COLOR)
+        self.back_rect = self.back_label.get_rect(
+            center=self.back_button.center)
+        self.title_label = self.font.render(
+            "Leaderboard", True, Settings.BLACK_TEXT_COLOR)
+        self.title_rect = self.title_label.get_rect(
+            center=(Settings.WIDTH // 2, Settings.HEIGHT // 2 - 200))
+
+        self.top_players = game_api_client.get_top_ten_highest_level_users()
+
+    def display(self):
+        self.update()
+        self.render()
+
+    def update(self):
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                pygame.quit()
+                sys.exit()
+
+            elif event.type == pygame.MOUSEBUTTONDOWN:
+                if event.button == 1:
+                    if self.back_button.collidepoint(event.pos):
+                        print("Back button clicked!")
+                        self.open_leaderboard()
+
+    def render(self):
+        pygame.draw.rect(self.screen, pygame.Color(
+            Settings.MENU_BG_COLOR), self.menu_rect)
+        pygame.draw.rect(self.screen, pygame.Color(
+            Settings.MENU_BORDER_COLOR), self.menu_rect, 5)
+
+        self.screen.blit(self.title_label, self.title_rect)
+
+        pygame.draw.rect(
+            self.screen, Settings.MENU_BUTTON_BG_COLOR, self.back_button)
+        self.screen.blit(self.back_label, self.back_rect)
+
+        y_offset = self.title_rect.bottom + 20
+        line_height = 30
+
+        for player_data in self.top_players:
+            player_label = self.font.render(
+                f"{player_data['username']} - Level {player_data['highest_level']}",
+                True, Settings.BLACK_TEXT_COLOR
+            )
+            player_rect = player_label.get_rect(
+                center=(self.menu_rect.centerx, y_offset))
+            self.screen.blit(player_label, player_rect)
+            y_offset += line_height

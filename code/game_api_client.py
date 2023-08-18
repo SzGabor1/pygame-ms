@@ -54,3 +54,15 @@ def update_character(character_id, updated_data):
     url = f"{BASE_URL}/update_character/{character_id}/"
     response = requests.put(url, json=updated_data)
     return response.json()
+
+
+def get_top_ten_highest_level_users():
+    url = f"{BASE_URL}/highest_level_users/"
+    response = requests.get(url)
+
+    if response.status_code == 200:
+        highest_level_users = response.json()
+        return highest_level_users
+    else:
+        raise ValueError(
+            f"Failed to retrieve highest level users. Status code: {response.status_code}")

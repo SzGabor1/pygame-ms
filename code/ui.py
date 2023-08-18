@@ -214,5 +214,62 @@ class UI:
                                 str(Settings.quest_data[player.current_quest]['max_amount']
                                     ) + "/" + str(player.current_amount))
         self.show_inventory(player)
-        self.show_completed_quest(player)
         self.show_strength_potion_duration(player)
+
+        # should create alert class to handle these
+        self.show_completed_quest(player)
+        self.show_game_over(player)
+
+    def show_game_over(self, player):
+        if player.game_over:
+            self.show_save_warning()
+            game_over_msg = "Game Over!"
+
+            # Render the text surface
+            game_over_surf = self.font.render(
+                game_over_msg, False, Settings.WHITE_TEXT_COLOR)
+
+            # Calculate the rectangle dimensions and positions
+            text_width = game_over_surf.get_width()
+            text_height = game_over_surf.get_height() + 40
+            text_rect = pygame.Rect(
+                (Settings.WIDTH - text_width) // 2, 10, text_width, text_height)
+
+            # Draw the background rectangle
+            pygame.draw.rect(self.display_surface,
+                             Settings.MENU_BG_COLOR, text_rect)
+            pygame.draw.rect(self.display_surface,
+                             Settings.MENU_BORDER_COLOR, text_rect, 3)
+
+            # Position and blit the text surface
+            game_over_rect = game_over_surf.get_rect(
+                center=(Settings.WIDTH // 2, text_rect.y + 20))
+
+            self.display_surface.blit(
+                game_over_surf, game_over_rect)
+
+    def show_save_warning(self):
+        save_warning_msg = "SAVE GAME BEFORE EXIT"
+
+        # Render the red text surface
+        save_warning_surf = self.font.render(
+            save_warning_msg, False, (255, 0, 0))  # Red color
+
+        # Calculate the rectangle dimensions and positions
+        text_width = save_warning_surf.get_width()
+        text_height = save_warning_surf.get_height() + 40
+        text_rect = pygame.Rect(
+            (Settings.WIDTH - text_width) // 2, 120, text_width, text_height)
+
+        # Draw the background rectangle (in a different color, e.g., black)
+        pygame.draw.rect(self.display_surface,
+                         Settings.MENU_BG_COLOR, text_rect)  # Black background
+        pygame.draw.rect(self.display_surface,
+                         Settings.MENU_BORDER_COLOR, text_rect, 3)
+
+        # Position and blit the text surface
+        save_warning_rect = save_warning_surf.get_rect(
+            center=(Settings.WIDTH // 2, text_rect.y + 20))
+
+        self.display_surface.blit(
+            save_warning_surf, save_warning_rect)

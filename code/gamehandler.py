@@ -2,7 +2,7 @@ import pygame
 
 from level import Level
 from save import Save
-from ingame_menu import IngameMenu, Ingame_settings
+from ingame_menu import IngameMenu, Ingame_settings, HowToPlay, Leaderboard
 from menuenums import menuenums
 from settings import Settings
 
@@ -13,6 +13,7 @@ class GameHandler():
         self.user = user
         if self.user is not None:
             self.save = Save(what_to_load, self.user.characters)
+            self.leaderboard = Leaderboard(self.open_leaderboard)
         else:
             self.save = Save(what_to_load, None)
         self.game_paused = False
@@ -24,9 +25,19 @@ class GameHandler():
         self.is_settings_menu_open = False
         self.Ingame_settings = Ingame_settings(self.open_ingame_settings)
 
+        self.how_to_play = HowToPlay(self.open_how_to_play)
+
         self.is_talent_menu_open = False
         self.talent_menu_open_time = None
         self.key_press_cooldown = 300
+
+        self.is_how_to_play_open = False
+        self.how_to_play_open_time = None
+        self.is_how_to_play_openable = True
+
+        self.is_leaderboard_open = False
+        self.leaderboard_open_time = None
+        self.is_leaderboard_openable = True
 
     def run(self):
         self.cooldown()
@@ -39,6 +50,10 @@ class GameHandler():
         else:
             self.input()
             self.level.run()
+            if self.is_how_to_play_open:
+                self.how_to_play.display()
+            if self.is_leaderboard_open and self.user is not None:
+                self.leaderboard.display()
 
     def input(self):
         keys = pygame.key.get_pressed()
@@ -51,11 +66,35 @@ class GameHandler():
                 self.talent_menu_open_time = pygame.time.get_ticks()
                 self.is_talent_menu_open = True
 
+        if keys[pygame.K_F1] and self.is_how_to_play_openable:
+            self.open_how_to_play()
+
+        if keys[pygame.K_F2] and self.is_leaderboard_openable and self.user is not None:
+            self.open_leaderboard()
+
+    def open_leaderboard(self):
+        self.is_leaderboard_openable = False
+        self.is_leaderboard_open = not self.is_leaderboard_open
+        self.leaderboard_open_time = pygame.time.get_ticks()
+
+    def open_how_to_play(self):
+        self.is_how_to_play_openable = False
+        self.is_how_to_play_open = not self.is_how_to_play_open
+        self.how_to_play_open_time = pygame.time.get_ticks()
+
     def cooldown(self):
         current_time = pygame.time.get_ticks()
         if self.is_talent_menu_open:
             if current_time - self.talent_menu_open_time > self.key_press_cooldown:
                 self.is_talent_menu_open = False
+
+        if not self.is_how_to_play_openable:
+            if current_time - self.how_to_play_open_time > self.key_press_cooldown:
+                self.is_how_to_play_openable = True
+
+        if not self.is_leaderboard_openable and self.user is not None:
+            if current_time - self.leaderboard_open_time > self.key_press_cooldown:
+                self.is_leaderboard_openable = True
 
     def save_game(self):
         print("gamehandler save")

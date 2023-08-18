@@ -94,7 +94,10 @@ class Player(Entity):
         self.in_range_of_dungeon_portal = False
         self.is_inside_dungeon = False
 
-        Player.level = 2
+        if self.health <= 0:
+            self.game_over = True
+        else:
+            self.game_over = False
 
     def init_stats(self):
         if not self.newGame:
@@ -324,9 +327,12 @@ class Player(Entity):
             self.is_inside_dungeon = False
         else:
 
-            # self.print_death_text("Game over!")
-            # self.delete_save()
-            pygame.quit()
+            self.hitbox.topleft = self.spawn_point
+            self.game_over = True
+
+    def end_challange_mode(self):
+        if self.game_over:
+            self.hitbox.topleft = self.spawn_point
 
     def handle_new_level(self):
         self.health = self.stats['health']
@@ -346,3 +352,4 @@ class Player(Entity):
         self.get_status()
         self.animate()
         self.move(self.speed)
+        self.end_challange_mode()
