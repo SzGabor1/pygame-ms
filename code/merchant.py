@@ -190,12 +190,8 @@ class Shop():
                          text_rect.inflate(20, 20), 3)
 
     def update(self):
-        for event in pygame.event.get():
-            if event.type == pygame.QUIT:
-                pygame.quit()
-                sys.exit()
-            elif event.type == pygame.MOUSEBUTTONDOWN:
-                if event.button == 1:
-                    if self.close_button.collidepoint(event.pos):
-                        print("Close button clicked!")
-                        self.toggle_shop()
+        pos = pygame.mouse.get_pos()
+
+        if pygame.mouse.get_pressed()[0] and self.close_button.collidepoint(pos):
+            print("Close button clicked!")
+            self.toggle_shop()

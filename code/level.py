@@ -156,9 +156,7 @@ class Level:
                                 if col == '18':
                                     monster_name = 'skeleton'
                                 elif col == '38':
-                                    if self.save[0] == "new":
-                                        monster_name = 'crab'
-                                    elif not 1 in self.save[1]['player_completed_quests']:
+                                    if 6 not in self.player.completed_quests:
                                         monster_name = 'crab'
                                 elif col == '58':
                                     monster_name = 'wizzard'
@@ -167,7 +165,7 @@ class Level:
 
                                 self.enemy_sprites.append(Enemy(monster_name, (x, y), [
                                     self.visible_sprites, self.attackable_sprites], self.obstacle_sprites,
-                                    self.trigger_death_particles, self.player.update_quest_progress, self.drop_loot, self.spawn_projectile, self.level))
+                                    self.trigger_death_particles, self.drop_loot, self.spawn_projectile, self.level))
 
     def is_all_quests_completed(self):
         for questgiver in self.quest_givers:
@@ -246,7 +244,7 @@ class Level:
                             if not passSpawn:
                                 enemy = Enemy(monster_name, (x, y), [
                                     self.visible_sprites, self.attackable_sprites], self.obstacle_sprites,
-                                    self.trigger_death_particles, self.player.update_quest_progress, self.drop_loot, self.spawn_projectile, self.level)
+                                    self.trigger_death_particles, self.drop_loot, self.spawn_projectile, self.level)
                                 self.enemy_sprites.append(enemy)
 
     def create_dungeon(self):
@@ -303,7 +301,7 @@ class Level:
 
                             enemy = Enemy(monster_name, (x, y), [
                                 self.visible_sprites, self.attackable_sprites], self.obstacle_sprites,
-                                self.trigger_death_particles, self.player.update_quest_progress, self.drop_loot, self.spawn_projectile, self.level)
+                                self.trigger_death_particles, self.drop_loot, self.spawn_projectile, self.level)
 
                             self.enemy_sprites.append(enemy)
 

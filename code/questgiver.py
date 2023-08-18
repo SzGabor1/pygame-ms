@@ -137,20 +137,15 @@ class Dialogue:
                 self.toggle_dialogue = False
                 self.selection_time = pygame.time.get_ticks()
 
-    def handle_mouse_click(self, event):
-        if event.type == pygame.MOUSEBUTTONDOWN:
-            if event.button == 1:  # Left mouse button
-                pos = pygame.mouse.get_pos()
-                if self.selection_index == 0 and self.left_choice_rect.collidepoint(pos):
-                    self.can_move = False
-                    self.accepting_quest(False)
-                    self.toggle_dialogue = False
-                    self.selection_time = pygame.time.get_ticks()
-                elif self.selection_index == 1 and self.right_choice_rect.collidepoint(pos):
-                    self.can_move = False
-                    self.accepting_quest(True)
-                    self.toggle_dialogue = False
-                    self.selection_time = pygame.time.get_ticks()
+    def handle_mouse_click(self):
+        pos = pygame.mouse.get_pos()
+
+        if pygame.mouse.get_pressed()[0]:
+            if self.left_choice_rect.collidepoint(pos):
+                self.toggle_dialogue = False
+            elif self.right_choice_rect.collidepoint(pos):
+                self.accepting_quest(True)
+                self.toggle_dialogue = False
 
     def should_close_dialogue(self):
         keys = pygame.key.get_pressed()
@@ -176,7 +171,7 @@ class Dialogue:
     def display(self, name, text):
         self.selection_cooldown()
         self.input()
-        # self.handle_mouse_click()
+        self.handle_mouse_click()
 
         box_height = self.display_surface.get_size()[1] // 5
         box_y = self.display_surface.get_size()[1] // 1.5

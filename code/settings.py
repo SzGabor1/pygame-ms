@@ -115,11 +115,11 @@ class Settings:
     # weapons
     weapon_data = {
         'sword': {'cooldown': 100, 'damage': 15, 'graphic': 'graphics/weapons/sword/up.png'},
-        'lance': {'cooldown': 400, 'damage': 300, 'graphic': 'graphics/weapons/lance/up.png'},
+        'lance': {'cooldown': 400, 'damage': 30, 'graphic': 'graphics/weapons/lance/up.png'},
         'axe': {'cooldown': 300, 'damage': 20, 'graphic': 'graphics/weapons/axe/up.png'},
         'sai': {'cooldown': 80, 'damage': 10, 'graphic': 'graphics/weapons/sai/up.png'}}
 
-    ENERGY_CONSUMPTION_PER_FRAME = 0.5
+    ENERGY_CONSUMPTION_PER_FRAME = 0.35
     ENERGY_REGENERATION_PER_INTERVAL = 4
     ENERGY_REGENERATION_INTERVAL = 1000
 
@@ -199,7 +199,7 @@ class Settings:
             'text': 'Go near the dungeon entrance and kill 3 skeletons',
             'objective': 'Kill 3 skeletons',
             'max_amount': 3,
-            'enemy_type': 'skeleton',
+            'quest_type': 'skeleton',
             'rewardMoney': 800,
             'rewardXP': 300
         },
@@ -223,7 +223,7 @@ class Settings:
             'text': 'Kill the Crab in front of the dungeon entrance',
             'objective': 'Kill the Crab',
             'max_amount': 1,
-            'enemy_type': 'crab',
+            'quest_type': 'crab',
             'rewardMoney': 1500,
             'rewardXP': 600
         },
@@ -231,7 +231,7 @@ class Settings:
             'text': 'Go into the dungeon and kill the Wizard',
             'objective': 'Kill the Wizard',
             'max_amount': 1,
-            'enemy_type': 'wizard',
+            'quest_type': 'wizzard',
             'rewardMoney': 1500,
             'rewardXP': 800
         }

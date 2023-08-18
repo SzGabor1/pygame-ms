@@ -8,7 +8,7 @@ from sound import Sounds
 
 
 class Enemy(Entity):
-    def __init__(self, monster_name, pos, groups, obstacle_sprites, trigger_death_particles, update_quest_progress, drop_loot, spawn_projectile, stat_scale):
+    def __init__(self, monster_name, pos, groups, obstacle_sprites, trigger_death_particles, drop_loot, spawn_projectile, stat_scale):
         # general setup
         super().__init__(groups)
         self.sprite_type = 'enemy'
@@ -42,7 +42,6 @@ class Enemy(Entity):
         self.attack_time = None
         self.attack_cooldown = 400
         self.trigger_death_particles = trigger_death_particles
-        self.update_quest_progress = update_quest_progress
         self.drop_loot = drop_loot
         # invincibility timer
         self.vulnerable = True
@@ -129,8 +128,10 @@ class Enemy(Entity):
             self.trigger_death_particles(self.rect.center, self.monster_name)
             Sounds.play('death')
             if not player.current_quest == -1:
-                if(self.monster_name == Settings.quest_data[player.current_quest]['enemy_type']):
-                    self.update_quest_progress()
+
+                if self.monster_name == Settings.quest_data[player.current_quest]['quest_type']:
+
+                    player.progress_quest(self.monster_name)
 
     def hit_reaction(self):
         if not self.vulnerable:
