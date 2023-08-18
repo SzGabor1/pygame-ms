@@ -40,7 +40,7 @@ class UI:
 
     def show_exp(self, exp):
         text_surf = self.font.render(
-            str(int(exp)), False, Settings.BLACK_TEXT_COLOR)
+            f"Xp {exp}", False, Settings.BLACK_TEXT_COLOR)
         text_rect = text_surf.get_rect(bottomright=(
             Settings.WIDTH-10, Settings.HEIGHT-10))
         pygame.draw.rect(self.display_surface, Settings.UI_BG_COLOR,
@@ -199,27 +199,6 @@ class UI:
                 center=(100 + 40 // 2, 100 + 40 // 2))
             self.display_surface.blit(text_surf, text_rect)
 
-    def display(self, player):
-        self.show_bar(
-            player.health, player.stats['health'], self.health_bar_rect, Settings.HEALTH_COLOR)
-        self.show_bar(
-            player.energy, player.stats['energy'], self.energy_bar_rect, Settings.ENERGY_COLOR)
-        self.show_exp(player.exp)
-        self.show_weapon(10, Settings.HEIGHT - 10 -
-                         Settings.ITEM_BOX_SIZE, player.weapon_index)
-
-        if player.current_quest != -1 and not player.is_quest_completed:
-            self.show_objective(Settings.quest_data[player.current_quest]['objective'] +
-                                " " +
-                                str(Settings.quest_data[player.current_quest]['max_amount']
-                                    ) + "/" + str(player.current_amount))
-        self.show_inventory(player)
-        self.show_strength_potion_duration(player)
-
-        # should create alert class to handle these
-        self.show_completed_quest(player)
-        self.show_game_over(player)
-
     def show_game_over(self, player):
         if player.game_over:
             self.show_save_warning()
@@ -273,3 +252,40 @@ class UI:
 
         self.display_surface.blit(
             save_warning_surf, save_warning_rect)
+
+    def show_balance(self, balance):
+        text_surf = self.font.render(
+            f"Gold: {balance}", False, Settings.BLACK_TEXT_COLOR)
+        text_rect = text_surf.get_rect(bottomright=(
+            Settings.WIDTH - 10, Settings.HEIGHT - 10))
+
+        text_rect.bottomright = (
+            Settings.WIDTH - 10, Settings.HEIGHT - 50)
+
+        pygame.draw.rect(self.display_surface, Settings.UI_BG_COLOR,
+                         text_rect.inflate(20, 20))
+        self.display_surface.blit(text_surf, text_rect)
+        pygame.draw.rect(self.display_surface, Settings.UI_BORDER_COLOR,
+                         text_rect.inflate(20, 20), 3)
+
+    def display(self, player):
+        self.show_bar(
+            player.health, player.stats['health'], self.health_bar_rect, Settings.HEALTH_COLOR)
+        self.show_bar(
+            player.energy, player.stats['energy'], self.energy_bar_rect, Settings.ENERGY_COLOR)
+        self.show_exp(player.exp)
+        self.show_balance(player.balance)
+        self.show_weapon(10, Settings.HEIGHT - 10 -
+                         Settings.ITEM_BOX_SIZE, player.weapon_index)
+
+        if player.current_quest != -1 and not player.is_quest_completed:
+            self.show_objective(Settings.quest_data[player.current_quest]['objective'] +
+                                " " +
+                                str(Settings.quest_data[player.current_quest]['max_amount']
+                                    ) + "/" + str(player.current_amount))
+        self.show_inventory(player)
+        self.show_strength_potion_duration(player)
+
+        # should create alert class to handle these
+        self.show_completed_quest(player)
+        self.show_game_over(player)
