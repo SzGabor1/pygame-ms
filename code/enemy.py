@@ -2,8 +2,6 @@ import pygame
 from settings import *
 from entity import Entity
 from support import *
-import random
-import math
 from sound import Sounds
 
 
@@ -102,7 +100,6 @@ class Enemy(Entity):
     def actions(self, player):
         if self.status == 'attack':
             self.attack_time = pygame.time.get_ticks()
-            # self.damage_player(self.attack_damage, self.attack_type)
             player.get_damage(self.attack_damage)
             Sounds.play(self.attack_type)
 

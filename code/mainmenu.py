@@ -155,12 +155,6 @@ class SettingsMenu:
             self.font.render("No", True, Settings.BLACK_TEXT_COLOR)
         ]
 
-        # Position the "yes" and "no" text labels in line with the fullscreen label
-        fullscreen_label_width = self.fullscreen_label.get_width()
-        fullscreen_option_spacing = 50
-        fullscreen_option_x = self.fullscreen_rect.right + fullscreen_option_spacing
-        fullscreen_option_y = self.fullscreen_rect.centery - \
-            self.fullscreen_option_labels[0].get_height() // 2
         self.fullscreen_option_rects = [
             self.fullscreen_option_labels[0].get_rect(
                 center=(Settings.WIDTH // 2-70, menu_y + 140)),
@@ -267,7 +261,6 @@ class SettingsMenu:
             self.screen, Settings.MENU_BUTTON_BG_COLOR, self.save_button)
         self.screen.blit(self.save_label, self.save_rect)
         pygame.display.flip()
-        # self.clock.tick(Settings.FPS)
 
 
 class NewGameMenu:
@@ -436,7 +429,6 @@ class NewGameMenu:
         self.screen.blit(button_label, button_label_rect.topleft)
 
         pygame.display.flip()
-        # self.clock.tick(Settings.FPS)
 
     def update(self):
         for event in pygame.event.get():
@@ -721,8 +713,7 @@ class CreditsMenu:
 
                     if self.back_button.collidepoint(event.pos):
                         print("Back button clicked!")
-                        self.game.state = menuenums.SETTINGS  # Set the game state to SETTINGS
-                        # Handle the action you want to take when the "Back" button is clicked
+                        self.game.state = menuenums.SETTINGS
 
     def render(self):
         self.screen.blit(self.menu_bg, (0, 0))
@@ -740,4 +731,3 @@ class CreditsMenu:
         self.screen.blit(self.back_label, self.back_rect)
 
         pygame.display.flip()
-        # self.clock.tick(Settings.FPS)

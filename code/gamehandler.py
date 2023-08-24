@@ -103,7 +103,7 @@ class GameHandler():
 
         if self.level.player.current_quest != len(Settings.quest_data):
 
-            print("gamehandler save")
+            print("game saved")
 
             self.level.player.progress_quest('save_game')
 

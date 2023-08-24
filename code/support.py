@@ -65,8 +65,6 @@ def import_settings(path):
     f.close()
     return data
 
-    # Closing file
-
 
 def import_character_profile_images():
     from settings import Settings

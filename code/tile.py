@@ -12,6 +12,7 @@ class Tile(pygame.sprite.Sprite):
         self.sprite_type = sprite_type
         y_offset = Settings.HITBOX_OFFSET[sprite_type]
         self.image = surface
+        # object somehow +64 pixels on y level need correction
         if sprite_type == 'object':
             self.rect = self.image.get_rect(
                 topleft=(self.x, self.y - Settings.TILESIZE))

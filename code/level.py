@@ -159,7 +159,7 @@ class Level:
                                 elif col == '58':
                                     monster_name = 'wizzard'
                                 else:
-                                    monster_name = 'squid'
+                                    monster_name = 'skeleton'
 
                                 self.enemy_sprites.append(Enemy(monster_name, (x, y), [
                                     self.visible_sprites, self.attackable_sprites], self.obstacle_sprites,
@@ -295,7 +295,7 @@ class Level:
                             elif col == '58':
                                 monster_name = 'wizzard'
                             else:
-                                monster_name = 'squid'
+                                monster_name = 'skeleton'
 
                             enemy = Enemy(monster_name, (x, y), [
                                 self.visible_sprites, self.attackable_sprites], self.obstacle_sprites,

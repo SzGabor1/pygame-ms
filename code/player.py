@@ -58,7 +58,6 @@ class Player(Entity):
         self.balance = None
         self.last_energy_regeneration_time = pygame.time.get_ticks()
         # quest
-        # self.completed_quests = [2, 4, 6, 7]
         self.completed_quests = None
         self.current_quest = None
         self.current_amount = None
@@ -71,10 +70,6 @@ class Player(Entity):
         self.vulnerable = True
         self.hurt_time = None
         self.invulnerable_duration = 500
-
-        # # import sound
-        # self.weapon_attack_sound = pygame.mixer.Sound('audio/sword.wav')
-        # self.weapon_attack_sound.set_volume(0.1)
 
         # inventory
         self.inventory = Inventory()
@@ -345,7 +340,6 @@ class Player(Entity):
     def handle_death(self):
         if self.difficulty == 0:
             print("You died!")
-            # self.print_death_text("You died!")
             self.health = self.stats['health']
             self.hitbox.topleft = self.spawn_point
             self.is_inside_dungeon = False

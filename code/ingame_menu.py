@@ -130,11 +130,9 @@ class Ingame_settings():
             Settings.UI_FONT, Settings.UI_FONT_SIZE)
         self.menu_bg = pygame.transform.scale(pygame.image.load(
             "graphics/Backgrounds/menubg.jpg"), (Settings.WIDTH, Settings.HEIGHT))
-        # Define the rectangle for the menu background
         menu_width = 400
         menu_height = 500
         menu_x = (Settings.WIDTH - menu_width) // 2
-        # Adjust the value here
         menu_y = (Settings.HEIGHT - menu_height) // 2
         self.menu_rect = pygame.Rect(
             menu_x, menu_y - 25, menu_width, menu_height)
@@ -231,7 +229,6 @@ class HowToPlay():
         menu_width = 500
         menu_height = 600
         menu_x = (Settings.WIDTH - menu_width) // 2
-        # Adjust the value here
         menu_y = (Settings.HEIGHT - menu_height) // 2
         self.menu_rect = pygame.Rect(
             menu_x, menu_y - 25, menu_width, menu_height)
@@ -253,7 +250,7 @@ class HowToPlay():
             "E - interact with NPCs, dungeon.",
             "M - Map",
             "N - Stats",
-            "Space - Upgrade Stat",
+            "<- , ->, Space to upgrade stat",
             "Q - Use Potion",
             "Available quest marked with a ",
             "yellow dot on the map.",
@@ -280,7 +277,6 @@ class HowToPlay():
         pygame.draw.rect(self.screen, pygame.Color(
             Settings.MENU_BG_COLOR), self.menu_rect)
 
-        # Draw the border around the menu rectangle
         pygame.draw.rect(self.screen, pygame.Color(
             Settings.MENU_BORDER_COLOR), self.menu_rect, 5)
 

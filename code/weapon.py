@@ -42,21 +42,20 @@ class Weapon(pygame.sprite.Sprite):
             self.update_bottom_attack(rotation, amplitude)
 
     def update_left_attack(self, rotation, amplitude):
-        # Rotate the weapon image around the player's position
+
         rotated_image = pygame.transform.rotate(self.original_image, rotation)
         self.rect = rotated_image.get_rect(
-            center=self.player.rect.midleft)  # Change midleft to midtop
+            center=self.player.rect.midleft)
         self.image = rotated_image
 
         offset_x = -5
         self.rect.x += offset_x
 
-        # Adjust the position of the image based on the current state of the sin function
         offset_y = math.sin(self.angle) * amplitude * 0.5
         self.rect.y += offset_y
 
     def update_right_attack(self, rotation, amplitude):
-        # Rotate the weapon image around the player's position
+
         rotated_image = pygame.transform.rotate(self.original_image, rotation)
         self.rect = rotated_image.get_rect(center=self.player.rect.midright)
         self.image = rotated_image
@@ -68,7 +67,7 @@ class Weapon(pygame.sprite.Sprite):
         self.rect.y -= offset_y
 
     def update_top_attack(self, rotation, amplitude):
-        # Rotate the weapon image around the player's position
+
         rotated_image = pygame.transform.rotate(self.original_image, rotation)
         self.rect = rotated_image.get_rect(center=self.player.rect.midtop)
         self.image = rotated_image
@@ -80,7 +79,7 @@ class Weapon(pygame.sprite.Sprite):
         self.rect.x += offset_x
 
     def update_bottom_attack(self, rotation, amplitude):
-        # Rotate the weapon image around the player's position
+
         rotated_image = pygame.transform.rotate(self.original_image, rotation)
         self.rect = rotated_image.get_rect(center=self.player.rect.midbottom)
         self.image = rotated_image
