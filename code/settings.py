@@ -39,7 +39,7 @@ class Settings:
         with open('data/settings/settings.json', 'w') as outfile:
             json.dump(data, outfile, indent=4)
 
-    FPS = 120
+    FPS = 60
     TILESIZE = 64
     HITBOX_OFFSET = {
         'player': -20,
@@ -151,7 +151,7 @@ class Settings:
 
     # UI colors
     HEALTH_COLOR = 'red'
-    ENERGY_COLOR = '#013220'
+    ENERGY_COLOR = '#00FF00'
 
     # talent menu
     BLACK_TEXT_COLOR = '#111111'
@@ -176,7 +176,7 @@ class Settings:
             'objective': 'Press f1 to open the controls panel',
             'max_amount': 1,
             'quest_type': 'open_control_panel',
-            'rewardMoney': 400,
+            'rewardMoney': 700,
             'rewardXP': 300
         },
         1: {
@@ -184,7 +184,7 @@ class Settings:
             'objective': 'Save the game',
             'max_amount': 1,
             'quest_type': 'save_game',
-            'rewardMoney': 400,
+            'rewardMoney': 800,
             'rewardXP': 400
         },
         2: {
@@ -192,7 +192,7 @@ class Settings:
             'objective': 'Grass cut',
             'max_amount': 50,
             'quest_type': 'cut_grass',
-            'rewardMoney': 600,
+            'rewardMoney': 1000,
             'rewardXP': 400
         },
         3: {
@@ -200,7 +200,7 @@ class Settings:
             'objective': 'Kill 3 skeletons',
             'max_amount': 3,
             'quest_type': 'skeleton',
-            'rewardMoney': 800,
+            'rewardMoney': 1000,
             'rewardXP': 300
         },
         4: {

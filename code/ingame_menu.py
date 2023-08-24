@@ -255,6 +255,8 @@ class HowToPlay():
             "N - Stats",
             "Space - Upgrade Stat",
             "Q - Use Potion",
+            "Available quest marked with a ",
+            "yellow dot on the map.",
         ]
 
     def display(self):

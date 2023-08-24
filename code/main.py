@@ -2,15 +2,11 @@ import pygame
 from pygame.locals import *
 import sys
 from settings import Settings
-from support import import_settings
 from mainmenu import MainMenu, SettingsMenu, NewGameMenu, LoadMenu, CreditsMenu
 from menuenums import menuenums
 from gamehandler import GameHandler
-from save import Save
 from settings import Settings
 from sound import Sounds
-from user_auth import UserAuth
-from user import User
 from user_auth import LoginPanel
 
 
@@ -42,6 +38,7 @@ class Game:
                 (Settings.WIDTH, Settings.HEIGHT), flags=pygame.RESIZABLE | pygame.SCALED, vsync=1)
 
     def run(self):
+
         while True:
             if self.state == menuenums.LOGIN:
                 self.login_panel.update()
@@ -55,7 +52,7 @@ class Game:
                 if self.settings_menu is not None:
                     self.settings_menu.update()
                     self.settings_menu.render()
-
+                    self.clock.tick(Settings.FPS)
             elif self.state == menuenums.CREDITS:
                 self.credits_menu = CreditsMenu(self)
                 self.credits_menu.update()

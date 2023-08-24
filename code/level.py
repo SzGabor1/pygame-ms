@@ -1,4 +1,3 @@
-from PIL import Image, ImageDraw
 import pygame
 from settings import *
 from tile import Tile
@@ -12,8 +11,6 @@ from enemy import Enemy
 from particles import AnimationPlayer
 from random import randint
 from talents import Talents
-from ingame_menu import IngameMenu
-from npc import NPC
 import random
 import math
 from menuenums import menuenums
@@ -66,8 +63,8 @@ class Level:
         self.key_press_cooldown = 500
         self.is_key_pressed = False
 
-        self.minimap_open_time = None
-        self.minimap_cooldown = 500
+        self.map_open_time = None
+        self.map_cooldown = 500
 
         # particles
         self.particle_player = AnimationPlayer()
@@ -76,10 +73,10 @@ class Level:
 
         self.animation = Animation()
 
-        self.minimap_image = pygame.image.load(
-            'new_map/minimap_background.png')
-        self.is_minimap_open = False
-        self.is_minimap_able_to_open = True
+        self.map_image = pygame.image.load(
+            'new_map/map_background.png')
+        self.is_map_open = False
+        self.is_map_able_to_open = True
 
         self.game_start_time = pygame.time.get_ticks()
         self.game_time = 0
@@ -111,6 +108,7 @@ class Level:
                         if style == 'grass':
                             random_grass_image = choice(
                                 graphics['grass'])
+
                             self.grass_tiles.append(Tile((x, y), [self.visible_sprites,
                                                                   self.obstacle_sprites, self.attackable_sprites], 'grass', random_grass_image))
 
@@ -318,6 +316,7 @@ class Level:
                 if distance.length() <= 100:
                     self.player.in_range_of_dungeon_portal = True
                     self.dungeon_id = self.dungeon_entrances.index(dungeon)
+                    self.ui.display_dungeon_portal_text()
                 else:
                     self.player.in_range_of_dungeon_portal = False
         else:
@@ -337,14 +336,14 @@ class Level:
             if current_time - self.key_press_time >= self.key_press_cooldown:
                 self.is_key_pressed = False
 
-        if not self.is_minimap_able_to_open:
-            if current_time - self.minimap_open_time >= self.minimap_cooldown:
-                self.is_minimap_able_to_open = True
+        if not self.is_map_able_to_open:
+            if current_time - self.map_open_time >= self.map_cooldown:
+                self.is_map_able_to_open = True
 
     def teleport_to_dungeon(self):
         keys = pygame.key.get_pressed()
         if keys[pygame.K_e] and not self.is_key_pressed:
-            if self.player.in_range_of_dungeon_portal and not self.player.is_inside_dungeon and self.player.current_quest == 2:
+            if self.player.in_range_of_dungeon_portal and not self.player.is_inside_dungeon and self.player.current_quest == 7:
                 self.dungeon = self.create_dungeon()
                 self.player.hitbox.center = self.dungeon_spawns[self.dungeon_id].rect.center
                 self.player.is_inside_dungeon = True
@@ -354,8 +353,8 @@ class Level:
 
             elif self.player.in_range_of_dungeon_portal and self.player.is_inside_dungeon:
                 self.player.hitbox.center = self.dungeon_entrances[self.dungeon_id].rect.center
-                self.dungeon.empty()  # Empty the dungeon sprite group
-                self.dungeon = None  # Set the dungeon object to None
+                self.dungeon.empty()
+                self.dungeon = None
                 self.player.is_inside_dungeon = False
 
                 self.is_key_pressed = True
@@ -366,11 +365,10 @@ class Level:
         y += random.randint(-100, 100)
         loot_types = list(Settings.monster_data[monster_name]['loots'])
 
-        # Exclude xp_orb from the loot_types list
         loot_types.remove('xp_orb')
 
         # Check if there should be a drop or not for other loot types
-        no_drop_chance = 0  # Adjust the chance as desired
+        no_drop_chance = 0
 
         # Determine whether to drop xp_orb or not
         drop_xp_orb = random.random() >= no_drop_chance
@@ -513,40 +511,40 @@ class Level:
                 return questgiver.rect.center
         return None
 
-    def show_minimap(self, player):
-        if self.is_minimap_open:
+    def show_map(self, player):
+        if self.is_map_open:
             scale_factor = 0.13
 
-            minimap_width = int(self.minimap_image.get_width() * scale_factor)
-            minimap_height = int(
-                self.minimap_image.get_height() * scale_factor)
+            map_width = int(self.map_image.get_width() * scale_factor)
+            map_height = int(
+                self.map_image.get_height() * scale_factor)
 
             border_surface = pygame.Surface(
-                (minimap_width + 10, minimap_height + 10))
+                (map_width + 10, map_height + 10))
             border_rect = pygame.Rect(
-                0, 0, minimap_width + 10, minimap_height + 10)
+                0, 0, map_width + 10, map_height + 10)
             pygame.draw.rect(
                 border_surface, Settings.MENU_BORDER_COLOR, border_rect)
 
-            minimap = pygame.Surface((minimap_width, minimap_height))
-            minimap.blit(pygame.transform.scale(self.minimap_image,
-                         (minimap_width, minimap_height)), (0, 0))
+            map = pygame.Surface((map_width, map_height))
+            map.blit(pygame.transform.scale(self.map_image,
+                                            (map_width, map_height)), (0, 0))
 
             player_pos_x = int(player.rect.centerx * scale_factor)
             player_pos_y = int(player.rect.centery * scale_factor)
 
             dot_radius = 3
-            pygame.draw.circle(minimap, (255, 0, 0),
+            pygame.draw.circle(map, (255, 0, 0),
                                (player_pos_x, player_pos_y), dot_radius)
 
             npc_position = self.next_quest_npc_position()
             if npc_position is not None:
                 npc_pos_x = int(npc_position[0] * scale_factor)
                 npc_pos_y = int(npc_position[1] * scale_factor)
-                pygame.draw.circle(minimap, (255, 255, 0),
+                pygame.draw.circle(map, (255, 255, 0),
                                    (npc_pos_x, npc_pos_y), dot_radius)
 
-            border_surface.blit(minimap, (5, 5))
+            border_surface.blit(map, (5, 5))
 
             border_x = Settings.WIDTH / 2 - border_surface.get_width() / 2
             border_y = 50
@@ -567,10 +565,10 @@ class Level:
     def input(self):
         keys = pygame.key.get_pressed()
 
-        if keys[pygame.K_m] and self.is_minimap_able_to_open:
-            self.is_minimap_open = not self.is_minimap_open
-            self.minimap_open_time = pygame.time.get_ticks()
-            self.is_minimap_able_to_open = False
+        if keys[pygame.K_m] and self.is_map_able_to_open:
+            self.is_map_open = not self.is_map_open
+            self.map_open_time = pygame.time.get_ticks()
+            self.is_map_able_to_open = False
 
     def run(self):
         self.visible_sprites.custom_draw(self.player)
@@ -594,7 +592,7 @@ class Level:
             self.night_lights()
             self.input()
             self.count_time()
-            self.show_minimap(self.player)
+            self.show_map(self.player)
             self.is_all_quests_completed()
         self.ui.display(self.player)
 

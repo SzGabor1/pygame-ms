@@ -197,7 +197,7 @@ class SettingsMenu:
                     if self.save_button.collidepoint(event.pos):
                         print("Save Settings button clicked!")
                         # Get the primary monitor
-                        monitor = get_monitors()[1]
+                        monitor = get_monitors()[0]
 
                         # Retrieve the width and height of the monitor
                         width = monitor.width

@@ -1,8 +1,8 @@
 {
     "settings": {
-        "WIDTH": 1680,
-        "HEIGHT": 1000,
-        "FULLSCREEN": false,
+        "WIDTH": 1920,
+        "HEIGHT": 1080,
+        "FULLSCREEN": true,
         "VOLUME": 0.11
     }
 }

@@ -21,8 +21,14 @@ def import_folder(path):
     for _, __, img_files in walk(path):
         for image in img_files:
             full_path = path + '/' + image
-            image_surf = pygame.image.load(full_path).convert_alpha()
-            surface_list.append(image_surf)
+            try:
+                image_surf = pygame.image.load(full_path).convert_alpha()
+                surface_list.append(image_surf)
+            except pygame.error:
+                print(f"Unsupported image format: {full_path}")
+                missing_surf = pygame.image.load("graphics/missing.png")
+                if missing_surf:
+                    surface_list.append(missing_surf.convert_alpha())
 
     return surface_list
 
@@ -30,7 +36,6 @@ def import_folder(path):
 def import_folder_sorted(path):
     surface_list = []
 
-    # Get all the file paths in the directory and sort them in numeric order
     def sort_key(filename):
         return int(re.search(r'\d+', filename).group())
 
@@ -39,9 +44,14 @@ def import_folder_sorted(path):
     file_paths.sort(key=sort_key)
 
     for full_path in file_paths:
-      #  print(full_path)
-        image_surf = pygame.image.load(full_path).convert_alpha()
-        surface_list.append(image_surf)
+        try:
+            image_surf = pygame.image.load(full_path).convert_alpha()
+            surface_list.append(image_surf)
+        except pygame.error:
+            print(f"Unsupported image format: {full_path}")
+            missing_surf = pygame.image.load("graphics/missing.png")
+            if missing_surf:
+                surface_list.append(missing_surf.convert_alpha())
 
     return surface_list
 

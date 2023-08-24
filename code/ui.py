@@ -165,6 +165,17 @@ class UI:
             self.display_surface.blit(rewardXP_surf, rewardXP_rect)
             self.display_surface.blit(rewardMoney_surf, rewardMoney_rect)
 
+    def display_dungeon_portal_text(self):
+        text_surf = self.font.render(
+            "E", False, Settings.BLACK_TEXT_COLOR)
+        text_rect = text_surf.get_rect(bottomright=(
+            Settings.WIDTH - 20, Settings.HEIGHT - 80))
+        pygame.draw.rect(self.display_surface, Settings.UI_BG_COLOR,
+                         text_rect.inflate(20, 20))
+        self.display_surface.blit(text_surf, text_rect)
+        pygame.draw.rect(self.display_surface, Settings.UI_BORDER_COLOR,
+                         text_rect.inflate(20, 20), 3)
+
     def caculate_strength_potion_time(self, player):
         current_time = pygame.time.get_ticks()
         return int((player.strength_potion_duration)/1000)-(int((current_time - player.strength_potion_time) / 1000))
