@@ -1,5 +1,4 @@
 import json
-import pygame
 from support import import_settings as import_settings
 
 

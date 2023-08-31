@@ -27,11 +27,10 @@ class MainMenu:
         self.title_rect = self.title_label.get_rect(
             center=(Settings.WIDTH // 2, Settings.HEIGHT // 2 - 100))
 
-        # Define the rectangle for the menu background
         menu_width = 400
         menu_height = 400
         menu_x = (Settings.WIDTH - menu_width) // 2
-        # Adjust the value here
+
         menu_y = (Settings.HEIGHT - menu_height) // 2
 
         self.menu_rect = pygame.Rect(
@@ -68,29 +67,24 @@ class MainMenu:
                     if self.new_game_button.collidepoint(event.pos):
                         print("New Game button clicked!")
                         self.game.open_new_game_menu()
-                        # Perform action for new game
                     elif self.load_game_button.collidepoint(event.pos):
                         print("Load Game button clicked!")
-                        # Perform action for load game
-                        self.game.open_load_menu()  # Set the state to "GAME"
+
+                        self.game.open_load_menu()
                     elif self.settings_button.collidepoint(event.pos):
                         print("Settings button clicked!")
-                        # Open settings menu
+
                         self.game.open_settings_menu()
 
     def render(self):
-        # Fill the screen with the menu background image
         self.screen.blit(self.menu_bg, (0, 0))
 
-        # Draw the menu background rectangle
         pygame.draw.rect(self.screen, pygame.Color(
             Settings.MENU_BG_COLOR), self.menu_rect)
 
-        # Draw the border around the menu rectangle
         pygame.draw.rect(self.screen, pygame.Color(
             Settings.MENU_BORDER_COLOR), self.menu_rect, 5)
 
-        # Draw the menu elements on top of the rectangle
         self.screen.blit(self.title_label, self.title_rect)
         pygame.draw.rect(self.screen, Settings.MENU_BUTTON_BG_COLOR,
                          self.new_game_button)
@@ -103,7 +97,6 @@ class MainMenu:
         self.screen.blit(self.settings_label, self.settings_rect)
 
         pygame.display.flip()
-        # self.clock.tick(Settings.FPS)
 
 
 class SettingsMenu:
@@ -125,11 +118,10 @@ class SettingsMenu:
         self.title_rect = self.title_label.get_rect(
             center=(Settings.WIDTH // 2, Settings.HEIGHT // 2 - 200))
 
-        # Define the rectangle for the menu background
         menu_width = 400
         menu_height = 500
         menu_x = (Settings.WIDTH - menu_width) // 2
-        # Adjust the value here
+
         menu_y = (Settings.HEIGHT - menu_height) // 2
 
         self.menu_rect = pygame.Rect(
@@ -143,13 +135,12 @@ class SettingsMenu:
             center=self.save_button.center)
 
         self.fullscreen = Settings.FULLSCREEN
-        # Create the fullscreen label
+
         self.fullscreen_label = self.font.render(
             "Fullscreen:", True, Settings.BLACK_TEXT_COLOR)
         self.fullscreen_rect = self.fullscreen_label.get_rect(
             center=(Settings.WIDTH // 2, menu_y + 100))
 
-        # Create the "yes" and "no" text labels
         self.fullscreen_option_labels = [
             self.font.render("Yes", True, Settings.BLACK_TEXT_COLOR),
             self.font.render("No", True, Settings.BLACK_TEXT_COLOR)
@@ -225,25 +216,20 @@ class SettingsMenu:
         self.screen.fill((0, 0, 0))
         self.screen.blit(self.menu_bg, (0, 0))
 
-        # Draw the menu background rectangle
         pygame.draw.rect(self.screen, pygame.Color(
             Settings.MENU_BG_COLOR), self.menu_rect)
 
-        # Draw the border around the menu rectangle
         pygame.draw.rect(self.screen, pygame.Color(
             Settings.MENU_BORDER_COLOR), self.menu_rect, 5)
 
         self.screen.blit(self.title_label, self.title_rect)
 
-        # Draw the "Credits" button
         pygame.draw.rect(
             self.screen, Settings.MENU_BUTTON_BG_COLOR, self.credits_button)
         self.screen.blit(self.credits_label, self.credits_rect)
 
-        # Draw the fullscreen label
         self.screen.blit(self.fullscreen_label, self.fullscreen_rect)
 
-        # Draw the "yes" and "no" text labels
         for i, label in enumerate(self.fullscreen_option_labels):
             rect = self.fullscreen_option_rects[i]
             if self.fullscreen and i == 0:
@@ -253,7 +239,6 @@ class SettingsMenu:
             else:
                 text_color = Settings.MENU_BG_COLOR
 
-            # Highlight the selected fullscreen option
             pygame.draw.rect(self.screen, text_color, rect)
             self.screen.blit(label, rect)
 
@@ -276,8 +261,7 @@ class NewGameMenu:
             Settings.UI_FONT, Settings.UI_FONT_SIZE)
 
         self.button_state = 0
-        # Calculate the dimensions of the button based on the text size
-        button_text = "Challenge Mode"  # Longer text to determine dimensions
+        button_text = "Challenge Mode"
         self.button_width = self.font.size(button_text)[0] + 10
         self.button_height = self.font.size(button_text)[1] + 10
 
@@ -331,10 +315,8 @@ class NewGameMenu:
         self.current_character_index = 0
         self.current_character_image = self.character_images[self.current_character_index]
 
-        # Triangle dimensions
         self.triangle_size = 20
 
-        # Triangle coordinates for left and right
         self.triangle_left_x = self.menu_x + 70 + self.triangle_size // 2
         self.triangle_left_y = self.menu_y + \
             self.menu_height // 2 + 150 + self.triangle_size // 2
@@ -375,32 +357,27 @@ class NewGameMenu:
             Settings.MENU_BUTTON_BG_COLOR), self.back_button)
         self.screen.blit(self.back_label, self.back_rect)
 
-        # Draw the character image
         character_image_rect = self.current_character_image.get_rect(
             center=(Settings.WIDTH // 2, Settings.HEIGHT // 2 + 50))
         self.screen.blit(self.current_character_image, character_image_rect)
 
-        # Draw the rectangles
         pygame.draw.rect(self.screen, pygame.Color(
             Settings.MENU_BUTTON_BG_COLOR), self.left_rectangle)
         pygame.draw.rect(self.screen, pygame.Color(
             Settings.MENU_BUTTON_BG_COLOR), self.right_rectangle)
 
-        # Calculate the triangle positions
         left_triangle_x = self.triangle_left_x + 20 - self.triangle_size // 2
         left_triangle_y = self.triangle_left_y
 
         right_triangle_x = self.triangle_right_x - self.triangle_size // 2
         right_triangle_y = self.triangle_right_y
 
-        # Draw the left arrow triangle
         pygame.draw.polygon(self.screen, pygame.Color(Settings.BLACK_TEXT_COLOR), [
             (left_triangle_x, left_triangle_y - self.triangle_size // 2),
             (left_triangle_x - self.triangle_size, left_triangle_y),
             (left_triangle_x, left_triangle_y + self.triangle_size // 2)
         ])
 
-        # Draw the right arrow triangle
         pygame.draw.polygon(self.screen, pygame.Color(Settings.BLACK_TEXT_COLOR), [
             (right_triangle_x, right_triangle_y - self.triangle_size // 2),
             (right_triangle_x + self.triangle_size, right_triangle_y),
@@ -414,13 +391,11 @@ class NewGameMenu:
             button_label = self.font.render(
                 "Challenge Mode", True, Settings.BLACK_TEXT_COLOR)
 
-        # Update the button dimensions based on the text size
         self.button_width = button_label.get_width() + 10
         self.button_height = button_label.get_height() + 10
         self.button_rect.width = self.button_width
         self.button_rect.height = self.button_height
 
-        # Adjust the text position to center it vertically
         button_label_rect = button_label.get_rect(
             center=self.button_rect.center)
 
@@ -439,7 +414,6 @@ class NewGameMenu:
                 if event.button == 1:
                     mouse_pos = pygame.mouse.get_pos()
 
-                    # Check if the save button is clicked
                     if self.save_button.collidepoint(mouse_pos):
                         print("Save button clicked!")
                         if self.game.online:
@@ -456,12 +430,10 @@ class NewGameMenu:
                                                          self.character_name, self.current_character_index, self.button_state)
                         self.game.state = menuenums.GAME
 
-                    # Check if the back button is clicked
                     elif self.back_button.collidepoint(mouse_pos):
                         print("Back button clicked!")
                         self.game.state = menuenums.MENU
 
-                    # Check if the left rectangle is clicked
                     elif self.left_rectangle.collidepoint(mouse_pos):
                         print("Left rectangle clicked!")
                         self.current_character_index -= 1
@@ -470,7 +442,6 @@ class NewGameMenu:
                                 self.character_images) - 1
                         self.current_character_image = self.character_images[self.current_character_index]
 
-                    # Check if the right rectangle is clicked
                     elif self.right_rectangle.collidepoint(mouse_pos):
                         print("Right rectangle clicked!")
                         self.current_character_index += 1
@@ -480,14 +451,14 @@ class NewGameMenu:
 
                     elif self.button_rect.collidepoint(mouse_pos) and self.game.online:
                         print("Button clicked!")
-                        self.button_state = 1 - self.button_state  # Toggle between 0 and 1
+                        self.button_state = 1 - self.button_state
 
             elif event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_BACKSPACE:
-                    # Remove the last character from the character name
+
                     self.character_name = self.character_name[:-1]
                 else:
-                    # Add the pressed character to the character name
+
                     self.character_name += event.unicode
 
         self.render()
@@ -513,7 +484,6 @@ class LoadMenu:
         self.title_rect = self.title_label.get_rect(
             center=(Settings.WIDTH // 2, Settings.HEIGHT // 2 - 200))
 
-        # Define the rectangle for the menu background
         menu_width = 400
         menu_height = 500
         menu_x = (Settings.WIDTH - menu_width) // 2
@@ -538,7 +508,7 @@ class LoadMenu:
 
         self.save_buttons = []
 
-        # Slider változók
+        # Slider
         self.slider_rect = pygame.Rect(
             menu_x + 370, menu_y + 100, 20, 200)
         self.slider_button_rect = pygame.Rect(
@@ -614,14 +584,12 @@ class LoadMenu:
             Settings.MENU_BORDER_COLOR), self.menu_rect, 5)
         self.screen.blit(self.title_label, self.title_rect)
 
-        # Draw the back button
         pygame.draw.rect(self.screen, pygame.Color(
             Settings.MENU_BUTTON_BG_COLOR), self.back_button)
         pygame.draw.rect(self.screen, pygame.Color(
             Settings.MENU_BORDER_COLOR), self.back_button, 3)
         self.screen.blit(self.back_label, self.back_rect)
 
-        # Draw the slider
         pygame.draw.rect(self.screen, pygame.Color(
             Settings.MENU_BUTTON_BG_COLOR), self.slider_rect)
         pygame.draw.rect(self.screen, pygame.Color(
@@ -629,7 +597,6 @@ class LoadMenu:
         pygame.draw.rect(self.screen, pygame.Color(
             Settings.MENU_BUTTON_BG_COLOR), self.slider_button_rect)
 
-        # Draw save buttons
         self.save_buttons = []
         for i, save_file in enumerate(self.visible_save_files):
             button_rect = pygame.Rect(

@@ -201,13 +201,13 @@ class LoginPanel():
 
         if event.type == pygame.MOUSEBUTTONDOWN:
             if self.name_input_rect.collidepoint(mouse_pos):
-                self.active_input = "username"  # Activate username input field
+                self.active_input = "username"
                 self.username = ""
             elif self.password_input_rect.collidepoint(mouse_pos):
-                self.active_input = "password"  # Activate password input field
+                self.active_input = "password"
                 self.password = ""
             else:
-                self.active_input = None  # Deactivate any active input field
+                self.active_input = None
 
             if self.login_button.collidepoint(mouse_pos):
                 # Handle login button click

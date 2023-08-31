@@ -243,7 +243,7 @@ class UI:
 
         # Render the red text surface
         save_warning_surf = self.font.render(
-            save_warning_msg, False, (255, 0, 0))  # Red color
+            save_warning_msg, False, (255, 0, 0))
 
         # Calculate the rectangle dimensions and positions
         text_width = save_warning_surf.get_width()

@@ -5,7 +5,6 @@ from settings import Settings
 from mainmenu import MainMenu, SettingsMenu, NewGameMenu, LoadMenu, CreditsMenu
 from menuenums import menuenums
 from gamehandler import GameHandler
-from settings import Settings
 from sound import Sounds
 from user_auth import LoginPanel
 

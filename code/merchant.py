@@ -2,8 +2,6 @@
 import pygame
 from npc import NPC
 from settings import Settings
-import sys
-import textwrap
 
 
 class Merchant(NPC):
