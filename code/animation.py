@@ -32,8 +32,7 @@ class Animation():
                 self.animation_index = 0
 
             for tile in self.animation_tiles:
-                tile.kill()  # Remove all old animated tiles
-
+                tile.kill()
             for layout_key, animation_layout in self.animation_layouts.items():
                 for row_index, row in enumerate(animation_layout):
                     for col_index, col in enumerate(row):

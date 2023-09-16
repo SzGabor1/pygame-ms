@@ -21,6 +21,7 @@ class MainMenu:
 
         self.menu_bg = pygame.transform.scale(pygame.image.load(
             "graphics/Backgrounds/menubg.jpg"), (Settings.WIDTH, Settings.HEIGHT))
+        print("Menu bg size: {}x{}".format(Settings.WIDTH, Settings.HEIGHT))
 
         self.title_label = self.font.render(
             "Marooned Sailor", True, Settings.BLACK_TEXT_COLOR)

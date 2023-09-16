@@ -2,19 +2,22 @@ from settings import *
 import pygame
 from npc import NPC
 from settings import Settings
+from debug import debug
 
 
 class QuestGiver(NPC):
-    def __init__(self, npc_name, pos, groups, obstacle_sprites, id):
+    def __init__(self, npc_name, pos, groups, obstacle_sprites, id, questgivers_quest_setup):
         super().__init__(npc_name, pos, groups, obstacle_sprites, id)
 
-        self.type = 'questgiver'
+        self.questgivers_quest_setup = questgivers_quest_setup
+
+        self.sprite_type = 'questgiver'
 
         self.id = id
 
         self.quests = []
         self.load_quests()
-
+       # self.questgivers_quest_setup()
         print(self.quests)
 
         self.toggle_dialogue = False
@@ -31,31 +34,37 @@ class QuestGiver(NPC):
         for quest_id in quest_ids:
             self.quests.append(quest_id)
 
-    def update_questgiver(self, player):
-        self.complete_quest(player)
-        self.get_rid_of_completed_quests(player)
+    def npc_update(self, player):
+
+       # self.complete_quest(player)
         self.display_dialogue(player)
         self.in_range_of_player(player)
         self.display_dialogue_button(player)
 
+        if self.range_of_player:
+            print(self.quests)
+
         if self.accept_quest_bool:
             self.accept_quest(player)
 
-    def complete_quest(self, player):
-        if player.current_amount >= player.max_amount:
-            player.is_quest_completed = True
-            player.quest_completed_time = pygame.time.get_ticks()
-            player.completed_quests.append(player.current_quest)
-            player.exp += Settings.quest_data[player.current_quest]['rewardXP']
-            player.balance += Settings.quest_data[player.current_quest]['rewardMoney']
+    # def complete_quest(self, player):
+    #     if player.current_quest in self.quests and player.current_amount >= player.max_amount:
+    #         player.completed_quests.append(player.current_quest)
+    #         player.is_quest_completed = True
+    #         player.quest_completed_time = pygame.time.get_ticks()
+    #         player.completed_quests.append(player.current_quest)
+    #         player.exp += Settings.quest_data[player.current_quest]['rewardXP']
+    #         player.balance += Settings.quest_data[player.current_quest]['rewardMoney']
+    #        # self.questgivers_quest_setup()
+    #         self.get_rid_of_completed_quests(player.completed_quests)
+    #         player.quest_accepted = False
+    #         self.accept_quest_bool = False
+    #         player.current_amount = 0
 
-            player.quest_accepted = False
-            self.accept_quest_bool = False
-            player.current_amount = 0
-
-    def get_rid_of_completed_quests(self, player):
-        for quest in player.completed_quests:
+    def get_rid_of_completed_quests(self, completed_quests):
+        for quest in completed_quests:
             if quest in self.quests:
+                print("removing quest for ", self.name, quest)
                 self.quests.remove(quest)
 
     def accepting_quest(self, status):
@@ -92,16 +101,6 @@ class QuestGiver(NPC):
 
     def update(self):
         self.input()
-
-    def npc_update(self, player):
-        self.complete_quest(player)
-        self.get_rid_of_completed_quests(player)
-        self.display_dialogue(player)
-        self.in_range_of_player(player)
-        self.display_dialogue_button(player)
-
-        if self.accept_quest_bool:
-            self.accept_quest(player)
 
 
 class Dialogue:

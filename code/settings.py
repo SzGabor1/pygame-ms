@@ -4,39 +4,43 @@ from support import import_settings as import_settings
 
 class Settings:
 
-    data = import_settings('data/settings/settings.json')
-    WIDTH = data['settings']['WIDTH']
-    HEIGHT = data['settings']['HEIGHT']
-    FULLSCREEN = data['settings']['FULLSCREEN']
-    VOLUME = data['settings']['VOLUME']
+    data = None
+    WIDTH = None
+    HEIGHT = None
+    FULLSCREEN = None
+    VOLUME = 0
 
-    @staticmethod
-    def overwrite_settings(width, height, fullscreen, volume):
+    @classmethod
+    def load_settings(cls):
         with open('data/settings/settings.json', 'r') as infile:
-            existing_settings = json.load(infile)
-            VOLUME = existing_settings['settings']['VOLUME'] if volume is None else volume
+            cls.data = json.load(infile)
+            cls.WIDTH = cls.data['settings']['WIDTH']
+            cls.HEIGHT = cls.data['settings']['HEIGHT']
+            cls.FULLSCREEN = cls.data['settings']['FULLSCREEN']
+            cls.VOLUME = cls.data['settings']['VOLUME']
 
-        dictionary = {
-            'settings': {
-                'WIDTH': width,
-                'HEIGHT': height,
-                'FULLSCREEN': fullscreen,
-                'VOLUME': VOLUME
-            }
-        }
-        json_object = json.dumps(dictionary, indent=4)
+    @classmethod
+    def save_settings(cls):
         with open('data/settings/settings.json', 'w') as outfile:
-            outfile.write(json_object)
+            json.dump(cls.data, outfile, indent=4)
 
-    @staticmethod
-    def overwrite_volume(volume):
-        Settings.VOLUME = volume
-        # Update settings in the JSON file with the new volume value
-        with open('data/settings/settings.json', 'r') as infile:
-            data = json.load(infile)
-            data['settings']['VOLUME'] = volume
-        with open('data/settings/settings.json', 'w') as outfile:
-            json.dump(data, outfile, indent=4)
+    @classmethod
+    def overwrite_settings(cls, width=None, height=None, fullscreen=None, volume=None):
+        cls.load_settings()
+        if width is not None:
+            cls.data['settings']['WIDTH'] = width
+            cls.WIDTH = width
+        if height is not None:
+            cls.data['settings']['HEIGHT'] = height
+            cls.HEIGHT = height
+        if fullscreen is not None:
+            cls.data['settings']['FULLSCREEN'] = fullscreen
+            cls.FULLSCREEN = fullscreen
+        if volume is not None:
+            cls.data['settings']['VOLUME'] = volume
+            cls.VOLUME = volume
+
+        cls.save_settings()
 
     FPS = 60
     TILESIZE = 64
@@ -114,12 +118,12 @@ class Settings:
     # weapons
     weapon_data = {
         'sword': {'cooldown': 100, 'damage': 15, 'graphic': 'graphics/weapons/sword/up.png'},
-        'lance': {'cooldown': 400, 'damage': 30, 'graphic': 'graphics/weapons/lance/up.png'},
+        'lance': {'cooldown': 400, 'damage': 300, 'graphic': 'graphics/weapons/lance/up.png'},
         'axe': {'cooldown': 300, 'damage': 20, 'graphic': 'graphics/weapons/axe/up.png'},
         'sai': {'cooldown': 80, 'damage': 10, 'graphic': 'graphics/weapons/sai/up.png'}}
 
     ENERGY_CONSUMPTION_PER_FRAME = 0.35
-    ENERGY_REGENERATION_PER_INTERVAL = 4
+    ENERGY_REGENERATION_PER_INTERVAL = 40
     ENERGY_REGENERATION_INTERVAL = 1000
 
     # MENU UI
@@ -166,7 +170,7 @@ class Settings:
         '79': {'name': 'Roli 79', 'skin': 'Villager1', 'quest_ids': [5], 'type': 'quest_giver', 'item_list': None},
         '119': {'name': 'Matyi 119', 'skin': 'Villager1', 'type': 'merchant', 'item_list': [0, 1, 2]},
         '99': {'name': 'Kevin 99', 'skin': 'Villager1', 'type': 'quest_giver', 'quest_ids': [3, 7], 'item_list': None},
-        '139': {'name': 'Mate 139 ', 'skin': 'Villager1', 'quest_ids': [1, 2], 'type': 'quest_giver', 'item_list': None}
+        '139': {'name': 'Mate 139 ', 'skin': 'Villager1', 'quest_ids': [0, 1, 2], 'type': 'quest_giver', 'item_list': None}
     }
 
     quest_data = {

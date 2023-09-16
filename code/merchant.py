@@ -41,6 +41,8 @@ class Merchant(NPC):
     def __init__(self, npc_name, pos, groups, obstacle_sprites, id, item_list):
         super().__init__(npc_name, pos, groups, obstacle_sprites, id)
 
+        self.sprite_type = 'merchant'
+
         self.itemlist = item_list
 
         self.is_shop_open = False

@@ -1,10 +1,13 @@
 import pygame
-
+from world import World
 from level import Level
 from save import Save
 from ingame_menu import IngameMenu, Ingame_settings, HowToPlay, Leaderboard
-from menuenums import menuenums
+from menuenums import menuenums, levelstates
 from settings import Settings
+from levelhandler import LevelHandler
+from ui import UI
+from talents import Talents
 
 
 class GameHandler():
@@ -18,7 +21,10 @@ class GameHandler():
             self.save = Save(what_to_load, None)
         self.game_paused = False
         self.load_data = self.save.load_data()
-        self.level = Level(self.load_data)
+
+        self.ui = UI()
+        self.levelhandler = LevelHandler(self.load_data)
+
         self.ingame_menu = IngameMenu(
             self.pause_game, self.save_game, self.open_ingame_settings)
 
@@ -39,6 +45,12 @@ class GameHandler():
         self.leaderboard_open_time = None
         self.is_leaderboard_openable = True
 
+        self.is_talent_menu_open = False
+        self.talent_menu_open_time = None
+        self.is_talent_menu_openable = True
+
+        self.talents = Talents(self.levelhandler.player)
+
     def run(self):
         self.cooldown()
         if self.game_paused:
@@ -49,7 +61,11 @@ class GameHandler():
                 self.ingame_menu.display()
         else:
             self.input()
-            self.level.run()
+            self.levelhandler.run()
+            self.ui.display(self.levelhandler.player)
+
+            if self.is_talent_menu_open:
+                self.talents.display()
             if self.is_how_to_play_open:
                 self.how_to_play.display()
             if self.is_leaderboard_open and self.user is not None:
@@ -61,15 +77,15 @@ class GameHandler():
             self.pause_game()
 
         if keys[pygame.K_n]:
-            if not self.is_talent_menu_open:
-                self.level.toggle_menu(menuenums.TALENTS)
+            if self.is_talent_menu_openable:
+                self.is_talent_menu_openable = False
+                self.is_talent_menu_open = not self.is_talent_menu_open
                 self.talent_menu_open_time = pygame.time.get_ticks()
-                self.is_talent_menu_open = True
 
         if keys[pygame.K_F1] and self.is_how_to_play_openable:
             self.open_how_to_play()
 
-            self.level.player.progress_quest('open_control_panel')
+            self.levelhandler.player.progress_quest('open_control_panel')
 
         if keys[pygame.K_F2] and self.is_leaderboard_openable and self.user is not None:
             self.open_leaderboard()
@@ -87,9 +103,6 @@ class GameHandler():
 
     def cooldown(self):
         current_time = pygame.time.get_ticks()
-        if self.is_talent_menu_open:
-            if current_time - self.talent_menu_open_time > self.key_press_cooldown:
-                self.is_talent_menu_open = False
 
         if not self.is_how_to_play_openable:
             if current_time - self.how_to_play_open_time > self.key_press_cooldown:
@@ -99,17 +112,21 @@ class GameHandler():
             if current_time - self.leaderboard_open_time > self.key_press_cooldown:
                 self.is_leaderboard_openable = True
 
+        if not self.is_talent_menu_openable:
+            if current_time - self.talent_menu_open_time > self.key_press_cooldown:
+                self.is_talent_menu_openable = True
+
     def save_game(self):
 
-        if self.level.player.current_quest != len(Settings.quest_data):
+        if self.levelhandler.player.current_quest != len(Settings.quest_data):
 
             print("game saved")
 
-            self.level.player.progress_quest('save_game')
+            self.levelhandler.player.progress_quest('save_game')
 
             if self.user is not None and self.load_data[0] == 'online':
                 self.save.create_online_save(
-                    self.level.player, self.save.load_data()[1]['id'], self.user.id, self.level.level)
+                    self.levelhandler.player, self.save.load_data()[1]['id'], self.user.id, self.levelhandler.difficulty_level)
 
             elif self.user is not None and self.load_data[0] == 'new':
 
@@ -118,17 +135,17 @@ class GameHandler():
                 for character in characters:
                     print(character.player_name)
 
-                    if character.player_name == self.level.player.name:
+                    if character.player_name == self.levelhandler.player.name:
                         self.save.create_online_save(
-                            self.level.player, character.id, self.user.id)
+                            self.levelhandler.player, character.id, self.user.id, self.levelhandler.difficulty_level)
 
                         return
 
                 self.save.create_new_online_save(
-                    self.level.player, self.user.id, self.level.level)
+                    self.levelhandler.player, self.user.id, self.levelhandler.difficulty_level)
 
             else:
-                self.save.create_save(self.level.player)
+                self.save.create_save(self.levelhandler.player)
 
     def pause_game(self):
         self.game_paused = not self.game_paused

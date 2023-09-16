@@ -9,7 +9,6 @@ class NPC(Entity):
     def __init__(self, name, pos, groups, obstacle_sprites, id):
         # general setup
         super().__init__(groups)
-        self.sprite_type = 'npc'
         self.id = id
         # graphics setup
         self.import_graphics(Settings.npc_data[id]['skin'])

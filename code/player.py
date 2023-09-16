@@ -8,9 +8,11 @@ from sound import Sounds
 
 
 class Player(Entity):
-    def __init__(self, pos, groups, obstacle_sprites, create_attack, destroy_attack, save_datas, newGame, spawn_point, difficulty):
+    def __init__(self, pos, groups, obstacle_sprites, create_attack, destroy_attack, save_datas, newGame, spawn_point, difficulty, is_all_quests_completed, questgivers_quest_setup):
         super().__init__(groups)
         self.newGame = newGame
+        self.questgivers_quest_setup = questgivers_quest_setup
+        self.is_all_quests_completed = is_all_quests_completed
         self.name = save_datas['player_name']
         self.character_id = save_datas['skin_id']
         self.spawn_point = spawn_point
@@ -315,9 +317,27 @@ class Player(Entity):
             self.image.set_alpha(255)
 
     def update_quest_progress(self):
-        if self.current_quest != -1:
-            if self.current_amount < self.max_amount:
-                self.current_amount += 1
+        if self.current_amount < self.max_amount:
+            self.current_amount += 1
+
+        self.complete_quest()
+
+    def complete_quest(self):
+        if self.current_amount >= self.max_amount:
+            print(self.complete_quest)
+            self.completed_quests.append(self.current_quest)
+            print(self.complete_quest)
+            self.is_quest_completed = True
+            self.quest_completed_time = pygame.time.get_ticks()
+            self.completed_quests.append(self.current_quest)
+            self.exp += Settings.quest_data[self.current_quest]['rewardXP']
+            self.balance += Settings.quest_data[self.current_quest]['rewardMoney']
+           # self.questgivers_quest_setup()
+            self.questgivers_quest_setup()
+        #    self.get_rid_of_completed_quests(self.completed_quests)
+            self.quest_accepted = False
+        #    self.accept_quest_bool = False
+            self.current_amount = 0
 
     def get_full_damage(self):
         return self.stats['attack'] + Settings.weapon_data[self.weapon]['damage']
@@ -342,7 +362,7 @@ class Player(Entity):
             print("You died!")
             self.health = self.stats['health']
             self.hitbox.topleft = self.spawn_point
-            self.is_inside_dungeon = False
+         #   self.is_inside_dungeon = False
         else:
 
             self.hitbox.topleft = self.spawn_point
@@ -353,9 +373,10 @@ class Player(Entity):
             self.hitbox.topleft = self.spawn_point
 
     def handle_new_level(self):
+        print("handling_new_level")
         self.health = self.stats['health']
         self.hitbox.topleft = self.spawn_point
-        self.is_inside_dungeon = False
+        # self.is_inside_dungeon = False
         self.completed_quests = [0]
 
     def update_experience(self, amount):

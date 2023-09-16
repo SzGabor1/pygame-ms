@@ -19,49 +19,22 @@ from questgiver import QuestGiver
 from merchant import Merchant
 from projectile import Projectile
 from settings import Settings
+from menuenums import levelstates
 
 
 class Level:
-    def __init__(self, save):
+    def __init__(self):
         # get the display surface
         self.display_surface = pygame.display.get_surface()
 
-        self.save = save
-
-        # sprite group setup
-        self.visible_sprites = YSortCameraGroup()
-        self.obstacle_sprites = pygame.sprite.Group()
-        self.attack_sprites = pygame.sprite.Group()
-        self.attackable_sprites = pygame.sprite.Group()
-
         self.dungeon_entrances = []
         self.dungeon_exits = []
-        self.dungeon_spawns = []
+        self.dungeon_spawn = []
         self.dungeon_id = None
 
         self.enemy_sprites = []
         self.quest_givers = []
         self.grass_tiles = []
-
-        if save[0] == 'online':
-            self.level = save[1]['level']
-        else:
-            self.level = 0
-
-        # sprite setup
-        self.create_map()
-        # attack sprites
-        self.current_attack = None
-
-        # UI
-        self.ui = UI()
-        self.talents = Talents(self.player)
-        self.game_paused = False
-        self.menu_type = None
-
-        self.key_press_time = None
-        self.key_press_cooldown = 500
-        self.is_key_pressed = False
 
         self.map_open_time = None
         self.map_cooldown = 500
@@ -71,99 +44,12 @@ class Level:
 
         self.loots = []
 
-        self.animation = Animation()
-
-        self.map_image = pygame.image.load(
-            'new_map/map_background.png')
         self.is_map_open = False
         self.is_map_able_to_open = True
 
         self.game_start_time = pygame.time.get_ticks()
         self.game_time = 0
         self.reset_interval = 24 * 60 * 60 * 1000
-
-    def create_map(self):
-        layouts = {
-            'boundary': import_csv_layout('new_map/MSmap._walls.csv'),
-            'grass': import_csv_layout('new_map/MSmap._grass.csv'),
-            'object': import_csv_layout('new_map/MSmap._objects.csv'),
-            'entities': import_csv_layout('new_map/MSmap._entities.csv'),
-            'dungeonportals': import_csv_layout('new_map/MSmap._dungeonentrance.csv'),
-        }
-        graphics = {
-            'grass': import_folder('graphics/grass'),
-            'object': import_folder_sorted('graphics/objects'),
-        }
-
-        for style, layout in layouts.items():
-            for row_index, row in enumerate(layout):
-                for col_index, col in enumerate(row):
-                    if col != '-1':
-                        x = col_index * Settings.TILESIZE
-                        y = row_index * Settings.TILESIZE
-                        if style == 'boundary':
-                            Tile((x, y), [self.obstacle_sprites],
-                                 'invisible', pygame.Surface(
-                                     (Settings.TILESIZE, Settings.TILESIZE)))
-                        if style == 'grass':
-                            random_grass_image = choice(
-                                graphics['grass'])
-
-                            self.grass_tiles.append(Tile((x, y), [self.visible_sprites,
-                                                                  self.obstacle_sprites, self.attackable_sprites], 'grass', random_grass_image))
-
-                        if style == 'dungeonportals':
-
-                            if col == '178':
-                                surf = graphics['object'][int(col)]
-                                self.dungeon_entrances.append(Tile((x, y+64), [self.visible_sprites,
-                                                                               self.obstacle_sprites], 'dungeonportals', surf))
-                        if style == 'object':
-                            # create object tile
-                            surf = graphics['object'][int(col)]
-
-                            Tile((x, y+64), [self.visible_sprites,
-                                             self.obstacle_sprites], 'object', surf)
-
-                        if style == 'entities':
-                            if col == '39':
-                                if self.save[0] == "existing" or self.save[0] == "online":
-                                    self.player = Player(
-                                        self.save[1]['player_pos'], [self.visible_sprites], self.obstacle_sprites, self.create_attack, self.destroy_attack, self.save[1], None, (x, y), self.save[1]['difficulty'])
-                                else:
-                                    self.player = Player(
-                                        (x, y), [self.visible_sprites], self.obstacle_sprites, self.create_attack, self.destroy_attack, self.save[1], "newCharacter", (x, y), self.save[1]['difficulty'])
-
-                            elif col == '59':
-                                self.create_npc(
-                                    col, x, y, Settings.npc_data)
-                            elif col == '79':
-                                self.create_npc(
-                                    col, x, y, Settings.npc_data)
-                            elif col == '139':
-                                self.create_npc(
-                                    col, x, y, Settings.npc_data)
-                            elif col == '99':
-                                self.create_npc(
-                                    col, x, y, Settings.npc_data)
-                            elif col == '119':
-                                self.create_npc(
-                                    col, x, y, Settings.npc_data)
-
-                            else:
-                                if col == '18':
-                                    monster_name = 'skeleton'
-                                elif col == '38':
-                                    if 6 not in self.player.completed_quests:
-                                        monster_name = 'crab'
-                                elif col == '58':
-                                    monster_name = 'wizzard'
-                                else:
-                                    monster_name = 'skeleton'
-
-                                self.enemy_sprites.append(Enemy(monster_name, (x, y), [
-                                    self.visible_sprites, self.attackable_sprites], self.obstacle_sprites,
-                                    self.trigger_death_particles, self.drop_loot, self.spawn_projectile, self.level))
 
     def is_all_quests_completed(self):
         for questgiver in self.quest_givers:
@@ -178,187 +64,12 @@ class Level:
             # have to reload npc quest lists
             self.restart_level()
 
-    def restart_level(self):
-        for questgiver in self.quest_givers:
-            questgiver.load_quests()
-
-        self.kill_all_enemies()
-
-        self.spawn_enemies()
-        self.spawn_grass()
-
-    def kill_all_enemies(self):
-        for enemy in self.enemy_sprites:
-            enemy.kill()
-
-    def spawn_grass(self):
-        layouts = {
-            'grass': import_csv_layout('new_map/MSmap._grass.csv'),
-        }
-        graphics = {
-            'grass': import_folder('graphics/grass'),
-        }
-
-        for style, layout in layouts.items():
-            for row_index, row in enumerate(layout):
-                for col_index, col in enumerate(row):
-                    if col != '-1':
-                        x = col_index * Settings.TILESIZE
-                        y = row_index * Settings.TILESIZE
-
-                        if not self.tile_exists_at_position(x, y, 'grass'):
-                            if style == 'grass':
-                                random_grass_image = choice(graphics['grass'])
-                                Tile((x, y), [self.visible_sprites,
-                                              self.obstacle_sprites, self.attackable_sprites], 'grass', random_grass_image)
-
-    def tile_exists_at_position(self, x, y, sprite_type):
-        for tile in self.grass_tiles:
-            if tile.sprite_type == sprite_type and tile.rect.x == x and tile.rect.y == y:
-                return True
-        return False
-
-    def spawn_enemies(self):
-        layouts = {
-            'entities': import_csv_layout('new_map/MSmap._entities.csv'),
-        }
-
-        for style, layout in layouts.items():
-            for row_index, row in enumerate(layout):
-                for col_index, col in enumerate(row):
-                    if col != '-1':
-                        x = col_index * Settings.TILESIZE
-                        y = row_index * Settings.TILESIZE
-                        if style == 'entities':
-                            passSpawn = False
-                            if col == '18':
-                                monster_name = 'skeleton'
-                            elif col == '38':
-                                monster_name = 'crab'
-                            elif col == '58':
-                                monster_name = 'wizzard'
-                            else:
-                                passSpawn = True
-                            if not passSpawn:
-                                enemy = Enemy(monster_name, (x, y), [
-                                    self.visible_sprites, self.attackable_sprites], self.obstacle_sprites,
-                                    self.trigger_death_particles, self.drop_loot, self.spawn_projectile, self.level)
-                                self.enemy_sprites.append(enemy)
-
-    def create_dungeon(self):
-        layouts = {
-            'boundary': import_csv_layout('dungeontest/dungeontest_walls.csv'),
-            'object': import_csv_layout('dungeontest/dungeontest_objects.csv'),
-            'entities': import_csv_layout('dungeontest/dungeontest_entities.csv'),
-            'dungeonportals': import_csv_layout('dungeontest/dungeontest_dungeonportals.csv'),
-        }
-        graphics = {
-            'object': import_folder_sorted('graphics/objects'),
-        }
-
-        # Create a sprite group for the dungeon
-        dungeon_sprites = pygame.sprite.Group()
-
-        for style, layout in layouts.items():
-            for row_index, row in enumerate(layout):
-                for col_index, col in enumerate(row):
-                    if col != '-1':
-                        x = (col_index * Settings.TILESIZE)-5000
-                        y = (row_index * Settings.TILESIZE)-5000
-                        if style == 'boundary':
-                            Tile((x, y), [self.obstacle_sprites],
-                                 'invisible',  pygame.Surface(
-                                (Settings.TILESIZE, Settings.TILESIZE)))
-                        if style == 'object':
-                            # create object tile
-                            surf = graphics['object'][int(col)]
-
-                            Tile((x, y+64), [self.visible_sprites,
-                                             self.obstacle_sprites], 'object', surf)
-
-                        if style == 'dungeonportals':
-
-                            if col == '178':
-                                surf = graphics['object'][int(col)]
-                                self.dungeon_exits.append(Tile((x, y), [self.visible_sprites,
-                                                                        self.obstacle_sprites], 'dungeonportals', surf))
-                            if col == '179':
-                                surf = graphics['object'][int(col)]
-                                self.dungeon_spawns.append(Tile((x, y), [self.visible_sprites,
-                                                                         self.obstacle_sprites], 'dungeonportals', surf))
-
-                        if style == 'entities':
-                            if col == '18':
-                                monster_name = 'skeleton'
-                            elif col == '38':
-                                monster_name = 'crab'
-                            elif col == '58':
-                                monster_name = 'wizzard'
-                            else:
-                                monster_name = 'skeleton'
-
-                            enemy = Enemy(monster_name, (x, y), [
-                                self.visible_sprites, self.attackable_sprites], self.obstacle_sprites,
-                                self.trigger_death_particles, self.drop_loot, self.spawn_projectile, self.level)
-
-                            self.enemy_sprites.append(enemy)
-
-                            dungeon_sprites.add(enemy)
-
-        return dungeon_sprites
-
-    def is_player_in_range_of_dungeon_portal(self):
-        if not self.player.is_inside_dungeon:
-            for dungeon in self.dungeon_entrances:
-                player_pos = self.player.rect.center
-                distance = pygame.math.Vector2(
-                    (dungeon.x, dungeon.y)) - player_pos
-                if distance.length() <= 100:
-                    self.player.in_range_of_dungeon_portal = True
-                    self.dungeon_id = self.dungeon_entrances.index(dungeon)
-                    self.ui.display_dungeon_portal_text()
-                else:
-                    self.player.in_range_of_dungeon_portal = False
-        else:
-            for dungeon in self.dungeon_exits:
-                player_pos = self.player.rect.center
-                distance = pygame.math.Vector2(
-                    (dungeon.x, dungeon.y)) - player_pos
-                if distance.length() <= 100:
-                    self.player.in_range_of_dungeon_portal = True
-                else:
-                    self.player.in_range_of_dungeon_portal = False
-
     def cooldowns(self):
         current_time = pygame.time.get_ticks()
-
-        if self.is_key_pressed:
-            if current_time - self.key_press_time >= self.key_press_cooldown:
-                self.is_key_pressed = False
 
         if not self.is_map_able_to_open:
             if current_time - self.map_open_time >= self.map_cooldown:
                 self.is_map_able_to_open = True
-
-    def teleport_to_dungeon(self):
-        keys = pygame.key.get_pressed()
-        if keys[pygame.K_e] and not self.is_key_pressed:
-            if self.player.in_range_of_dungeon_portal and not self.player.is_inside_dungeon and self.player.current_quest == 7:
-                self.dungeon = self.create_dungeon()
-                self.player.hitbox.center = self.dungeon_spawns[self.dungeon_id].rect.center
-                self.player.is_inside_dungeon = True
-
-                self.is_key_pressed = True
-                self.key_press_time = pygame.time.get_ticks()
-
-            elif self.player.in_range_of_dungeon_portal and self.player.is_inside_dungeon:
-                self.player.hitbox.center = self.dungeon_entrances[self.dungeon_id].rect.center
-                self.dungeon.empty()
-                self.dungeon = None
-                self.player.is_inside_dungeon = False
-
-                self.is_key_pressed = True
-                self.key_press_time = pygame.time.get_ticks()
 
     def drop_loot(self, x, y, monster_name):
         x += random.randint(-100, 100)
@@ -401,7 +112,7 @@ class Level:
             loot_offset_x = loot_x - player_x + Settings.WIDTH // 2
             loot_offset_y = loot_y - player_y + Settings.HEIGHT // 2
 
-            loot_graphics = Settings.loots[loot_type]['graphics']
+            loot_graphics = Settings.loots[loot_type]['self.graphics']
             loot_image = pygame.image.load(loot_graphics)
             loot_rect = loot_image.get_rect(
                 center=(loot_offset_x, loot_offset_y))
@@ -423,29 +134,11 @@ class Level:
                 player.update_experience(loot_amount)
             self.loots.remove(loot)
 
-    def create_npc(self, id, x, y, npc_data):
-        if Settings.npc_data[id]['type'] == 'quest_giver':
-            self.npc = QuestGiver(npc_data[id]['name'], (x, y), [
-                self.visible_sprites], self.obstacle_sprites, id,)
-            self.quest_givers.append(self.npc)
-        elif Settings.npc_data[id]['type'] == 'merchant':
-            self.npc = Merchant(npc_data[id]['name'], (x, y), [
-                self.visible_sprites], self.obstacle_sprites, id, npc_data[id]['item_list'])
-
-    def create_attack(self):
-        self.current_attack = Weapon(
-            self.player, [self.visible_sprites, self.attack_sprites])
-
-    def destroy_attack(self):
-        if self.current_attack:
-            self.current_attack.kill()
-        self.current_attack = None
-
-    def player_attack_logic(self):
-        if self.attack_sprites:
-            for attack_sprite in self.attack_sprites:
+    def player_attack_logic(self, attack_sprites, attackable_sprites, visible_sprites, player):
+        if attack_sprites:
+            for attack_sprite in attack_sprites:
                 collision_sprites = pygame.sprite.spritecollide(
-                    attack_sprite, self.attackable_sprites, False)
+                    attack_sprite, attackable_sprites, False)
                 if collision_sprites:
                     for target_sprite in collision_sprites:
                         if target_sprite.sprite_type == 'grass':
@@ -453,27 +146,15 @@ class Level:
                             offset = pygame.math.Vector2(0, 75)
                             for leaf in range(randint(3, 6)):
                                 self.particle_player.create_grass_particles(
-                                    pos-offset, [self.visible_sprites])
+                                    pos-offset, [visible_sprites])
                             target_sprite.kill()
-                            self.player.progress_quest('cut_grass')
+                            player.progress_quest('cut_grass')
                         else:
                             if target_sprite.vulnerable:
                                 self.particle_player.display_damage_numbers(target_sprite.rect.midtop, [
-                                    self.visible_sprites], self.player.get_full_damage())
+                                    visible_sprites], player.get_full_damage())
                             target_sprite.get_damage(
-                                self.player, attack_sprite.sprite_type)
-
-    def trigger_death_particles(self, pos, particle_type):
-        self.particle_player.create_particles(particle_type, pos, [
-                                              self.visible_sprites])
-
-    def spawn_projectile(self, begin_pos, end_pos, projectile_tpye):
-        self.projectile = Projectile(
-            [self.visible_sprites], begin_pos, end_pos, projectile_tpye)
-
-    def toggle_menu(self, menu_type):
-        self.menu_type = menu_type
-        self.game_paused = not self.game_paused
+                                player, attack_sprite.sprite_type)
 
     def night_lights(self):
 
@@ -495,17 +176,17 @@ class Level:
 
             self.display_surface.blit(circle_surface, (0, 0))
 
-    def what_is_the_next_quest(self):
-        if self.player.completed_quests == []:
+    def what_is_the_next_quest(self, player):
+        if player.completed_quests == [] or player.completed_quests == [0]:
             return 0
-        last_quest = self.player.completed_quests[-1]
+        last_quest = player.completed_quests[-1]
         length_of_quest_data = len(Settings.quest_data)
         if last_quest < length_of_quest_data:
             next_quest = last_quest + 1
             return next_quest
 
-    def next_quest_npc_position(self):
-        next_quest = self.what_is_the_next_quest()
+    def next_quest_npc_position(self, player):
+        next_quest = self.what_is_the_next_quest(player)
         for questgiver in self.quest_givers:
             if next_quest in questgiver.quests:
                 return questgiver.rect.center
@@ -537,7 +218,7 @@ class Level:
             pygame.draw.circle(map, (255, 0, 0),
                                (player_pos_x, player_pos_y), dot_radius)
 
-            npc_position = self.next_quest_npc_position()
+            npc_position = self.next_quest_npc_position(player)
             if npc_position is not None:
                 npc_pos_x = int(npc_position[0] * scale_factor)
                 npc_pos_y = int(npc_position[1] * scale_factor)
@@ -570,84 +251,28 @@ class Level:
             self.map_open_time = pygame.time.get_ticks()
             self.is_map_able_to_open = False
 
-    def run(self):
-        self.visible_sprites.custom_draw(self.player)
+    # def run(self):
+    #     self.visible_sprites.custom_draw(self.player)
 
-        if self.game_paused:
-            if self.menu_type == menuenums.TALENTS:
-                self.talents.display()
-        else:
-            self.cooldowns()
-            self.animation.update(self.visible_sprites, self.obstacle_sprites)
-            self.visible_sprites.update()
-            self.visible_sprites.enemy_update(self.player)
-            self.visible_sprites.npc_update(self.player)
-            self.visible_sprites.projectile_update(self.player)
-            if self.current_attack:
-                self.current_attack.update()
-            self.player_attack_logic()
-            self.draw_and_collect_loot(self.player)
-            self.is_player_in_range_of_dungeon_portal()
-            self.teleport_to_dungeon()
-            self.night_lights()
-            self.input()
-            self.count_time()
-            self.show_map(self.player)
-            self.is_all_quests_completed()
-        self.ui.display(self.player)
+    #     if self.game_paused:
+    #         if self.menu_type == menuenums.TALENTS:
+    #             self.talents.display()
+    #     else:
+    #         self.cooldowns()
 
-
-class YSortCameraGroup(pygame.sprite.Group):
-    def __init__(self):
-
-        # general setup
-        super().__init__()
-        self.display_surface = pygame.display.get_surface()
-        self.half_width = self.display_surface.get_width() / 2
-        self.half_height = self.display_surface.get_height() / 2
-        self.offset = pygame.math.Vector2()
-
-        self.floor_surf = pygame.image.load(
-            'new_map/MSmap_background.png').convert()
-        self.floor_rect = self.floor_surf.get_rect(topleft=(0, 0))
-
-        self.dungeon0_surf = pygame.image.load(
-            'dungeontest\dungeontest.png').convert()
-        self.dungeon0_rect = self.dungeon0_surf.get_rect(
-            topleft=(-5000, -5000))
-
-    def custom_draw(self, player):
-
-        # getting the offset
-        self.offset.x = player.rect.centerx - self.half_width
-        self.offset.y = player.rect.centery - self.half_height
-
-        # drawing the floor
-        floor_offset_pos = self.floor_rect.topleft - self.offset
-        self.display_surface.blit(self.floor_surf, floor_offset_pos)
-
-        dungeon0_offset_pos = self.dungeon0_rect.topleft - self.offset
-        self.display_surface.blit(self.dungeon0_surf, dungeon0_offset_pos)
-
-        # for sprite in self.sprites():
-        for sprite in sorted(self.sprites(), key=lambda sprite: sprite.rect.y):
-            offset_pos = sprite.rect.topleft - self.offset
-            self.display_surface.blit(sprite.image, offset_pos)
-
-    def enemy_update(self, player):
-        enemy_sprites = [sprite for sprite in self.sprites()if hasattr(
-            sprite, 'sprite_type') and sprite.sprite_type == 'enemy']
-        for enemy in enemy_sprites:
-            enemy.enemy_update(player)
-
-    def npc_update(self, player):
-        npc_sprites = [sprite for sprite in self.sprites()if hasattr(
-            sprite, 'sprite_type') and sprite.sprite_type == 'npc']
-        for npc in npc_sprites:
-            npc.npc_update(player)
-
-    def projectile_update(self, player):
-        projectile_sprites = [sprite for sprite in self.sprites()if hasattr(
-            sprite, 'sprite_type') and sprite.sprite_type == 'projectile']
-        for projectile in projectile_sprites:
-            projectile.update_projectile(player)
+    #         self.visible_sprites.update()
+    #         self.visible_sprites.enemy_update(self.player)
+    #         self.visible_sprites.npc_update(self.player)
+    #         self.visible_sprites.projectile_update(self.player)
+    #         if self.current_attack:
+    #             self.current_attack.update()
+    #         self.player_attack_logic()
+    #         self.draw_and_collect_loot(self.player)
+    #        # self.is_player_in_range_of_dungeon_portal()
+    #        # self.teleport_to_dungeon()
+    #         self.night_lights()
+    #         self.input()
+    #         self.count_time()
+    #         self.show_map(self.player)
+    #         self.is_all_quests_completed()
+    #     self.ui.display(self.player)

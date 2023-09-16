@@ -3,7 +3,7 @@ from settings import *
 
 
 class UI:
-    def __init__(self, ):
+    def __init__(self):
 
         # general
         self.display_surface = pygame.display.get_surface()
@@ -165,16 +165,17 @@ class UI:
             self.display_surface.blit(rewardXP_surf, rewardXP_rect)
             self.display_surface.blit(rewardMoney_surf, rewardMoney_rect)
 
-    def display_dungeon_portal_text(self):
-        text_surf = self.font.render(
-            "E", False, Settings.BLACK_TEXT_COLOR)
-        text_rect = text_surf.get_rect(bottomright=(
-            Settings.WIDTH - 20, Settings.HEIGHT - 80))
-        pygame.draw.rect(self.display_surface, Settings.UI_BG_COLOR,
-                         text_rect.inflate(20, 20))
-        self.display_surface.blit(text_surf, text_rect)
-        pygame.draw.rect(self.display_surface, Settings.UI_BORDER_COLOR,
-                         text_rect.inflate(20, 20), 3)
+    def display_dungeon_portal_text(self, player):
+        if player.in_range_of_dungeon_portal:
+            text_surf = self.font.render(
+                "E", False, Settings.BLACK_TEXT_COLOR)
+            text_rect = text_surf.get_rect(bottomright=(
+                Settings.WIDTH - 20, Settings.HEIGHT - 80))
+            pygame.draw.rect(self.display_surface, Settings.UI_BG_COLOR,
+                             text_rect.inflate(20, 20))
+            self.display_surface.blit(text_surf, text_rect)
+            pygame.draw.rect(self.display_surface, Settings.UI_BORDER_COLOR,
+                             text_rect.inflate(20, 20), 3)
 
     def caculate_strength_potion_time(self, player):
         current_time = pygame.time.get_ticks()
@@ -296,6 +297,7 @@ class UI:
                                     ) + "/" + str(player.current_amount))
         self.show_inventory(player)
         self.show_strength_potion_duration(player)
+        self.display_dungeon_portal_text(player)
 
         # should create alert class to handle these
         self.show_completed_quest(player)

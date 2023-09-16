@@ -12,3 +12,8 @@ class menuenums(Enum):
     LOAD_GAME = 'load_game'
     LOGIN = 'login'
     CREDITS = 'credits'
+
+
+class levelstates(Enum):
+    WORLD = 'World'
+    DUNGEON = 'Dungeon'

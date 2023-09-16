@@ -11,6 +11,7 @@ from user_auth import LoginPanel
 
 class Game:
     def __init__(self):
+        Settings.load_settings()
         self.user = None
         self.online = False
 
@@ -29,12 +30,8 @@ class Game:
         self.login_panel = LoginPanel(self)
 
     def init_screen(self):
-        if Settings.FULLSCREEN:
-            self.screen = pygame.display.set_mode(
-                (Settings.WIDTH, Settings.HEIGHT), flags=pygame.FULLSCREEN | pygame.SCALED, vsync=1)
-        else:
-            self.screen = pygame.display.set_mode(
-                (Settings.WIDTH, Settings.HEIGHT), flags=pygame.RESIZABLE | pygame.SCALED, vsync=1)
+        self.screen = pygame.display.set_mode(
+            (Settings.WIDTH, Settings.HEIGHT), flags=pygame.FULLSCREEN | pygame.SCALED, vsync=1)
 
     def run(self):
 
