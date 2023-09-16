@@ -1,14 +1,17 @@
-import pygame
-from animation import Animation
-from questgiver import QuestGiver
-from merchant import Merchant
-from level import Level
-from support import import_csv_layout, import_folder, import_folder_sorted
-from settings import Settings
-from tile import Tile
-from random import choice
-from player import Player
+import sys
+
 from enemy import Enemy
+from player import Player
+from random import choice
+from tile import Tile
+from settings import Settings
+from support import import_csv_layout, import_folder, import_folder_sorted
+from level import Level
+from merchant import Merchant
+from questgiver import QuestGiver
+from animation import Animation
+import pygame
+from world.world_grass import get_dict
 
 
 class World(Level):
@@ -43,6 +46,19 @@ class World(Level):
             'object': import_folder_sorted('graphics/objects'),
         }
 
+        dict_layouts = {
+            'grass': get_dict('world_grass_data')}
+
+        for dict_layout in dict_layouts.values():
+            for tile in dict_layout:
+                x = tile['j'] * Settings.TILESIZE
+                y = tile['i'] * Settings.TILESIZE
+                if tile['value'] != -1:
+                    random_grass_image = choice(graphics['grass'])
+                    tile = Tile((x, y), [visible_sprites,
+                                         obstacle_sprites, attackable_sprites], 'grass', random_grass_image)
+                    self.grass_tiles.append(tile)
+
         for style, layout in layouts.items():
             for row_index, row in enumerate(layout):
                 for col_index, col in enumerate(row):
@@ -54,11 +70,11 @@ class World(Level):
                                         'invisible', pygame.Surface(
                                             (Settings.TILESIZE, Settings.TILESIZE)))
 
-                        if style == 'grass':
-                            random_grass_image = choice(graphics['grass'])
-                            tile = Tile((x, y), [visible_sprites,
-                                                 obstacle_sprites, attackable_sprites], 'grass', random_grass_image)
-                            self.grass_tiles.append(tile)
+                        # if style == 'grass':
+                        #     random_grass_image = choice(graphics['grass'])
+                        #     tile = Tile((x, y), [visible_sprites,
+                        #                          obstacle_sprites, attackable_sprites], 'grass', random_grass_image)
+                        #     self.grass_tiles.append(tile)
 
                         if style == 'dungeonportals':
                             if col == '178':

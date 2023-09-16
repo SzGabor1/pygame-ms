@@ -1,4 +1,9 @@
-map_data = [
+def get_dict(dict_name):
+    if dict_name == "world_grass_data":
+        return world_grass_data
+
+
+world_grass_data = [
     {
         "i": 68,
         "j": 43,

@@ -4,6 +4,7 @@ from settings import Settings
 
 class Sounds():
     SOUNDS = {}
+    VOLUME = 0.5  # You can set a default volume here if needed.
 
     @classmethod
     def load_sounds(cls, sound_names):
@@ -13,7 +14,6 @@ class Sounds():
 
     @classmethod
     def volume_validation(cls):
-        cls.VOLUME = Settings.VOLUME
         if not 0 <= cls.VOLUME <= 1:
             cls.VOLUME = 0.5
         cls.update_volumes()
@@ -37,5 +37,9 @@ class Sounds():
         cls.SOUNDS[sound_name].play(-1)
 
 
+# Initialize the Pygame mixer
+pygame.mixer.init()
+
+# Load sounds and validate volume
 Sounds.load_sounds(Settings.SOUNDS)
 Sounds.volume_validation()
