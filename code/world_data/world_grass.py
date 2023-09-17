@@ -1,9 +1,4 @@
-def get_dict(dict_name):
-    if dict_name == "world_grass_data":
-        return world_grass_data
-
-
-world_grass_data = [
+world_grass = [
     {
         "i": 68,
         "j": 43,

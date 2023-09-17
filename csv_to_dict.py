@@ -2,7 +2,7 @@ import csv
 import json
 
 # Define the input CSV file path
-csv_file = "new_map\MSmap._grass.csv"
+csv_file = "new_map\MSmap._dungeonentrance.csv"
 
 # Create an empty list to store the data
 map_data = []
@@ -11,18 +11,19 @@ map_data = []
 with open(csv_file, newline='') as csvfile:
     csv_reader = csv.reader(csvfile)
     # Skip the header row
-    next(csv_reader)
     for i, row in enumerate(csv_reader):
         for j, value in enumerate(row):
             # Convert the value to an integer
             value = int(value)
             # Check if the value is not -1
             if value != -1:
+                if value == 142:
+                    print('142')
                 # Create a dictionary entry for this cell
                 map_data.append({"i": i, "j": j, "value": value})
 
 # Define the output Python file path
-python_file = "map_data.py"
+python_file = "world_dungeonentrance"
 
 # Save the list of dictionaries to a Python file
 with open(python_file, 'w') as pyfile:

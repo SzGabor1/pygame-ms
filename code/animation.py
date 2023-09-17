@@ -2,6 +2,7 @@ import pygame
 from tile import Tile
 from support import import_folder_sorted, import_csv_layout
 from settings import Settings
+from world_data import world_wateranim, world_animated_objects
 
 
 class Animation():
@@ -14,10 +15,10 @@ class Animation():
         self.animation_frames = []
         self.animation_tiles = []
 
-        self.animation_layouts = {
-            'trees': import_csv_layout('new_map/MSmap._animated.csv'),
-            'borders': import_csv_layout('new_map/MSmap._animatedwalls.csv'), }
-
+        self.dict_animation_layouts = {
+            'water': world_wateranim.world_wateranim,
+            'trees': world_animated_objects.world_animated_objects
+        }
         self.load_animation_frames()
 
     def load_animation_frames(self):
@@ -33,17 +34,16 @@ class Animation():
 
             for tile in self.animation_tiles:
                 tile.kill()
-            for layout_key, animation_layout in self.animation_layouts.items():
-                for row_index, row in enumerate(animation_layout):
-                    for col_index, col in enumerate(row):
-                        if col != '-1':
-                            x = col_index * Settings.TILESIZE
-                            y = row_index * Settings.TILESIZE
 
-                            for tile_id, animation_frame in self.animation_frames:
-                                if col == tile_id:
-                                    self.animation_tiles.append(Tile((x, y), [visible_sprites,
-                                                                              obstacle_sprites], layout_key, animation_frame[self.animation_index]))
+            for layout_key, tile in self.dict_animation_layouts.items():
+                for datas in tile:
+                    x = datas['j'] * Settings.TILESIZE
+                    y = datas['i'] * Settings.TILESIZE
+
+                    for tile_id, animation_frame in self.animation_frames:
+                        if str(datas['value']) == tile_id:
+                            self.animation_tiles.append(Tile((x, y), [visible_sprites,
+                                                                      obstacle_sprites], layout_key, animation_frame[self.animation_index]))
 
             self.animation_time = pygame.time.get_ticks()
             self.can_get_new_animation_frame = False

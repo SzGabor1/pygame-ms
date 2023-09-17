@@ -9,6 +9,7 @@ from particles import AnimationPlayer
 from menuenums import levelstates
 from dungeon import Dungeon
 from debug import debug
+from world_data import world_entities
 
 
 class LevelHandler():
@@ -97,15 +98,15 @@ class LevelHandler():
                 self.player.is_inside_dungeon = True
 
                # self.is_key_pressed = True
-                #self.key_press_time = pygame.time.get_ticks()
+                # self.key_press_time = pygame.time.get_ticks()
 
             elif self.player.in_range_of_dungeon_portal and self.player.is_inside_dungeon:
                 self.change_level(levelstates.WORLD)
                 self.player.hitbox.center = self.world.dungeon_entrances[self.dungeon_id].rect.center
                 self.player.is_inside_dungeon = False
 
-                #self.is_key_pressed = True
-                #self.key_press_time = pygame.time.get_ticks()
+                # self.is_key_pressed = True
+                # self.key_press_time = pygame.time.get_ticks()
 
     def create_world(self):
         self.world = World(self.change_level)
@@ -114,7 +115,7 @@ class LevelHandler():
         print("quests removed")
         self.questgivers_quest_setup()
 
-        print("world created")
+        print("world_data created")
         self.is_all_quests_completed()
 
     def create_dungeon(self):
@@ -169,7 +170,7 @@ class LevelHandler():
 
                 print(self.player.completed_quests)
 
-            # reload world
+            # reload world_data
         #    self.change_level(levelstates.WORLD)
 
     def run(self):
@@ -182,7 +183,7 @@ class LevelHandler():
         self.visible_sprites.npc_update(self.player)
         self.visible_sprites.projectile_update(self.player)
 
-        # only should work if world is loaded
+        # only should work if world_data is loaded
         if self.state == levelstates.WORLD:
             self.world.run(self.visible_sprites,
                            self.obstacle_sprites, self.player)
@@ -207,25 +208,18 @@ class LevelHandler():
         # self.ui.display(self.player)
 
     def create_player(self):
-        layouts = {
-            'entities': import_csv_layout('new_map/MSmap._entities.csv'),
-        }
 
-        for style, layout in layouts.items():
-            for row_index, row in enumerate(layout):
-                for col_index, col in enumerate(row):
-                    if col != '-1':
-                        x = col_index * Settings.TILESIZE
-                        y = row_index * Settings.TILESIZE
+        for datas in world_entities.world_entities:
+            x = datas['j'] * Settings.TILESIZE
+            y = datas['i'] * Settings.TILESIZE
 
-                        if style == 'entities':
-                            if col == '39':
-                                if self.load_data[0] == "existing" or self.load_data[0] == "online":
-                                    self.player = Player(
-                                        self.load_data[1]['player_pos'], [self.visible_sprites], self.obstacle_sprites, self.create_attack, self.destroy_attack, self.load_data[1], None, (x, y), self.load_data[1]['difficulty'], self.is_all_quests_completed, self.questgivers_quest_setup)
-                                else:
-                                    self.player = Player(
-                                        (x, y), [self.visible_sprites], self.obstacle_sprites, self.create_attack, self.destroy_attack, self.load_data[1], "newCharacter", (x, y), self.load_data[1]['difficulty'], self.is_all_quests_completed, self.questgivers_quest_setup)
+            if datas['value'] == 39:
+                if self.load_data[0] == "existing" or self.load_data[0] == "online":
+                    self.player = Player(
+                        self.load_data[1]['player_pos'], [self.visible_sprites], self.obstacle_sprites, self.create_attack, self.destroy_attack, self.load_data[1], None, (x, y), self.load_data[1]['difficulty'], self.is_all_quests_completed, self.questgivers_quest_setup)
+                else:
+                    self.player = Player(
+                        (x, y), [self.visible_sprites], self.obstacle_sprites, self.create_attack, self.destroy_attack, self.load_data[1], "newCharacter", (x, y), self.load_data[1]['difficulty'], self.is_all_quests_completed, self.questgivers_quest_setup)
 
 
 class YSortCameraGroup(pygame.sprite.Group):

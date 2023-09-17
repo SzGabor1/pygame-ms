@@ -8,6 +8,7 @@ from support import import_csv_layout, import_folder, import_folder_sorted
 from animation import Animation
 from settings import Settings
 from level import Level
+from dungeon_data import dungeon_dungeonportals, dungeon_objects, dungeon_entities
 
 
 class Dungeon(Level):
@@ -25,59 +26,47 @@ class Dungeon(Level):
         pass
 
     def create_dungeon(self, visible_sprites, obstacle_sprites, attackable_sprites, player_completed_quests, difficulty_level, trigger_death_particles, spawn_projectile):
-        layouts = {
-            'boundary': import_csv_layout('dungeontest/dungeontest_walls.csv'),
-            'object': import_csv_layout('dungeontest/dungeontest_objects.csv'),
-            'entities': import_csv_layout('dungeontest/dungeontest_entities.csv'),
-            'dungeonportals': import_csv_layout('dungeontest/dungeontest_dungeonportals.csv'),
-        }
         graphics = {
             'object': import_folder_sorted('graphics/objects'),
         }
 
-        # Create a sprite group for the dungeon
-        dungeon_sprites = pygame.sprite.Group()
+        dict_layouts = {
+            'dungeonportals': dungeon_dungeonportals.dungeon_dungeonportals,
+            'object': dungeon_objects.dungeon_objects,
+            'entities': dungeon_entities.dungeon_entities,
+        }
 
-        for style, layout in layouts.items():
-            for row_index, row in enumerate(layout):
-                for col_index, col in enumerate(row):
-                    if col != '-1':
-                        x = (col_index * Settings.TILESIZE)
-                        y = (row_index * Settings.TILESIZE)
-                        if style == 'boundary':
-                            Tile((x, y), [obstacle_sprites],
-                                 'invisible',  pygame.Surface(
-                                (Settings.TILESIZE, Settings.TILESIZE)))
-                        if style == 'object':
-                            # create object tile
-                            surf = graphics['object'][int(col)]
+        for key, tile in dict_layouts.items():
+            for datas in tile:
+                x = datas['j'] * Settings.TILESIZE
+                y = datas['i'] * Settings.TILESIZE
+                if key == 'dungeonportals':
+                    if datas['value'] == 178:
+                        surf = graphics['object'][datas['value']]
+                        self.dungeon_exits.append(Tile((x, y), [visible_sprites,
+                                                                obstacle_sprites], 'dungeonportals', surf))
 
-                            Tile((x, y+64), [visible_sprites,
-                                             obstacle_sprites], 'object', surf)
+                    if datas['value'] == 179:
+                        surf = graphics['object'][datas['value']]
+                        self.dungeon_spawn.append(Tile(
+                            (x, y), [visible_sprites, obstacle_sprites], 'dungeonportals', surf))
 
-                        if style == 'dungeonportals':
-
-                            if col == '178':
-                                surf = graphics['object'][int(col)]
-                                self.dungeon_exits.append(Tile((x, y), [visible_sprites,
-                                                                        obstacle_sprites], 'dungeonportals', surf))
-                            if col == '179':
-                                surf = graphics['object'][int(col)]
-                                self.dungeon_spawn.append(Tile(
-                                    (x, y), [visible_sprites, obstacle_sprites], 'dungeonportals', surf))
-
-                        if style == 'entities':
-                            if col == '18':
-                                monster_name = 'skeleton'
-                            elif col == '38':
-                                monster_name = 'crab'
-                            elif col == '58':
-                                monster_name = 'wizzard'
-                            else:
-                                monster_name = 'skeleton'
-
-                            self.enemy_sprites = Enemy(monster_name, (x, y), [
-                                visible_sprites, attackable_sprites], obstacle_sprites,
-                                trigger_death_particles, self.drop_loot, spawn_projectile, difficulty_level)
-
-        return dungeon_sprites
+                elif key == 'object':
+                    surf = graphics['object'][datas['value']]
+                    tile = Tile((x, y-64), [visible_sprites,
+                                            obstacle_sprites], 'object', surf)
+                elif key == 'entities':
+                    passSpawn = False
+                    if datas['value'] == 18:
+                        monster_name = 'skeleton'
+                    elif datas['value'] == 38:
+                        if 6 not in player_completed_quests:
+                            monster_name = 'crab'
+                    elif datas['value'] == 58:
+                        monster_name = 'wizzard'
+                    else:
+                        passSpawn = True
+                    if not passSpawn:
+                        Enemy(monster_name, (x, y), [
+                            visible_sprites, attackable_sprites], obstacle_sprites,
+                            trigger_death_particles, self.drop_loot, spawn_projectile, difficulty_level)

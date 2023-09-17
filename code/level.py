@@ -196,9 +196,9 @@ class Level:
         if self.is_map_open:
             scale_factor = 0.13
 
-            map_width = int(self.map_image.get_width() * scale_factor)
+            map_width = int(self.minimap_image.get_width() * scale_factor)
             map_height = int(
-                self.map_image.get_height() * scale_factor)
+                self.minimap_image.get_height() * scale_factor)
 
             border_surface = pygame.Surface(
                 (map_width + 10, map_height + 10))
@@ -208,7 +208,7 @@ class Level:
                 border_surface, Settings.MENU_BORDER_COLOR, border_rect)
 
             map = pygame.Surface((map_width, map_height))
-            map.blit(pygame.transform.scale(self.map_image,
+            map.blit(pygame.transform.scale(self.minimap_image,
                                             (map_width, map_height)), (0, 0))
 
             player_pos_x = int(player.rect.centerx * scale_factor)
@@ -250,29 +250,3 @@ class Level:
             self.is_map_open = not self.is_map_open
             self.map_open_time = pygame.time.get_ticks()
             self.is_map_able_to_open = False
-
-    # def run(self):
-    #     self.visible_sprites.custom_draw(self.player)
-
-    #     if self.game_paused:
-    #         if self.menu_type == menuenums.TALENTS:
-    #             self.talents.display()
-    #     else:
-    #         self.cooldowns()
-
-    #         self.visible_sprites.update()
-    #         self.visible_sprites.enemy_update(self.player)
-    #         self.visible_sprites.npc_update(self.player)
-    #         self.visible_sprites.projectile_update(self.player)
-    #         if self.current_attack:
-    #             self.current_attack.update()
-    #         self.player_attack_logic()
-    #         self.draw_and_collect_loot(self.player)
-    #        # self.is_player_in_range_of_dungeon_portal()
-    #        # self.teleport_to_dungeon()
-    #         self.night_lights()
-    #         self.input()
-    #         self.count_time()
-    #         self.show_map(self.player)
-    #         self.is_all_quests_completed()
-    #     self.ui.display(self.player)
