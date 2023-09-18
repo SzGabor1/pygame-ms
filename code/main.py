@@ -11,7 +11,7 @@ from user_auth import LoginPanel
 
 class Game:
     def __init__(self):
-        Settings.load_settings()
+
         self.user = None
         self.online = False
 

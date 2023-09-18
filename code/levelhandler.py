@@ -1,3 +1,5 @@
+import math
+import random
 import pygame
 from projectile import Projectile
 from world import World
@@ -10,6 +12,7 @@ from menuenums import levelstates
 from dungeon import Dungeon
 from debug import debug
 from world_data import world_entities
+from loot import Loot
 
 
 class LevelHandler():
@@ -20,6 +23,7 @@ class LevelHandler():
         self.obstacle_sprites = pygame.sprite.Group()
         self.attack_sprites = pygame.sprite.Group()
         self.attackable_sprites = pygame.sprite.Group()
+        self.loots = []
 
         # attack sprites
         self.current_attack = None
@@ -111,7 +115,7 @@ class LevelHandler():
     def create_world(self):
         self.world = World(self.change_level)
         self.world.create_map(self.visible_sprites,
-                              self.obstacle_sprites, self.attackable_sprites, self.player.completed_quests, self.difficulty_level, self.trigger_death_particles, self.spawn_projectile, self.questgivers_quest_setup)
+                              self.obstacle_sprites, self.attackable_sprites, self.player.completed_quests, self.difficulty_level, self.trigger_death_particles, self.spawn_projectile, self.questgivers_quest_setup, self.drop_loot)
         print("quests removed")
         self.questgivers_quest_setup()
 
@@ -173,6 +177,65 @@ class LevelHandler():
             # reload world_data
         #    self.change_level(levelstates.WORLD)
 
+    def drop_loot(self, x, y, monster_name):
+        x += random.randint(-100, 100)
+        y += random.randint(-100, 100)
+        loot_types = list(Settings.monster_data[monster_name]['loots'])
+
+        loot_types.remove('xp_orb')
+
+        no_drop_chance = 0
+
+        # Determine whether to drop xp_orb or not
+        drop_xp_orb = random.random() >= no_drop_chance
+
+        if drop_xp_orb:
+            xp_orb_amount = Settings.monster_data[monster_name]['exp']
+            xp_orb = Loot(self.visible_sprites, (x, y), "xp_orb")
+            xp_orb.amount = xp_orb_amount
+            self.loots.append(xp_orb)
+
+        # Drop other loot types
+        for loot_type in loot_types:
+            chance = Settings.loots[loot_type]['chance']
+            if random.random() < chance:
+                loot_x = x
+                loot_y = y
+
+                # Generate separate position for items
+                if drop_xp_orb:
+                    loot_x += random.randint(-50, 50)
+                    loot_y += random.randint(-50, 50)
+
+                loot = Loot(self.visible_sprites, (loot_x, loot_y), loot_type)
+                self.loots.append(loot)
+
+        #        self.loots.append((loot_type, loot_amount, (loot_x, loot_y)))
+
+    def collect_loot(self):
+        player_x, player_y = self.player.rect.center
+
+        loot_to_remove = []
+
+        for loot in self.loots:
+            loot_x, loot_y = loot.get_pos()
+
+            distance = math.sqrt((player_x - loot_x) **
+                                 2 + (player_y - loot_y) ** 2)
+
+            if distance < 90:
+                if loot.itemname == 'gold_coin' or loot.itemname == 'gold_coins':
+                    self.player.balance += loot.amount
+
+                elif loot.itemname == 'xp_orb':
+                    self.player.update_experience(loot.amount)
+
+                loot_to_remove.append(loot)
+
+        for loot in loot_to_remove:
+            loot.kill()
+            self.loots.remove(loot)
+
     def run(self):
         self.visible_sprites.custom_draw(self.player)
 
@@ -197,7 +260,8 @@ class LevelHandler():
         # if self.current_attack:
         #    self.current_attack.update()
       #  self.player_attack_logic()
-        # self.draw_and_collect_loot(self.player)
+       # self.draw_and_collect_loot()
+        self.collect_loot()
         self.is_player_in_range_of_dungeon_portal()
         self.teleport_to_dungeon()
       #  self.night_lights()
@@ -253,6 +317,11 @@ class YSortCameraGroup(pygame.sprite.Group):
         for sprite in sorted(self.sprites(), key=lambda sprite: sprite.rect.y):
             offset_pos = sprite.rect.topleft - self.offset
             self.display_surface.blit(sprite.image, offset_pos)
+
+        # loot_sprites = [sprite for sprite in self.sprites()if hasattr(
+        #     sprite, 'sprite_type') and sprite.sprite_type == 'loot']
+        # for loot in loot_sprites:
+        #     print(loot.itemname, loot.amount, loot.rect.center)
 
     def enemy_update(self, player):
         enemy_sprites = [sprite for sprite in self.sprites()if hasattr(

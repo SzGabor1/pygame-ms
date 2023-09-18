@@ -39,7 +39,7 @@ class Sounds():
 
 # Initialize the Pygame mixer
 pygame.mixer.init()
-
+Sounds.set_static_volume(Settings.VOLUME)
 # Load sounds and validate volume
 Sounds.load_sounds(Settings.SOUNDS)
 Sounds.volume_validation()

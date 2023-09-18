@@ -35,7 +35,7 @@ class World(Level):
         self.input()
         self.cooldowns()
 
-    def create_map(self, visible_sprites, obstacle_sprites, attackable_sprites, player_completed_quests, difficulty_level, trigger_death_particles, spawn_projectile, questgivers_quest_setup):
+    def create_map(self, visible_sprites, obstacle_sprites, attackable_sprites, player_completed_quests, difficulty_level, trigger_death_particles, spawn_projectile, questgivers_quest_setup, drop_loot):
         graphics = {
             'grass': import_folder('graphics/grass'),
             'object': import_folder_sorted('graphics/objects'),
@@ -102,7 +102,7 @@ class World(Level):
                         if not passSpawn:
                             Enemy(monster_name, (x, y), [
                                 visible_sprites, attackable_sprites], obstacle_sprites,
-                                trigger_death_particles, self.drop_loot, spawn_projectile, difficulty_level)
+                                trigger_death_particles, drop_loot, spawn_projectile, difficulty_level)
 
     def create_npc(self, id, x, y, npc_data, visible_sprites, obstacle_sprites, questgivers_quest_setup):
         if Settings.npc_data[id]['type'] == 'quest_giver':

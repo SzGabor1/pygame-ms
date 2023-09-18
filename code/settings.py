@@ -42,6 +42,16 @@ class Settings:
 
         cls.save_settings()
 
+    @staticmethod
+    def overwrite_volume(volume):
+        Settings.VOLUME = volume
+        # Update settings in the JSON file with the new volume value
+        with open('data/settings/settings.json', 'r') as infile:
+            data = json.load(infile)
+            data['settings']['VOLUME'] = volume
+        with open('data/settings/settings.json', 'w') as outfile:
+            json.dump(data, outfile, indent=4)
+
     FPS = 60
     TILESIZE = 64
     HITBOX_OFFSET = {
@@ -276,3 +286,6 @@ class Settings:
             'cost': 2000
         }
     }
+
+
+Settings.load_settings()
