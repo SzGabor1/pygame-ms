@@ -218,8 +218,7 @@ class LevelHandler():
         loot_to_remove = []
 
         for loot in self.loots:
-            loot_x, loot_y = loot.get_pos()
-
+            loot_x, loot_y = loot.x, loot.y
             distance = math.sqrt((player_x - loot_x) **
                                  2 + (player_y - loot_y) ** 2)
 

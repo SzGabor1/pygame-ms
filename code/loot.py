@@ -23,6 +23,3 @@ class Loot(pygame.sprite.Sprite):
 
         self.rect = self.image.get_rect(center=pos)
         self.item = None
-
-    def get_pos(self):
-        return self.x, self.y
