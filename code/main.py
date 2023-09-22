@@ -22,10 +22,10 @@ class Game:
         self.menu = MainMenu(self)
         self.game_handler = None
         self.settings_menu = None
-        self.load_menu = None
-        self.new_game_menu = None
+        # self.load_menu = None
+        # self.new_game_menu = None
         self.state = menuenums.LOGIN
-        self.mapGenerated = False
+        # self.mapGenerated = False
         self.save_parameters = None
         self.login_panel = LoginPanel(self)
 
@@ -67,7 +67,7 @@ class Game:
                     Sounds.play_loop('main')
                     self.game_handler = GameHandler(
                         self.user, self.save_parameters)
-                    self.mapGenerated = True
+                    # self.mapGenerated = True
                 for event in pygame.event.get():
                     if event.type == pygame.QUIT:
                         pygame.quit()
