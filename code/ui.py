@@ -43,7 +43,7 @@ class UI:
             f"Xp {int(exp)}", False, Settings.BLACK_TEXT_COLOR)
         text_rect = text_surf.get_rect(bottomright=(
             Settings.WIDTH-10, Settings.HEIGHT-10))
-        pygame.draw.rect(self.display_surface, Settings.UI_BG_COLOR,
+        pygame.draw.rect(self.display_surface, Settings.MENU_BG_COLOR,
                          text_rect.inflate(20, 20))
         self.display_surface.blit(text_surf, text_rect)
         pygame.draw.rect(self.display_surface, Settings.UI_BORDER_COLOR,
@@ -64,7 +64,7 @@ class UI:
         bg_rect = pygame.Rect(
             left, top, Settings.ITEM_BOX_SIZE, Settings.ITEM_BOX_SIZE)
         pygame.draw.rect(self.display_surface,
-                         Settings.UI_BG_COLOR, bg_rect)
+                         Settings.MENU_BG_COLOR, bg_rect)
         pygame.draw.rect(self.display_surface,
                          Settings.UI_BORDER_COLOR, bg_rect, 3)
 
@@ -83,40 +83,50 @@ class UI:
 
         for i in range(inventory_size):
             if i < len(player_inventory):
-                item_id = player_inventory[i]
+                item_data = player_inventory[i]
+                item_id, quantity = item_data
+
                 if item_id in Settings.items:
                     item = Settings.items[item_id]
                     path = item['graphic']
                     item_image = pygame.image.load(path).convert_alpha()
                     item_image = pygame.transform.scale(
                         item_image, (Settings.ITEM_BOX_SIZE - 6, Settings.ITEM_BOX_SIZE - 6))
-            else:
-                # Use a default image for empty slots
-                item_image = pygame.Surface(
-                    (Settings.ITEM_BOX_SIZE - 6, Settings.ITEM_BOX_SIZE - 6))
-                item_image.fill(Settings.MENU_BG_COLOR)
+                else:
+                    # Use a default image for empty slots
+                    item_image = pygame.Surface(
+                        (Settings.ITEM_BOX_SIZE - 6, Settings.ITEM_BOX_SIZE - 6))
+                    item_image.fill(Settings.MENU_BG_COLOR)
 
-            item_rect = pygame.Rect(start_x + (i * Settings.ITEM_BOX_SIZE), inventory_y,
-                                    Settings.ITEM_BOX_SIZE, Settings.ITEM_BOX_SIZE)
+                item_rect = pygame.Rect(start_x + (i * Settings.ITEM_BOX_SIZE), inventory_y,
+                                        Settings.ITEM_BOX_SIZE, Settings.ITEM_BOX_SIZE)
 
-            # Determine if the item is selected
-            selected = (i == player.inventory_index)
+                # Determine if the item is selected
+                selected = (i == player.inventory_index)
 
-            # Draw slot background
-            if selected:
+                # Draw slot background
+                if selected:
+                    pygame.draw.rect(self.display_surface,
+                                     Settings.INVENTORY_SELECTED_BG_COLOR, item_rect)
+                else:
+                    pygame.draw.rect(self.display_surface,
+                                     Settings.MENU_BG_COLOR, item_rect)
+
+                # Draw item image inside the slot
+                item_image_rect = item_image.get_rect(center=item_rect.center)
+                self.display_surface.blit(item_image, item_image_rect.topleft)
+
+                # Draw slot border
                 pygame.draw.rect(self.display_surface,
-                                 Settings.INVENTORY_SELECTED_BG_COLOR, item_rect)
-            else:
-                pygame.draw.rect(self.display_surface,
-                                 Settings.MENU_BG_COLOR, item_rect)
+                                 Settings.MENU_BORDER_COLOR, item_rect, 3)
 
-            # Draw item image inside the slot
-            item_image_rect = item_image.get_rect(center=item_rect.center)
-            self.display_surface.blit(item_image, item_image_rect.topleft)
-
-            # Draw slot border
-            pygame.draw.rect(self.display_surface,
-                             Settings.MENU_BORDER_COLOR, item_rect, 3)
+                # Draw quantity in the bottom left corner
+                font = pygame.font.Font(None, 36)
+                text_surface = font.render(
+                    str(quantity), True, (255, 255, 255))
+                text_rect = text_surface.get_rect()
+                text_rect.bottomleft = item_rect.bottomleft
+                self.display_surface.blit(text_surface, text_rect)
 
     def show_completed_quest(self, player):
         if player.is_quest_completed:
@@ -274,7 +284,7 @@ class UI:
         text_rect.bottomright = (
             Settings.WIDTH - 10, Settings.HEIGHT - 50)
 
-        pygame.draw.rect(self.display_surface, Settings.UI_BG_COLOR,
+        pygame.draw.rect(self.display_surface, Settings.MENU_BG_COLOR,
                          text_rect.inflate(20, 20))
         self.display_surface.blit(text_surf, text_rect)
         pygame.draw.rect(self.display_surface, Settings.UI_BORDER_COLOR,
