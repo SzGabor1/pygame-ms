@@ -121,8 +121,8 @@ class Save:
         skin_id = player.character_id
         player_pos = player.rect.topleft
         player_stats = player.stats
-        player_health = player.health
-        player_energy = player.energy
+        player_health = int(player.health)
+        player_energy = int(player.energy)
         player_exp = player.exp
         balance = player.balance
         player_completed_quests = player.completed_quests

@@ -2,7 +2,7 @@ import requests
 import hashlib
 
 
-BASE_URL = "http://127.0.0.1:8000"
+BASE_URL = "http://91.229.245.186:8000"
 
 
 def register_user(username, password):

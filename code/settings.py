@@ -176,11 +176,11 @@ class Settings:
     DAMAGE_NUMBER_COLOR = '#ff7200'
 
     npc_data = {
-        '59': {'name': 'Laci 59', 'skin': 'Villager1', 'quest_ids': [4, 6], 'type': 'quest_giver', 'item_list': None},
-        '79': {'name': 'Roli 79', 'skin': 'Villager1', 'quest_ids': [5], 'type': 'quest_giver', 'item_list': None},
-        '119': {'name': 'Matyi 119', 'skin': 'Villager1', 'type': 'merchant', 'item_list': [0, 1, 2]},
-        '99': {'name': 'Kevin 99', 'skin': 'Villager1', 'type': 'quest_giver', 'quest_ids': [3, 7], 'item_list': None},
-        '139': {'name': 'Mate 139 ', 'skin': 'Villager1', 'quest_ids': [0, 1, 2], 'type': 'quest_giver', 'item_list': None}
+        '59': {'name': 'Laci', 'skin': 'Villager1', 'quest_ids': [4, 6], 'type': 'quest_giver', 'item_list': None},
+        '79': {'name': 'Roli', 'skin': 'Villager1', 'quest_ids': [5], 'type': 'quest_giver', 'item_list': None},
+        '119': {'name': 'Matyi', 'skin': 'Villager1', 'type': 'merchant', 'item_list': [0, 1, 2]},
+        '99': {'name': 'Kevin', 'skin': 'Villager1', 'type': 'quest_giver', 'quest_ids': [3, 7], 'item_list': None},
+        '139': {'name': 'Mate', 'skin': 'Villager1', 'quest_ids': [0, 1, 2], 'type': 'quest_giver', 'item_list': None}
     }
 
     quest_data = {
